@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.farm.farm2fork.SplashScreen">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="36dp"
+            android:textColor="#000"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal"
+
+            android:text="Farm2Fork"/>
+        <TextView
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:gravity="center"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="64dp"
+            android:textColor="#212121"
+            android:layout_gravity="center_horizontal"
+
+            android:text="Connecting farmers for effective farming"/>
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp"
+            android:textColor="#212121"
+            android:textSize="16dp"
+            android:text="Auto Detecting OTP. Please Wait" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+
+            <EditText
+                android:id="@+id/ed_otp"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:textColor="#212121"
+                android:paddingLeft="4dp"
+                android:gravity="center"
+                android:hint="****"
+                android:inputType="phone"
+                android:textSize="28dp"
+                />
+
+
+        </LinearLayout>
+        <Button
+            android:id="@+id/btn_next"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:textAllCaps="false"
+            android:layout_marginTop="8dp"
+            android:text="Next >"
+            android:layout_height="wrap_content" />
+
+
+    </LinearLayout>
+
+</RelativeLayout>

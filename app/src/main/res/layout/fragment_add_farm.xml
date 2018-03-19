@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" Select Crop: "
+        android:textColor="#424242"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/ed_crop"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/border_farm_card"
+        android:gravity="center_vertical"
+        android:paddingLeft="8dp"
+        android:text="Potato"
+        android:textColor="#f44336"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Farm Location: "
+
+        android:textColor="#424242"
+
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txt_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="32dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/border_farm_card"
+        android:gravity="center_vertical"
+        android:paddingLeft="8dp"
+        android:text="(Please choose Location of your Farm)"
+
+        android:textColor="#f44336"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
+   <!-- <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text=" Farm Photo: "
+
+        android:textColor="#424242"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/border_farm_card"
+        android:gravity="center_vertical"
+        android:paddingLeft="8dp"
+        android:text="+91-7054392300"
+        android:textColor="#f44336"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text=" Size: (in Acre)"
+
+        android:textColor="#424242"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/border_farm_card"
+        android:gravity="center_vertical"
+        android:paddingLeft="8dp"
+        android:hint="0"
+        android:id="@+id/ed_size"
+        android:text=""
+        android:textColor="#f44336"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:text="ADD FARM" />
+
+</LinearLayout>

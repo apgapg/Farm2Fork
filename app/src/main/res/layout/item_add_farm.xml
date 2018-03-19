@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="106dp"
+    android:background="@drawable/border_farm_card"
+    android:orientation="vertical"
+    android:paddingBottom="8dp"
+    android:id="@+id/rootview"
+    android:paddingLeft="8dp"
+    android:paddingTop="8dp">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_add_circle_outline_black_24dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:paddingTop="6dp"
+        android:text="Add Farm"
+        android:textColor="#424242"
+
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
+</LinearLayout>
