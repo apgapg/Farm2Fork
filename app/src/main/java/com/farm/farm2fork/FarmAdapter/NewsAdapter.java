@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.farm.farm2fork.MainNavScreen;
-import com.farm.farm2fork.Models.FarmModel;
+import com.farm.farm2fork.Models.NewsModel;
 import com.farm.farm2fork.R;
 
 import java.util.ArrayList;
@@ -28,13 +28,6 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public NewsAdapter(Context context) {
         this.context = context;
-
-
-        //////////For trial
-        messagelist.add(new FarmModel());
-        messagelist.add("Add Farm");
-
-
     }
 
     @Override
@@ -54,7 +47,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return messagelist.size();
     }
 
-    public void add(List<Object> list) {
+    public void add(List<NewsModel> list) {
         messagelist.clear();
         messagelist.addAll(list);
         Log.d(TAG, "add: list size: " + list.size());

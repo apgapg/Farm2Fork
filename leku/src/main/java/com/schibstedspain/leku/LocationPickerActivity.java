@@ -100,13 +100,12 @@ public class LocationPickerActivity extends AppCompatActivity
     private static final int WIDER_ZOOM = 6;
     private static final int MIN_CHARACTERS = 2;
     private static final int DEBOUNCE_TIME = 400;
-
+    private final List<Address> locationList = new ArrayList<>();
     private GoogleMap map;
     private GoogleApiClient googleApiClient;
     private Location currentLocation;
     private LekuPoi currentLekuPoi;
     private GeocoderPresenter geocoderPresenter;
-
     private ArrayAdapter<String> adapter;
     private EditText searchView;
     private TextView street;
@@ -120,8 +119,6 @@ public class LocationPickerActivity extends AppCompatActivity
     private ListView listResult;
     private ImageView clearSearchButton;
     private MenuItem searchOption;
-
-    private final List<Address> locationList = new ArrayList<>();
     private List<String> locationNameList = new ArrayList<>();
     private boolean hasWiderZoom = false;
     private Bundle bundle = new Bundle();
@@ -1056,6 +1053,7 @@ public class LocationPickerActivity extends AppCompatActivity
         if (isGooglePlacesEnabled) {
             googleApiClientBuilder.addApi(Places.GEO_DATA_API);
         }
+
 
         googleApiClient = googleApiClientBuilder.build();
         googleApiClient.connect();

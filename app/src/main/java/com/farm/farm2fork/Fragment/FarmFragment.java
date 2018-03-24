@@ -18,6 +18,7 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.ParsedRequestListener;
 import com.farm.farm2fork.CustomViews.ItemOffsetDecoration;
 import com.farm.farm2fork.FarmAdapter.FarmAdapter;
+import com.farm.farm2fork.Interface.NetRetryListener;
 import com.farm.farm2fork.MainNavScreen;
 import com.farm.farm2fork.Models.FarmModel;
 import com.farm.farm2fork.R;
@@ -38,19 +39,28 @@ public class FarmFragment extends Fragment {
     private FarmAdapter farmAdapter;
     private View progressBar;
     private UserSessionManager userSessionManager;
+    private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_farm, container, false);
+        ((MainNavScreen) mContext).setToolbarTitle("Welcome");
+
+        if (view != null) {
+            if (view.getParent() != null)
+                ((ViewGroup) view.getParent()).removeView(view);
+            return view;
+        }
+        view = inflater.inflate(R.layout.fragment_farm, container, false);
+
         userSessionManager = new UserSessionManager(mContext);
 
         progressBar = view.findViewById(R.id.progressbar);
         view.findViewById(R.id.community).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainNavScreen) mContext).onCommunityButtonClick();
+                //  ((MainNavScreen) mContext).onCommunityButtonClick();
             }
         });
         recyclerView = view.findViewById(R.id.farmrecycelrview);
@@ -60,11 +70,22 @@ public class FarmFragment extends Fragment {
         recyclerView.addItemDecoration(itemDecoration);
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setAdapter(farmAdapter);
+
         makefetchfarmReqtoserver();
+
+        ((MainNavScreen) mContext).setnetworkReqRetryListner(new NetRetryListener() {
+            @Override
+            public void onNetReqRetry(String name) {
+                if (name.equals(FarmFragment.class.getName()))
+                    makefetchfarmReqtoserver();
+            }
+        });
+
         return view;
     }
 
     private void makefetchfarmReqtoserver() {
+        progressBar.setVisibility(View.VISIBLE);
         AndroidNetworking.post(BASE_URL + "fetchfarms.php")
                 .addBodyParameter("authtoken", userSessionManager.getAuthToken())
                 .addBodyParameter("uid", userSessionManager.getUID())
@@ -90,6 +111,7 @@ public class FarmFragment extends Fragment {
                     @Override
                     public void onError(ANError anError) {
                         progressBar.setVisibility(View.INVISIBLE);
+                        ((MainNavScreen) mContext).showSnackBarNetError(FarmFragment.class.getName());
 
                         Log.d(TAG, "onError: " + anError);
                     }

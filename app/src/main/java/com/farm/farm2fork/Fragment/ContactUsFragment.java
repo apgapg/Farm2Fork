@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.farm.farm2fork.MainNavScreen;
 import com.farm.farm2fork.R;
 
 /**
@@ -22,6 +23,7 @@ public class ContactUsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view=inflater.inflate(R.layout.fragment_contact_us, container,false);
+        ((MainNavScreen) mContext).setToolbarTitle("Contact Us");
 
 
 

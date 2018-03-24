@@ -14,6 +14,11 @@ public class FarmModel {
     private String farmsize;
     private String uid;
     private String loc_city;
+    private String loc_key;
+
+    public String getLoc_key() {
+        return loc_key;
+    }
 
     public String getCrop() {
         return crop;

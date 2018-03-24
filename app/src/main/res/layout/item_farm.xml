@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootview"
     android:layout_width="match_parent"
     android:layout_height="106dp"
     android:background="@drawable/border_farm_card"
@@ -21,8 +22,8 @@
             android:layout_height="wrap_content"
             android:paddingRight="8dp"
             android:text="Crop: "
-            android:textSize="16dp"
             android:textColor="#424242"
+            android:textSize="16dp"
             android:textStyle="bold" />
 
         <TextView
@@ -30,9 +31,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="-"
-            android:textSize="16dp"
-
             android:textColor="#f44336"
+
+            android:textSize="16dp"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -47,10 +48,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingRight="4dp"
-            android:textSize="16dp"
-
             android:text="City: "
+
             android:textColor="#424242"
+            android:textSize="16dp"
             android:textStyle="bold" />
 
         <TextView
@@ -58,10 +59,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="-"
-            android:textSize="16dp"
-
-
             android:textColor="#f44336"
+
+
+            android:textSize="16dp"
             android:textStyle="bold" />
     </LinearLayout>
     <LinearLayout
@@ -75,10 +76,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingRight="4dp"
-            android:textSize="16dp"
+            android:text="Size: "
 
-            android:text="Farm Size: "
             android:textColor="#424242"
+            android:textSize="16dp"
             android:textStyle="bold" />
 
         <TextView
@@ -86,10 +87,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
-            android:textSize="16dp"
-
-
             android:textColor="#f44336"
+
+
+            android:textSize="16dp"
             android:textStyle="bold" />
     </LinearLayout>
 

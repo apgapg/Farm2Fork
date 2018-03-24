@@ -6,15 +6,28 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.farm.farm2fork.CustomViews.ItemOffsetDecoration;
 import com.farm.farm2fork.FarmAdapter.WeatherAdapter;
+import com.farm.farm2fork.Models.WeatherModel;
 import com.farm.farm2fork.R;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import zh.wang.android.yweathergetter4a.WeatherInfo;
 
@@ -23,6 +36,8 @@ import zh.wang.android.yweathergetter4a.WeatherInfo;
  */
 
 public class WeatherFragment extends Fragment {
+    private static final String TAG = WeatherFragment.class.getName();
+    SimpleDateFormat sdf = new SimpleDateFormat("dd MMM", Locale.ENGLISH);
     private RecyclerView recyclerView;
     private Activity mContext;
     private WeatherAdapter weatherAdapter;
@@ -35,7 +50,7 @@ public class WeatherFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.farmrecycelrview);
 
-         weatherAdapter = new WeatherAdapter(mContext);
+        weatherAdapter = new WeatherAdapter(mContext);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(mContext, R.dimen.item_offset);
@@ -43,7 +58,58 @@ public class WeatherFragment extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(weatherAdapter);
 
+        getWeatherData(getArguments().getString("loc_key"));
+
         return view;
+    }
+
+    private void getWeatherData(String loc_key) {
+        AndroidNetworking.get("http://dataservice.accuweather.com/forecasts/v1/daily/5day/" + loc_key + "?apikey=wPPGSAmAyTuYLJV3MJ8ZVnAxGQOFAwdE&details=true&metric=true&language=en-IN")
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, "onResponse: " + response);
+
+                        try {
+                            JSONArray jsonArray = response.getJSONArray("DailyForecasts");
+                            List<WeatherModel> list = new ArrayList<>();
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                WeatherModel weatherModel = new WeatherModel();
+                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+
+                                weatherModel.setDate(sdf.format(new Date(jsonObject.getLong("EpochDate") * 1000)));
+
+                                JSONObject jsonObjecttemp = jsonObject.getJSONObject("Temperature");
+                                JSONObject jsonObjectmax = jsonObjecttemp.getJSONObject("Maximum");
+                                weatherModel.setTemp_high(String.valueOf(jsonObjectmax.get("Value")));
+                                JSONObject jsonObjectmin = jsonObjecttemp.getJSONObject("Minimum");
+                                weatherModel.setTemp_low(String.valueOf(jsonObjectmin.get("Value")));
+
+                                JSONObject jsonObjectday = jsonObject.getJSONObject("Day");
+                                weatherModel.setDay_text(jsonObjectday.getString("IconPhrase"));
+                                weatherModel.setDay_rain_probability(String.valueOf(jsonObjectday.get("RainProbability")));
+
+                                JSONObject jsonObjectnight = jsonObject.getJSONObject("Night");
+                                weatherModel.setNight_text(jsonObjectnight.getString("IconPhrase"));
+                                weatherModel.setNight_rain_probability(String.valueOf(jsonObjectnight.get("RainProbability")));
+
+                                list.add(weatherModel);
+                            }
+                            weatherAdapter.add(list);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        Log.d(TAG, "onError: " + anError.getResponse());
+                    }
+                });
     }
 
     @Override
@@ -63,7 +129,7 @@ public class WeatherFragment extends Fragment {
 
     public void onWeatherDataReceived(List<WeatherInfo.ForecastInfo> forecastInfoList) {
 
-        weatherAdapter.add(forecastInfoList);
+        // weatherAdapter.add(forecastInfoList);
 
     }
 }

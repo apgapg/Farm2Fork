@@ -8,13 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.farm.farm2fork.Models.FarmModel;
+import com.farm.farm2fork.Models.WeatherModel;
 import com.farm.farm2fork.R;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import zh.wang.android.yweathergetter4a.WeatherInfo;
 
 
 /**
@@ -26,7 +24,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private static final String TAG = WeatherAdapter.class.getName();
     private final Context context;
 
-    List<WeatherInfo.ForecastInfo> messagelist = new ArrayList<>();
+    List<WeatherModel> messagelist = new ArrayList<>();
 
     public WeatherAdapter(Context context) {
         this.context = context;
@@ -43,10 +41,14 @@ public class WeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((WeatherViewHolder) holder).txtcurrentdate.setText(messagelist.get(position).getForecastDate().replace(" 2018",""));
-        ((WeatherViewHolder) holder).txtmax.setText("Max: "+messagelist.get(position).getForecastTempHigh()+"°c");
-        ((WeatherViewHolder) holder).txtmin.setText("Min: "+messagelist.get(position).getForecastTempLow()+"°c");
-        ((WeatherViewHolder) holder).txtforecast.setText(messagelist.get(position).getForecastText());
+        ((WeatherViewHolder) holder).txtcurrentdate.setText(messagelist.get(position).getDate());
+        ((WeatherViewHolder) holder).txtmax.setText("Max: " + messagelist.get(position).getTemp_high() + "°c");
+        ((WeatherViewHolder) holder).txtmin.setText("Min: " + messagelist.get(position).getTemp_low() + "°c");
+        ((WeatherViewHolder) holder).txtrainforecastday.setText("Day: " + messagelist.get(position).getDay_rain_probability() + "%");
+        ((WeatherViewHolder) holder).txtrainforecastnight.setText("Night: " + messagelist.get(position).getNight_rain_probability() + "%");
+        ((WeatherViewHolder) holder).txtforecastdaytext.setText("Day: " + messagelist.get(position).getDay_text());
+        ((WeatherViewHolder) holder).txtforecastnighttext.setText("Night: " + messagelist.get(position).getNight_text());
+
     }
 
     @Override
@@ -54,7 +56,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return messagelist.size();
     }
 
-    public void add(List<WeatherInfo.ForecastInfo> list) {
+    public void add(List<WeatherModel> list) {
         messagelist.clear();
         messagelist.addAll(list);
         Log.d(TAG, "add: list size: " + list.size());
@@ -65,7 +67,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private class WeatherViewHolder extends RecyclerView.ViewHolder {
 
 
-        private TextView txtcurrentdate,txtmax,txtmin,txtforecast;
+        private TextView txtcurrentdate, txtmax, txtmin, txtrainforecastday, txtrainforecastnight, txtforecastdaytext, txtforecastnighttext;
 
         public WeatherViewHolder(View inflate) {
             super(inflate);
@@ -73,7 +75,10 @@ public class WeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             txtcurrentdate = inflate.findViewById(R.id.currentdate);
             txtmax = inflate.findViewById(R.id.maxtemp);
             txtmin = inflate.findViewById(R.id.mintemp);
-            txtforecast = inflate.findViewById(R.id.forecast);
+            txtrainforecastday = inflate.findViewById(R.id.forecast_rain_day);
+            txtrainforecastnight = inflate.findViewById(R.id.forecast_rain_night);
+            txtforecastdaytext = inflate.findViewById(R.id.forecastdaytext);
+            txtforecastnighttext = inflate.findViewById(R.id.forecastnighttext);
 
         }
     }

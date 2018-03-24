@@ -23,12 +23,12 @@ import java.util.List;
 public class FarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final String TAG = FarmAdapter.class.getName();
-    private final Context context;
+    private final Context mContext;
 
     List<Object> messagelist = new ArrayList<>();
 
     public FarmAdapter(Context context) {
-        this.context = context;
+        this.mContext = context;
     }
 
     @Override
@@ -47,7 +47,7 @@ public class FarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (holder.getItemViewType() == 2) {
             ((FarmViewHolder) holder).txtcity.setText(((FarmModel) messagelist.get(position)).getLoc_city());
             ((FarmViewHolder) holder).txtcrop.setText(((FarmModel) messagelist.get(position)).getCrop());
-            ((FarmViewHolder) holder).txtfarmsize.setText(((FarmModel) messagelist.get(position)).getFarmsize()+" acre");
+            ((FarmViewHolder) holder).txtfarmsize.setText(((FarmModel) messagelist.get(position)).getFarmsize());
 
         }
     }
@@ -77,13 +77,22 @@ public class FarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private class FarmViewHolder extends RecyclerView.ViewHolder {
 
 
-        private  TextView txtcrop, txtcity,txtfarmsize;
+        private TextView txtcrop, txtcity, txtfarmsize;
+        private View rootview;
 
         public FarmViewHolder(View inflate) {
             super(inflate);
-            txtcrop=inflate.findViewById(R.id.crop);
-            txtcity =inflate.findViewById(R.id.address);
-            txtfarmsize =inflate.findViewById(R.id.size);
+            txtcrop = inflate.findViewById(R.id.crop);
+            txtcity = inflate.findViewById(R.id.address);
+            txtfarmsize = inflate.findViewById(R.id.size);
+            rootview = inflate.findViewById(R.id.rootview);
+            rootview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((MainNavScreen) mContext).showCommunityFragment(((FarmModel) messagelist.get(getAdapterPosition())));
+                }
+            });
+
 
         }
     }
@@ -100,7 +109,7 @@ public class FarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             rootview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((MainNavScreen) context).onAddFarmButtonClick();
+                    ((MainNavScreen) mContext).onAddFarmButtonClick();
                 }
             });
         }

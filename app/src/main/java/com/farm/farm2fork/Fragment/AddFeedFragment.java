@@ -3,7 +3,6 @@ package com.farm.farm2fork.Fragment;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -26,62 +25,50 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.farm.farm2fork.CustomViews.customspinner.MaterialSpinner;
 import com.farm.farm2fork.Interface.ImagePathListener;
-import com.farm.farm2fork.Interface.LocationSetListener;
 import com.farm.farm2fork.MainNavScreen;
-import com.farm.farm2fork.Models.LocationInfoModel;
 import com.farm.farm2fork.R;
 import com.farm.farm2fork.Utils.UserSessionManager;
 import com.kbeanie.multipicker.api.ImagePicker;
-import com.schibstedspain.leku.LocationPickerActivity;
 
 /**
  * Created by master on 10/3/18.
  */
 
-public class AddFarmFragment extends Fragment {
+public class AddFeedFragment extends Fragment {
     public static final String BASE_URL = "https://www.reweyou.in/fasalapp/";
-    private static final String TAG = AddFarmFragment.class.getName();
+    private static final String TAG = AddFeedFragment.class.getName();
     private Activity mContext;
     private Button btn_add;
-    private TextView txt_location;
+    private TextView txt_crop;
     private UserSessionManager userSessionManager;
-    private LocationInfoModel mlocationInfoModel;
-    private EditText ed_size, ed_crop;
-    private boolean locationtaken = false;
     private ImageView cameraicon, mainimage;
     private ImagePicker imagePicker;
     private String imagepath = "";
     private String imageencoded = "";
-    private String farmSizeUnit = "acre";
-    private String farmsize_acre;
+    private EditText ed_description;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_add_farm, container, false);
-
-        ((MainNavScreen) mContext).setToolbarTitle("Add Farm");
+        View view = inflater.inflate(R.layout.fragment_add_feed, container, false);
+        ((MainNavScreen) mContext).setToolbarTitle("Add Post");
 
         userSessionManager = new UserSessionManager(mContext);
         btn_add = view.findViewById(R.id.add);
-        txt_location = view.findViewById(R.id.txt_location);
+        txt_crop = view.findViewById(R.id.txt_crop);
+        ed_description = view.findViewById(R.id.ed_des);
         cameraicon = view.findViewById(R.id.cameraicon);
         mainimage = view.findViewById(R.id.photo);
 
-        MaterialSpinner spinner = view.findViewById(R.id.spinner);
-        spinner.setItems("acre", "hectare", "bigha", "guntha");
-        spinner.setSelectedIndex(0);
-        spinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
-
+        txt_crop.setText(getArguments().getString("crop"));
+        txt_crop.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                farmSizeUnit = item;
+            public void onClick(View v) {
+                Toast.makeText(mContext, "Crop cannot be changed!", Toast.LENGTH_SHORT).show();
             }
         });
-
         view.findViewById(R.id.rootphoto).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,42 +94,11 @@ public class AddFarmFragment extends Fragment {
             }
         });
 
-        ed_size = view.findViewById(R.id.ed_size);
-        ed_crop = view.findViewById(R.id.ed_crop);
-
-        ((MainNavScreen) mContext).setonLocationSetByUser(new LocationSetListener() {
-
-            @Override
-            public void onLocationSetByUser(LocationInfoModel locationInfoModel) {
-                txt_location.setText(locationInfoModel.getAddress());
-                mlocationInfoModel = locationInfoModel;
-                locationtaken = true;
-
-
-            }
-        });
-
-        txt_location.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new LocationPickerActivity.Builder()
-                        .withGooglePlacesEnabled()
-                        .withGeolocApiKey("AIzaSyBtuQ0bOdBshWBziK31gyUY2wKFnQnrEyc")
-                        .withSearchZone("en_IN")
-
-                        .shouldReturnOkOnBackPressed()
-                        .withSatelliteViewHidden()
-
-                        .build(mContext);
-
-                mContext.startActivityForResult(intent, 1);
-            }
-        });
 
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (locationtaken && ed_crop.getText().toString().trim().length() != 0 && ed_size.getText().toString().trim().length() != 0)
+                if (ed_description.getText().toString().trim().length() != 0)
                     makeServerReq();
                 else
                     Toast.makeText(mContext, "Please fill up all details", Toast.LENGTH_SHORT).show();
@@ -155,37 +111,15 @@ public class AddFarmFragment extends Fragment {
         final ProgressDialog progressDialog = new ProgressDialog(mContext);
         progressDialog.setMessage("Adding Farm! Please Wait");
         progressDialog.show();
-        Log.d(TAG, "makeServerReq: " + ed_size.getText().toString().trim());
-        Log.d(TAG, "makeServerReq: " + ed_crop.getText().toString());
-        Log.d(TAG, "makeServerReq: " + mlocationInfoModel.getCity());
+        Log.d(TAG, "makeServerReq: " + ed_description.getText().toString().trim());
 
 
-        if (farmSizeUnit.equals("bigha")) {
-            farmsize_acre = String.valueOf(Float.valueOf(ed_size.getText().toString().trim()) * 0.625);
-
-        } else if (farmSizeUnit.equals("acre")) {
-            farmsize_acre = ed_size.getText().toString().trim();
-
-
-        } else if (farmSizeUnit.equals("hectare")) {
-            farmsize_acre = String.valueOf(Float.valueOf(ed_size.getText().toString().trim()) * 2.471);
-
-        } else if (farmSizeUnit.equals("guntha")) {
-            farmsize_acre = String.valueOf(Float.valueOf(ed_size.getText().toString().trim()) * 0.025);
-
-
-        }
-
-        AndroidNetworking.post(BASE_URL + "addfarm_temp.php")
-                .addBodyParameter("crop", ed_crop.getText().toString().trim())
-                .addBodyParameter("farmsize", ed_size.getText().toString().trim() + " " + farmSizeUnit)
-                .addBodyParameter("farmsize_acre", farmsize_acre)
+        AndroidNetworking.post(BASE_URL + "addfeeds.php")
+                .addBodyParameter("crop", getArguments().getString("crop"))
+                .addBodyParameter("description", ed_description.getText().toString().trim())
                 .addBodyParameter("image", imageencoded)
-                .addBodyParameter("loc_address", mlocationInfoModel.getAddress())
-                .addBodyParameter("loc_lat", mlocationInfoModel.getLatitude())
-                .addBodyParameter("loc_long", mlocationInfoModel.getLongitude())
-                .addBodyParameter("postalCode", mlocationInfoModel.getPostalzipcode())
-                .addBodyParameter("loc_city", mlocationInfoModel.getCity())
+                .addBodyParameter("city", getArguments().getString("city"))
+                .addBodyParameter("name", "Ayush P Gupta")
                 .addBodyParameter("uid", userSessionManager.getUID())
                 .addBodyParameter("authtoken", userSessionManager.getAuthToken())
                 .setPriority(Priority.MEDIUM)

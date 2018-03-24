@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -19,6 +20,7 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.StringRequestListener;
+import com.farm.farm2fork.BuildConfig;
 import com.farm.farm2fork.R;
 import com.farm.farm2fork.SplashScreen;
 import com.karumi.dexter.Dexter;
@@ -101,7 +103,12 @@ public class LoginFragment extends Fragment {
         AndroidNetworking.post(BASE_URL + "sendotp_1.php")
                 .addBodyParameter("number", number)
                 .addBodyParameter("gcm_token", "try")
-                .addBodyParameter("deviceid", "try")
+                .addBodyParameter("deviceid", Settings.Secure.getString(mContext.getContentResolver(),
+                        Settings.Secure.ANDROID_ID))
+                .addBodyParameter("device", android.os.Build.DEVICE)
+                .addBodyParameter("model", android.os.Build.MODEL)
+                .addBodyParameter("app_version", BuildConfig.VERSION_NAME)
+                .addBodyParameter("os_version", android.os.Build.VERSION.SDK)
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsString(new StringRequestListener() {

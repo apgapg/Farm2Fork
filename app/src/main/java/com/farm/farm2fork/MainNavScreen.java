@@ -1,5 +1,6 @@
 package com.farm.farm2fork;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -14,17 +15,36 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import com.farm.farm2fork.Fragment.AboutFragment;
 import com.farm.farm2fork.Fragment.AddFarmFragment;
+import com.farm.farm2fork.Fragment.AddFeedFragment;
 import com.farm.farm2fork.Fragment.CommunityFragment;
 import com.farm.farm2fork.Fragment.ContactUsFragment;
 import com.farm.farm2fork.Fragment.FarmFragment;
 import com.farm.farm2fork.Fragment.ProfileFragment;
+import com.farm.farm2fork.Interface.ImagePathListener;
 import com.farm.farm2fork.Interface.LocationSetListener;
+import com.farm.farm2fork.Interface.NetRetryListener;
 import com.farm.farm2fork.Interface.Weatherlistener;
+import com.farm.farm2fork.Models.FarmModel;
 import com.farm.farm2fork.Models.LocationInfoModel;
+import com.google.gson.Gson;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
+import com.kbeanie.multipicker.api.ImagePicker;
+import com.kbeanie.multipicker.api.Picker;
+import com.kbeanie.multipicker.api.callbacks.ImagePickerCallback;
+import com.kbeanie.multipicker.api.entity.ChosenImage;
 import com.schibstedspain.leku.LocationPickerActivity;
+
+import java.util.List;
 
 import zh.wang.android.yweathergetter4a.WeatherInfo;
 import zh.wang.android.yweathergetter4a.YahooWeather;
@@ -38,26 +58,28 @@ public class MainNavScreen extends AppCompatActivity
     private boolean isOtherScreen = false;
     private Weatherlistener onWeatherDataReceivedListener;
     private LocationSetListener locationSetByUser;
+    private ImagePicker imagePicker;
+    private ImagePathListener onImagePathListener;
+    private NetRetryListener networkReqRetryListner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_nav_screen);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // weatherlistener= (Weatherlistener) this;
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        getSupportActionBar().setTitle("Welcome Ayush");
 
         Fragment fragment = null;
         Class fragmentClass = null;
@@ -76,15 +98,12 @@ public class MainNavScreen extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            if (isOtherScreen) {
-                showMainScreen();
-                isOtherScreen = false;
-            } else
-                super.onBackPressed();
+
+            super.onBackPressed();
         }
     }
 
@@ -100,7 +119,6 @@ public class MainNavScreen extends AppCompatActivity
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fl, fragment).commit();
-        getSupportActionBar().setTitle("Welcome");
     }
 
 
@@ -113,24 +131,21 @@ public class MainNavScreen extends AppCompatActivity
         Class fragmentClass = null;
         if (id == R.id.nav_profile) {
             fragmentClass = ProfileFragment.class;
-            getSupportActionBar().setTitle("Profile");
 
 
         } else if (id == R.id.nav_contact_us) {
             fragmentClass = ContactUsFragment.class;
-            getSupportActionBar().setTitle("Contact Us");
 
 
         } else if (id == R.id.nav_about) {
             fragmentClass = AboutFragment.class;
-            getSupportActionBar().setTitle("About");
 
 
         }
         try {
             fragment = (Fragment) fragmentClass.newInstance();
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.fl, fragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.fl, fragment).addToBackStack(null).commit();
             isOtherScreen = true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -138,7 +153,7 @@ public class MainNavScreen extends AppCompatActivity
         }
 
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
         return true;
@@ -156,20 +171,26 @@ public class MainNavScreen extends AppCompatActivity
             throw new NullPointerException("Fragment is null");
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.fl, fragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.fl, fragment).addToBackStack(null).commit();
 
         isOtherScreen = true;
 
     }
 
-    public void onCommunityButtonClick() {
+    public void onCommunityButtonClick(FarmModel farmModel) {
 
         getSupportActionBar().setTitle("Community");
 
         try {
             CommunityFragment communityFragment = new CommunityFragment();
+            Bundle bundle = new Bundle();
+            Gson gson = new Gson();
+            String json = gson.toJson(farmModel);
+            bundle.putString("FarmModel", json);
+            communityFragment.setArguments(bundle);
+
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.fl, communityFragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.fl, communityFragment).addToBackStack(null).commit();
             isOtherScreen = true;
         } catch (Exception e) {
             throw new NullPointerException("Fragment is null");
@@ -189,11 +210,10 @@ public class MainNavScreen extends AppCompatActivity
         } else Log.d(TAG, "gotWeatherInfo: error:  " + errorType);
     }
 
-    public void reqWeatherInfo(String roorkee) {
+    public void reqWeatherInfo(String loc_lat, String loc_long) {
 
         YahooWeather mYahooWeather = YahooWeather.getInstance();
-        mYahooWeather.queryYahooWeatherByLatLon(this, 30.2603, 78.4981, this);
-        // mYahooWeather.queryYahooWeatherByPlaceName(this, roorkee, this);
+        mYahooWeather.queryYahooWeatherByLatLon(this, Double.valueOf(loc_lat), Double.valueOf(loc_long), this);
 
     }
 
@@ -218,6 +238,35 @@ public class MainNavScreen extends AppCompatActivity
                 //Write your code if there's no result
                 Log.d(TAG, "onActivityResult: no result");
 
+            }
+        }
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == Picker.PICK_IMAGE_DEVICE) {
+                if (imagePicker == null) {
+                    imagePicker = new ImagePicker(this);
+                    imagePicker.setImagePickerCallback(new ImagePickerCallback() {
+                                                           @Override
+                                                           public void onImagesChosen(List<ChosenImage> images) {
+                                                               if (images != null)
+                                                                   if (images.size() > 0) {
+                                                                       onImagePathListener.onImagePath(images.get(0).getQueryUri());
+                                                                   } else Log.d(TAG, "onImagesChosen: empty");
+                                                               else
+                                                                   Log.e(TAG, "onError: onimagechoosen: ");
+
+                                                           }
+
+                                                           @Override
+                                                           public void onError(String message) {
+                                                               // Do error handling
+                                                               Log.e(TAG, "onError: " + message);
+                                                           }
+                                                       }
+
+                    );
+                }
+                imagePicker.submit(data);
             }
         }
     }
@@ -249,6 +298,103 @@ public class MainNavScreen extends AppCompatActivity
     }
 
     public void showSnackBar() {
-        Snackbar.make(findViewById(R.id.cl), "Start by Adding your Farm", 5000).show();
+        Snackbar.make(findViewById(R.id.cl), "Start by Adding your Farm", 4000).show();
+    }
+
+    public void chooseImage() {
+        imagePicker = new ImagePicker(this);
+        imagePicker.setImagePickerCallback(new ImagePickerCallback() {
+                                               @Override
+                                               public void onImagesChosen(List<ChosenImage> images) {
+                                                   if (images != null) {
+                                                       if (images.size() > 0) {
+                                                           onImagePathListener.onImagePath(images.get(0).getQueryUri());
+                                                       } else Log.d(TAG, "onImagesChosen: empty");
+                                                   } else
+                                                       Log.e(TAG, "onError: onimagechoosen: ");
+
+                                               }
+
+                                               @Override
+                                               public void onError(String message) {
+                                                   // Do error handling
+                                                   Log.e(TAG, "onError: " + message);
+                                               }
+                                           }
+
+        );
+
+        imagePicker.shouldGenerateMetadata(true);
+        imagePicker.shouldGenerateThumbnails(false);
+        imagePicker.pickImage();
+    }
+
+    public void setonImagePathListener(ImagePathListener onImagePathListener) {
+        this.onImagePathListener = onImagePathListener;
+    }
+
+
+    public void checkstoragepermissionforimage() {
+        Dexter.withActivity(this)
+                .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                .withListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse response) {
+                        chooseImage();
+                    }
+
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse response) {
+                        Toast.makeText(MainNavScreen.this, "Please allow the permission to proceed", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+
+                        token.continuePermissionRequest();
+                    }
+
+                }).check();
+
+    }
+
+    public void showCommunityFragment(FarmModel farmModel) {
+        onCommunityButtonClick(farmModel);
+    }
+
+    public void showSnackBarNetError(final String name) {
+        Snackbar.make(findViewById(R.id.cl), "Couldn't fetch Data", Snackbar.LENGTH_INDEFINITE).setAction("RETRY", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                networkReqRetryListner.onNetReqRetry(name);
+            }
+        }).show();
+
+    }
+
+    public void setnetworkReqRetryListner(NetRetryListener networkReqRetryListner) {
+        this.networkReqRetryListner = networkReqRetryListner;
+    }
+
+
+    public void showAddFeedFragment(String crop, String city) {
+
+        try {
+            AddFeedFragment addFeedFragment = new AddFeedFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("crop", crop);
+            bundle.putString("city", city);
+            addFeedFragment.setArguments(bundle);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.fl, addFeedFragment).addToBackStack(null).commit();
+            isOtherScreen = true;
+        } catch (Exception e) {
+            throw new NullPointerException("Fragment is null");
+        }
+
+    }
+
+    public void setToolbarTitle(String toolbarTitle) {
+        getSupportActionBar().setTitle(toolbarTitle);
     }
 }
