@@ -85,9 +85,10 @@ public class AddFarmFragment extends Fragment {
         view.findViewById(R.id.rootphoto).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainNavScreen) mContext).checkstoragepermissionforimage();
+                ((MainNavScreen) mContext).showImageChoosingDialog();
             }
         });
+
 
         ((MainNavScreen) mContext).setonImagePathListener(new ImagePathListener() {
             @Override
@@ -96,7 +97,7 @@ public class AddFarmFragment extends Fragment {
                 Glide.with(mContext).load(queryUri).into(mainimage);
                 cameraicon.setVisibility(View.INVISIBLE);
                 if (!imagepath.isEmpty()) {
-                    Glide.with(mContext).load(imagepath).asBitmap().toBytes(Bitmap.CompressFormat.JPEG, 90).format(DecodeFormat.PREFER_ARGB_8888).atMost().override(1200, 1200).into(new SimpleTarget<byte[]>() {
+                    Glide.with(mContext).load(imagepath).asBitmap().toBytes(Bitmap.CompressFormat.JPEG, 90).format(DecodeFormat.PREFER_ARGB_8888).atMost().override(1500, 1500).into(new SimpleTarget<byte[]>() {
                         @Override
                         public void onResourceReady(byte[] resource, GlideAnimation<? super byte[]> glideAnimation) {
                             imageencoded = Base64.encodeToString(resource, Base64.DEFAULT);
@@ -106,6 +107,26 @@ public class AddFarmFragment extends Fragment {
                 }
             }
         });
+
+       /* ((MainNavScreen) mContext).setImageCaptureListener(new ImageCaptureListener() {
+            @Override
+            public void onImageCapture(Bitmap bitmap) {
+                Log.d(TAG, "onImageCapture: "+bitmap.getHeight());
+                cameraicon.setVisibility(View.INVISIBLE);
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                Glide.with(mContext).load(stream.toByteArray()).into(mainimage);
+
+                Glide.with(mContext).load(stream.toByteArray()).asBitmap().toBytes(Bitmap.CompressFormat.JPEG, 90).format(DecodeFormat.PREFER_ARGB_8888).atMost().override(1500, 1500).into(new SimpleTarget<byte[]>() {
+                    @Override
+                    public void onResourceReady(byte[] resource, GlideAnimation<? super byte[]> glideAnimation) {
+                        imageencoded = Base64.encodeToString(resource, Base64.DEFAULT);
+                    }
+                });
+
+
+            }
+        });*/
 
         ed_size = view.findViewById(R.id.ed_size);
         ed_crop = view.findViewById(R.id.ed_crop);

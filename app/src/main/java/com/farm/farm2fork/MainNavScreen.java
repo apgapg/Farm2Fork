@@ -1,21 +1,32 @@
 package com.farm.farm2fork;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.farm.farm2fork.Fragment.AboutFragment;
@@ -25,6 +36,7 @@ import com.farm.farm2fork.Fragment.CommunityFragment;
 import com.farm.farm2fork.Fragment.ContactUsFragment;
 import com.farm.farm2fork.Fragment.FarmFragment;
 import com.farm.farm2fork.Fragment.ProfileFragment;
+import com.farm.farm2fork.Interface.ImageCaptureListener;
 import com.farm.farm2fork.Interface.ImagePathListener;
 import com.farm.farm2fork.Interface.LocationSetListener;
 import com.farm.farm2fork.Interface.NetRetryListener;
@@ -33,10 +45,12 @@ import com.farm.farm2fork.Models.FarmModel;
 import com.farm.farm2fork.Models.LocationInfoModel;
 import com.google.gson.Gson;
 import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.karumi.dexter.listener.single.PermissionListener;
 import com.kbeanie.multipicker.api.ImagePicker;
 import com.kbeanie.multipicker.api.Picker;
@@ -44,7 +58,9 @@ import com.kbeanie.multipicker.api.callbacks.ImagePickerCallback;
 import com.kbeanie.multipicker.api.entity.ChosenImage;
 import com.schibstedspain.leku.LocationPickerActivity;
 
+import java.io.File;
 import java.util.List;
+import java.util.Random;
 
 import zh.wang.android.yweathergetter4a.WeatherInfo;
 import zh.wang.android.yweathergetter4a.YahooWeather;
@@ -54,6 +70,7 @@ public class MainNavScreen extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, YahooWeatherInfoListener {
 
     private static final String TAG = MainNavScreen.class.getName();
+    private static final int CAMERA_REQUEST = 24;
     private RecyclerView recyclerView;
     private boolean isOtherScreen = false;
     private Weatherlistener onWeatherDataReceivedListener;
@@ -61,6 +78,8 @@ public class MainNavScreen extends AppCompatActivity
     private ImagePicker imagePicker;
     private ImagePathListener onImagePathListener;
     private NetRetryListener networkReqRetryListner;
+    private ImageCaptureListener imageCaptureListener;
+    private Uri imageToUploadUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,21 +229,16 @@ public class MainNavScreen extends AppCompatActivity
         } else Log.d(TAG, "gotWeatherInfo: error:  " + errorType);
     }
 
-    public void reqWeatherInfo(String loc_lat, String loc_long) {
-
-        YahooWeather mYahooWeather = YahooWeather.getInstance();
-        mYahooWeather.queryYahooWeatherByLatLon(this, Double.valueOf(loc_lat), Double.valueOf(loc_long), this);
-
-    }
-
-    public void setonWeatherDataReceivedListener(Weatherlistener onWeatherDataReceivedListener) {
-        this.onWeatherDataReceivedListener = onWeatherDataReceivedListener;
-    }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // checkPermissionOnActivityResult(requestCode, resultCode, data);
+        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+            onImagePathListener.onImagePath(String.valueOf(imageToUploadUri));
+        } else {
+            Log.d(TAG, "onActivityResult: Image cant be captured");
+            imageToUploadUri = null;
+        }
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
 
@@ -273,15 +287,18 @@ public class MainNavScreen extends AppCompatActivity
 
     private LocationInfoModel parseLocationData(Intent data) {
         double latitude = data.getDoubleExtra(LocationPickerActivity.LATITUDE, 0);
-        Log.d("LATITUDE****", String.valueOf(latitude));
         double longitude = data.getDoubleExtra(LocationPickerActivity.LONGITUDE, 0);
-        Log.d("LONGITUDE****", String.valueOf(longitude));
+
         String address = data.getStringExtra(LocationPickerActivity.LOCATION_ADDRESS);
-        Log.d("ADDRESS****", String.valueOf(address));
+
         String postalcode = data.getStringExtra(LocationPickerActivity.ZIPCODE);
-        Log.d("POSTALCODE****", String.valueOf(postalcode));
+
         String city = data.getStringExtra(LocationPickerActivity.LOCATION_CITY);
-        Log.d("CITY****", String.valueOf(city));
+        Log.d("LATITUDE: ", String.valueOf(latitude));
+        Log.d("LONGITUDE: ", String.valueOf(longitude));
+        Log.d("ADDRESS: ", String.valueOf(address));
+        Log.d("POSTALCODE: ", String.valueOf(postalcode));
+        Log.d("CITY: ", String.valueOf(city));
 
         LocationInfoModel locationInfoModel = new LocationInfoModel();
         locationInfoModel.setLongitude(String.valueOf(longitude));
@@ -358,6 +375,92 @@ public class MainNavScreen extends AppCompatActivity
 
     }
 
+    public void showImageChoosingDialog() {
+
+        LayoutInflater li = LayoutInflater.from(MainNavScreen.this);
+
+        View confirmDialog = li.inflate(R.layout.dialog_choose_image_options, null);
+
+        TextView btn_camera = confirmDialog.findViewById(R.id.open_camera);
+        TextView btn_gallery = confirmDialog.findViewById(R.id.open_gallery);
+
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(MainNavScreen.this);
+        alert.setView(confirmDialog);
+
+        final AlertDialog alertDialog = alert.create();
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        //alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        alertDialog.setCancelable(true);
+        alertDialog.show();
+
+
+        btn_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    checkCameraPermission();
+                } else {
+                    startImageCapture();
+                }
+
+            }
+        });
+        btn_gallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    checkstoragepermissionforimage();
+                } else {
+                    chooseImage();
+
+                }
+
+            }
+        });
+
+    }
+
+    private void checkCameraPermission() {
+        Dexter.withActivity(this)
+                .withPermissions(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        if (report.areAllPermissionsGranted())
+                            startImageCapture();
+                        else {
+                            Log.d(TAG, "onPermissionDenied: ");
+                            Toast.makeText(MainNavScreen.this, "Please allow the permission to proceed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                }).check();
+    }
+
+    private void startImageCapture() {
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        Random r = new Random();
+        int i1 = r.nextInt(1000) + 100;
+        File fs = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Farm2Fork");
+        if (!fs.exists())
+            fs.mkdirs();
+        File f = new File(fs, +i1 + ".jpg");
+        imageToUploadUri = FileProvider.getUriForFile(MainNavScreen.this, MainNavScreen.this.getApplicationContext().getPackageName() + ".provider", f);
+
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageToUploadUri);
+        cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        startActivityForResult(cameraIntent, CAMERA_REQUEST);
+    }
+
     public void showCommunityFragment(FarmModel farmModel) {
         onCommunityButtonClick(farmModel);
     }
@@ -396,5 +499,9 @@ public class MainNavScreen extends AppCompatActivity
 
     public void setToolbarTitle(String toolbarTitle) {
         getSupportActionBar().setTitle(toolbarTitle);
+    }
+
+    public void setImageCaptureListener(ImageCaptureListener imageCaptureListener) {
+        this.imageCaptureListener = imageCaptureListener;
     }
 }
