@@ -5,126 +5,56 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/crop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="12dp"
+        android:padding="8dp"
         android:text="Crop: Potato"
         android:textColor="#212121"
-        android:textSize="18dp"
+        android:textSize="16dp"
         android:textStyle="bold" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.7dp"
-        android:layout_marginTop="12dp"
 
         android:background="#424242" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+
+        android:orientation="horizontal"
+        android:paddingRight="8dp">
 
 
-        <LinearLayout
+        <TextView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="32dp"
+            android:layout_gravity="center_horizontal"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:paddingBottom="2dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:text="Mandi Name"
-                android:textColor="#212121"
-                android:textSize="16dp"
-                android:textStyle="bold" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.7dp"
-                android:layout_marginBottom="2dp"
-                android:background="#424242" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:padding="2dp"
-                android:text="Sabzi Mandi"
-                android:textColor="#212121"
-                android:textSize="14dp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:padding="2dp"
-                android:text="Grocery"
-                android:textColor="#212121"
-                android:textSize="14dp"
-                android:textStyle="bold" />
+            android:gravity="center"
+            android:paddingLeft="32dp"
+            android:paddingRight="32dp"
+            android:text="State"
+            android:textColor="#212121"
+            android:textSize="14dp"
+            android:textStyle="bold" />
 
 
-        </LinearLayout>
+        <TextView
+            android:layout_width="180dp"
 
-        <View
-            android:layout_width="0.7dp"
-            android:layout_height="match_parent"
-
-            android:background="#424242" />
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-
-            android:paddingBottom="2dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:text="Rates (Rs/Q)"
-                android:textColor="#212121"
-                android:textSize="16dp"
-                android:textStyle="bold" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.7dp"
-                android:layout_marginBottom="2dp"
-                android:background="#424242" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:padding="2dp"
-                android:text="1500"
-                android:textColor="#212121"
-                android:textSize="14dp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:padding="2dp"
-                android:text="1300"
-                android:textColor="#212121"
-                android:textSize="14dp"
-                android:textStyle="bold" />
+            android:layout_height="32dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:text="Prices (Rs/Quintal)"
+            android:textColor="#212121"
+            android:textSize="14dp"
+            android:textStyle="bold" />
 
 
-        </LinearLayout>
     </LinearLayout>
 
     <View
@@ -133,11 +63,72 @@
 
         android:background="#424242" />
 
-    <Button
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add mandi"
-        android:layout_gravity="center"
-        android:layout_marginTop="16dp"/>
+        android:orientation="horizontal"
+        android:paddingRight="8dp">
+
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Mandi Name"
+            android:textColor="#212121"
+            android:textSize="14dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="Max"
+            android:textColor="#212121"
+            android:textSize="14dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="Min"
+            android:textColor="#212121"
+            android:textSize="14dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:text="Modal"
+            android:textColor="#212121"
+            android:textSize="14dp"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/farmrecycelrview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:clipToPadding="false"
+        android:paddingBottom="2dp"
+
+        android:paddingTop="2dp" />
+
 
 </LinearLayout>

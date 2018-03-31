@@ -208,7 +208,11 @@ public class CommunityFragment extends Fragment {
                     feedsFragment.setArguments(bundle);
                     return feedsFragment;
                 case 2:
-                    return new PriceFragment();
+                    PriceFragment priceFragment = new PriceFragment();
+                    Bundle bundle2 = new Bundle();
+                    bundle2.putString("crop", farmModel.getCrop());
+                    priceFragment.setArguments(bundle2);
+                    return priceFragment;
                 case 3:
                     return new AboutFragment();
                 case 4:
