@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.farm.farm2fork.SplashScreen">
+    tools:context="com.farm.farm2fork.ui.login.LoginScreen">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,23 +14,23 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="36dp"
-            android:textColor="#000"
-            android:textStyle="bold"
             android:layout_gravity="center_horizontal"
+            android:text="Farm2Fork"
+            android:textColor="#000"
+            android:textSize="36dp"
 
-            android:text="Farm2Fork"/>
+            android:textStyle="bold" />
         <TextView
             android:layout_width="170dp"
             android:layout_height="wrap_content"
-            android:textSize="16dp"
-            android:gravity="center"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="64dp"
-            android:textColor="#212121"
             android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="64dp"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:text="Connecting farmers for effective farming"
+            android:textColor="#212121"
 
-            android:text="Connecting farmers for effective farming"/>
+            android:textSize="16dp" />
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
@@ -41,9 +41,9 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingTop="8dp"
+            android:text="Please enter your number to become a part of the Farm2Fork community. We shall send a verification code to verify it."
             android:textColor="#212121"
-            android:textSize="16dp"
-            android:text="Please enter your number to become a part of the Farm2Fork community. We shall send a verification code to verify it." />
+            android:textSize="16dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -59,17 +59,17 @@
                 android:paddingBottom="8dp"
                 android:paddingRight="2dp"
                 android:paddingTop="8dp"
+                android:text="+91"
                 android:textColor="#212121"
-                android:textSize="16dp"
-                android:text="+91" />
+                android:textSize="16dp" />
             <EditText
                 android:id="@+id/numberfield"
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
-                android:textColor="#212121"
+                android:inputType="phone"
                 android:paddingLeft="4dp"
 
-                android:inputType="phone"
+                android:textColor="#212121"
                 android:textSize="16dp"
                 />
 
@@ -77,13 +77,13 @@
         </LinearLayout>
         <Button
             android:id="@+id/btn_next"
-            android:layout_gravity="center"
             android:layout_width="wrap_content"
-            android:textAllCaps="false"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
             android:text="Next >"
-            android:layout_marginBottom="8dp"
-            android:layout_height="wrap_content" />
+            android:textAllCaps="false" />
 
 
     </LinearLayout>

@@ -8,8 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.farm.farm2fork.MainNavScreen;
 import com.farm.farm2fork.R;
+import com.farm.farm2fork.activity.MainNavScreen;
 
 /**
  * Created by master on 10/3/18.

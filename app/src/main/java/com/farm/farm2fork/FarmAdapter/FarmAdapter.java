@@ -8,9 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.farm.farm2fork.MainNavScreen;
 import com.farm.farm2fork.Models.FarmModel;
 import com.farm.farm2fork.R;
+import com.farm.farm2fork.activity.MainNavScreen;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,5 @@
 package com.farm.farm2fork.Fragment;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -22,13 +21,7 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.StringRequestListener;
 import com.farm.farm2fork.BuildConfig;
 import com.farm.farm2fork.R;
-import com.farm.farm2fork.SplashScreen;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
+import com.farm.farm2fork.ui.login.LoginScreen;
 
 import static com.farm.farm2fork.Fragment.AddFarmFragment.BASE_URL;
 
@@ -54,11 +47,12 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
+                ((LoginScreen) mContext).performLogin(numberfield.getText().toString().trim());
 
-               /* */
 
 
-                if (numberfield.getText().toString().trim().length() != 10) {
+
+               /* if (numberfield.getText().toString().trim().length() != 10) {
                     Toast.makeText(mContext, "Please enter valid number", Toast.LENGTH_SHORT).show();
                     // proceedtoOtpscreen();
                 } else {
@@ -66,31 +60,31 @@ public class LoginFragment extends Fragment {
                             .withPermission(Manifest.permission.READ_SMS)
                             .withListener(new PermissionListener() {
                                 @Override
-                                public void onPermissionGranted(PermissionGrantedResponse response) {
+                                public void onSMSPermissionGranted(PermissionGrantedResponse response) {
                                     progressDialog = new ProgressDialog(mContext);
                                     progressDialog.setMessage("Please Wait!");
                                     progressDialog.setCancelable(false);
                                     progressDialog.show();
-                                    ((SplashScreen) mContext).setnumber(numberfield.getText().toString().trim());
+                                    ((LoginScreen) mContext).setnumber(numberfield.getText().toString().trim());
                                     makeOtpReqtoserver(numberfield.getText().toString().trim());
                                 }
 
                                 @Override
-                                public void onPermissionDenied(PermissionDeniedResponse response) {/* ... */
+                                public void onPermissionDenied(PermissionDeniedResponse response) {*//* ... *//*
                                     progressDialog = new ProgressDialog(mContext);
                                     progressDialog.setMessage("Please Wait!");
                                     progressDialog.setCancelable(false);
                                     progressDialog.show();
-                                    ((SplashScreen) mContext).setnumber(numberfield.getText().toString().trim());
+                                    ((LoginScreen) mContext).setnumber(numberfield.getText().toString().trim());
                                     makeOtpReqtoserver(numberfield.getText().toString().trim());
                                 }
 
                                 @Override
-                                public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {/* ... */}
+                                public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {*//* ... *//*}
                             }).check();
 
 
-                }
+                }*/
 
             }
         });
@@ -147,7 +141,7 @@ public class LoginFragment extends Fragment {
             e.printStackTrace();
         }
 
-        FragmentManager fragmentManager = ((SplashScreen) mContext).getSupportFragmentManager();
+        FragmentManager fragmentManager = ((LoginScreen) mContext).getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fl, fragment).commit();
 
     }

@@ -16,13 +16,13 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.ParsedRequestListener;
+import com.farm.data.UserDataManager;
 import com.farm.farm2fork.CustomViews.ItemOffsetDecoration;
 import com.farm.farm2fork.FarmAdapter.FarmAdapter;
 import com.farm.farm2fork.Interface.NetRetryListener;
-import com.farm.farm2fork.MainNavScreen;
 import com.farm.farm2fork.Models.FarmModel;
 import com.farm.farm2fork.R;
-import com.farm.farm2fork.Utils.UserSessionManager;
+import com.farm.farm2fork.activity.MainNavScreen;
 
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class FarmFragment extends Fragment {
     private Activity mContext;
     private FarmAdapter farmAdapter;
     private View progressBar;
-    private UserSessionManager userSessionManager;
+    private UserDataManager userDataManager;
     private View view;
 
     @Override
@@ -52,9 +52,10 @@ public class FarmFragment extends Fragment {
                 ((ViewGroup) view.getParent()).removeView(view);
             return view;
         }
+
         view = inflater.inflate(R.layout.fragment_farm, container, false);
 
-        userSessionManager = new UserSessionManager(mContext);
+        userDataManager = new UserDataManager(mContext);
 
         progressBar = view.findViewById(R.id.progressbar);
         view.findViewById(R.id.community).setOnClickListener(new View.OnClickListener() {
@@ -87,8 +88,8 @@ public class FarmFragment extends Fragment {
     private void makefetchfarmReqtoserver() {
         progressBar.setVisibility(View.VISIBLE);
         AndroidNetworking.post(BASE_URL + "fetchfarms.php")
-                .addBodyParameter("authtoken", userSessionManager.getAuthToken())
-                .addBodyParameter("uid", userSessionManager.getUID())
+                .addBodyParameter("authtoken", userDataManager.getAuthToken())
+                .addBodyParameter("uid", userDataManager.getUid())
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsObjectList(FarmModel.class, new ParsedRequestListener<List<FarmModel>>() {

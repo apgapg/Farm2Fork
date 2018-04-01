@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -26,15 +28,18 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.farm.data.UserDataManager;
 import com.farm.farm2fork.CustomViews.customspinner.MaterialSpinner;
 import com.farm.farm2fork.Interface.ImagePathListener;
 import com.farm.farm2fork.Interface.LocationSetListener;
-import com.farm.farm2fork.MainNavScreen;
+import com.farm.farm2fork.Models.CropNameModel;
 import com.farm.farm2fork.Models.LocationInfoModel;
 import com.farm.farm2fork.R;
-import com.farm.farm2fork.Utils.UserSessionManager;
+import com.farm.farm2fork.activity.MainNavScreen;
 import com.kbeanie.multipicker.api.ImagePicker;
 import com.schibstedspain.leku.LocationPickerActivity;
+
+import java.util.List;
 
 /**
  * Created by master on 10/3/18.
@@ -46,9 +51,11 @@ public class AddFarmFragment extends Fragment {
     private Activity mContext;
     private Button btn_add;
     private TextView txt_location;
-    private UserSessionManager userSessionManager;
+    private UserDataManager userDataManager;
     private LocationInfoModel mlocationInfoModel;
-    private EditText ed_size, ed_crop;
+    private EditText ed_size;
+    private AutoCompleteTextView ed_crop;
+
     private boolean locationtaken = false;
     private ImageView cameraicon, mainimage;
     private ImagePicker imagePicker;
@@ -63,9 +70,17 @@ public class AddFarmFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_add_farm, container, false);
 
+        List<CropNameModel> cropNameList = CropNameModel.listAll(CropNameModel.class);
+        String[] croplist = new String[cropNameList.size()];
+        for (int i = 0; i < cropNameList.size(); i++) {
+            croplist[i] = cropNameList.get(i).getName();
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_list_item_1, croplist);
+
+
         ((MainNavScreen) mContext).setToolbarTitle("Add Farm");
 
-        userSessionManager = new UserSessionManager(mContext);
+        userDataManager = new UserDataManager(mContext);
         btn_add = view.findViewById(R.id.add);
         txt_location = view.findViewById(R.id.txt_location);
         cameraicon = view.findViewById(R.id.cameraicon);
@@ -131,6 +146,8 @@ public class AddFarmFragment extends Fragment {
         ed_size = view.findViewById(R.id.ed_size);
         ed_crop = view.findViewById(R.id.ed_crop);
 
+        ed_crop.setAdapter(adapter);
+
         ((MainNavScreen) mContext).setonLocationSetByUser(new LocationSetListener() {
 
             @Override
@@ -149,11 +166,9 @@ public class AddFarmFragment extends Fragment {
                 Intent intent = new LocationPickerActivity.Builder()
                         .withGooglePlacesEnabled()
                         .withGeolocApiKey("AIzaSyBtuQ0bOdBshWBziK31gyUY2wKFnQnrEyc")
-                        .withSearchZone("en_IN")
-
+                        .withSearchZone("en_in")
                         .shouldReturnOkOnBackPressed()
                         .withSatelliteViewHidden()
-
                         .build(mContext);
 
                 mContext.startActivityForResult(intent, 1);
@@ -207,8 +222,8 @@ public class AddFarmFragment extends Fragment {
                 .addBodyParameter("loc_long", mlocationInfoModel.getLongitude())
                 .addBodyParameter("postalCode", mlocationInfoModel.getPostalzipcode())
                 .addBodyParameter("loc_city", mlocationInfoModel.getCity())
-                .addBodyParameter("uid", userSessionManager.getUID())
-                .addBodyParameter("authtoken", userSessionManager.getAuthToken())
+                .addBodyParameter("uid", userDataManager.getUid())
+                .addBodyParameter("authtoken", userDataManager.getAuthToken())
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsString(new StringRequestListener() {

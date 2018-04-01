@@ -41,11 +41,11 @@ android {
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-  def supportVersion = '27.0.2'
+  def supportVersion = '27.1.0'
   implementation "com.android.support:appcompat-v7:$supportVersion"
   implementation "com.android.support:design:$supportVersion"
 
-  def playServicesVersion = '11.8.0'
+  def playServicesVersion = '12.0.1'
   implementation "com.google.android.gms:play-services-maps:$playServicesVersion"
   implementation "com.google.android.gms:play-services-location:$playServicesVersion"
   implementation "com.google.android.gms:play-services-places:$playServicesVersion"

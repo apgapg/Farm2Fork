@@ -10,10 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.farm.farm2fork.R;
-import com.farm.farm2fork.SplashScreen;
+import com.farm.farm2fork.ui.login.LoginScreen;
 
 import swarajsaaj.smscodereader.interfaces.OTPListener;
 import swarajsaaj.smscodereader.receivers.OtpReader;
@@ -42,11 +41,8 @@ public class OtpFragment extends Fragment implements OTPListener {
             @Override
             public void onClick(View view) {
 
-                if (ed_otp.getText().toString().trim().length() != 0) {
-                    ((SplashScreen) mContext).validateOtpReq(ed_otp.getText().toString().trim());
-                } else {
-                    Toast.makeText(mContext, "Please enter valid OTP", Toast.LENGTH_SHORT).show();
-                }
+                ((LoginScreen) mContext).performValidationOfOtp(ed_otp.getText().toString().trim());
+
             }
         });
 
@@ -71,12 +67,8 @@ public class OtpFragment extends Fragment implements OTPListener {
     @Override
     public void otpReceived(String messageText) {
         Log.d(TAG, "otpReceived: " + messageText);
-        try {
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        ((SplashScreen) mContext).validateOtpReq(messageText.replace("Your Reweyou authentication OTP: ", ""));
+        ((LoginScreen) mContext).onOtpReceived(messageText.replace("Your Reweyou authentication OTP: ", ""));
 
     }
 }

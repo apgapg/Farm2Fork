@@ -71,38 +71,39 @@ public class WeatherFragment extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d(TAG, "onResponse: " + response);
+                        if (isAdded())
 
-                        try {
-                            JSONArray jsonArray = response.getJSONArray("DailyForecasts");
-                            List<WeatherModel> list = new ArrayList<>();
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                WeatherModel weatherModel = new WeatherModel();
-                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            try {
+                                JSONArray jsonArray = response.getJSONArray("DailyForecasts");
+                                List<WeatherModel> list = new ArrayList<>();
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    WeatherModel weatherModel = new WeatherModel();
+                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
 
 
-                                weatherModel.setDate(sdf.format(new Date(jsonObject.getLong("EpochDate") * 1000)));
+                                    weatherModel.setDate(sdf.format(new Date(jsonObject.getLong("EpochDate") * 1000)));
 
-                                JSONObject jsonObjecttemp = jsonObject.getJSONObject("Temperature");
-                                JSONObject jsonObjectmax = jsonObjecttemp.getJSONObject("Maximum");
-                                weatherModel.setTemp_high(String.valueOf(jsonObjectmax.get("Value")));
-                                JSONObject jsonObjectmin = jsonObjecttemp.getJSONObject("Minimum");
-                                weatherModel.setTemp_low(String.valueOf(jsonObjectmin.get("Value")));
+                                    JSONObject jsonObjecttemp = jsonObject.getJSONObject("Temperature");
+                                    JSONObject jsonObjectmax = jsonObjecttemp.getJSONObject("Maximum");
+                                    weatherModel.setTemp_high(String.valueOf(jsonObjectmax.get("Value")));
+                                    JSONObject jsonObjectmin = jsonObjecttemp.getJSONObject("Minimum");
+                                    weatherModel.setTemp_low(String.valueOf(jsonObjectmin.get("Value")));
 
-                                JSONObject jsonObjectday = jsonObject.getJSONObject("Day");
-                                weatherModel.setDay_text(jsonObjectday.getString("IconPhrase"));
-                                weatherModel.setDay_rain_probability(String.valueOf(jsonObjectday.get("RainProbability")));
+                                    JSONObject jsonObjectday = jsonObject.getJSONObject("Day");
+                                    weatherModel.setDay_text(jsonObjectday.getString("IconPhrase"));
+                                    weatherModel.setDay_rain_probability(String.valueOf(jsonObjectday.get("RainProbability")));
 
-                                JSONObject jsonObjectnight = jsonObject.getJSONObject("Night");
-                                weatherModel.setNight_text(jsonObjectnight.getString("IconPhrase"));
-                                weatherModel.setNight_rain_probability(String.valueOf(jsonObjectnight.get("RainProbability")));
+                                    JSONObject jsonObjectnight = jsonObject.getJSONObject("Night");
+                                    weatherModel.setNight_text(jsonObjectnight.getString("IconPhrase"));
+                                    weatherModel.setNight_rain_probability(String.valueOf(jsonObjectnight.get("RainProbability")));
 
-                                list.add(weatherModel);
+                                    list.add(weatherModel);
+                                }
+                                weatherAdapter.add(list);
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                            weatherAdapter.add(list);
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
                     }
 
                     @Override

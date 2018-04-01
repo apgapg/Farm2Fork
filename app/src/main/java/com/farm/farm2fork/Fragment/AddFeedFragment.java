@@ -25,10 +25,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.farm.data.UserDataManager;
 import com.farm.farm2fork.Interface.ImagePathListener;
-import com.farm.farm2fork.MainNavScreen;
 import com.farm.farm2fork.R;
-import com.farm.farm2fork.Utils.UserSessionManager;
+import com.farm.farm2fork.activity.MainNavScreen;
 import com.kbeanie.multipicker.api.ImagePicker;
 
 /**
@@ -41,7 +41,7 @@ public class AddFeedFragment extends Fragment {
     private Activity mContext;
     private Button btn_add;
     private TextView txt_crop;
-    private UserSessionManager userSessionManager;
+    private UserDataManager userDataManager;
     private ImageView cameraicon, mainimage;
     private ImagePicker imagePicker;
     private String imagepath = "";
@@ -55,7 +55,7 @@ public class AddFeedFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_add_feed, container, false);
         ((MainNavScreen) mContext).setToolbarTitle("Add Post");
 
-        userSessionManager = new UserSessionManager(mContext);
+        userDataManager = new UserDataManager(mContext);
         btn_add = view.findViewById(R.id.add);
         txt_crop = view.findViewById(R.id.txt_crop);
         ed_description = view.findViewById(R.id.ed_des);
@@ -120,8 +120,8 @@ public class AddFeedFragment extends Fragment {
                 .addBodyParameter("image", imageencoded)
                 .addBodyParameter("city", getArguments().getString("city"))
                 .addBodyParameter("name", "Ayush P Gupta")
-                .addBodyParameter("uid", userSessionManager.getUID())
-                .addBodyParameter("authtoken", userSessionManager.getAuthToken())
+                .addBodyParameter("uid", userDataManager.getUid())
+                .addBodyParameter("authtoken", userDataManager.getAuthToken())
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsString(new StringRequestListener() {

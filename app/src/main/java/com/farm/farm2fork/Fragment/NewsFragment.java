@@ -16,11 +16,11 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.ParsedRequestListener;
+import com.farm.data.UserDataManager;
 import com.farm.farm2fork.CustomViews.ItemOffsetDecoration;
 import com.farm.farm2fork.FarmAdapter.NewsAdapter;
 import com.farm.farm2fork.Models.NewsModel;
 import com.farm.farm2fork.R;
-import com.farm.farm2fork.Utils.UserSessionManager;
 
 import java.util.List;
 
@@ -35,7 +35,7 @@ public class NewsFragment extends Fragment {
     private RecyclerView recyclerView;
     private Activity mContext;
     private View progressbar;
-    private UserSessionManager userSessionManager;
+    private UserDataManager userDataManager;
     private NewsAdapter newsAdapter;
 
     @Override
@@ -45,7 +45,7 @@ public class NewsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_news, container, false);
         progressbar = view.findViewById(R.id.progressbar);
 
-        userSessionManager = new UserSessionManager(mContext);
+        userDataManager = new UserDataManager(mContext);
 
         recyclerView = view.findViewById(R.id.farmrecycelrview);
 
@@ -66,24 +66,22 @@ public class NewsFragment extends Fragment {
     private void makefetchnewsReqtoserver() {
         progressbar.setVisibility(View.VISIBLE);
         AndroidNetworking.post(BASE_URL + "fetchnews.php")
-                .addBodyParameter("authtoken", userSessionManager.getAuthToken())
-                .addBodyParameter("uid", userSessionManager.getUID())
+                .addBodyParameter("authtoken", userDataManager.getAuthToken())
+                .addBodyParameter("uid", userDataManager.getUid())
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsObjectList(NewsModel.class, new ParsedRequestListener<List<NewsModel>>() {
                     @Override
                     public void onResponse(final List<NewsModel> response) {
-
-                        progressbar.setVisibility(View.INVISIBLE);
-
-                        new Handler().post(new Runnable() {
-                            @Override
-                            public void run() {
-                                newsAdapter.add(response);
-
-
-                            }
-                        });
+                        if (isAdded()) {
+                            progressbar.setVisibility(View.INVISIBLE);
+                            new Handler().post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    newsAdapter.add(response);
+                                }
+                            });
+                        }
 
                     }
 

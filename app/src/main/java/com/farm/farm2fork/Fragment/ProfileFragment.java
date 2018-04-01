@@ -13,8 +13,8 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.StringRequestListener;
-import com.farm.farm2fork.MainNavScreen;
 import com.farm.farm2fork.R;
+import com.farm.farm2fork.activity.MainNavScreen;
 
 import static com.farm.farm2fork.Fragment.AddFarmFragment.BASE_URL;
 

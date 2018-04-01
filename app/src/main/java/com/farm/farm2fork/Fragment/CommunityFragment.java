@@ -20,9 +20,9 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
-import com.farm.farm2fork.MainNavScreen;
 import com.farm.farm2fork.Models.FarmModel;
 import com.farm.farm2fork.R;
+import com.farm.farm2fork.activity.MainNavScreen;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -109,23 +109,7 @@ public class CommunityFragment extends Fragment {
         });
 
         getWeatherData(farmModel.getLoc_key());
-      /*  ((MainNavScreen) mContext).setonWeatherDataReceivedListener(new Weatherlistener() {
-            @Override
-            public void onWeatherDataReceived(WeatherInfo weatherInfo) {
-                Log.d(TAG, "onWeatherDataReceived: " + weatherInfo.getCurrentTemp());
-                currenttemp.setText(String.valueOf(weatherInfo.getCurrentTemp()) + "°c");
-                txtforecast.setText(String.valueOf(weatherInfo.getCurrentText()));
-                txthumidity.setText(String.valueOf(weatherInfo.getAtmosphereHumidity()));
-                txtwind.setText(String.valueOf(weatherInfo.getWindSpeed() + " mph"));
 
-                if (pagerAdapter.getRegisteredFragment(0) != null) {
-                  //  ((WeatherFragment) pagerAdapter.getRegisteredFragment(0)).onWeatherDataReceived(weatherInfo.getForecastInfoList());
-                }
-
-            }
-        });*/
-
-        // ((MainNavScreen) mContext).reqWeatherInfo(farmModel.getLoc_lat(), farmModel.getLoc_long());
         return view;
     }
 
@@ -136,24 +120,26 @@ public class CommunityFragment extends Fragment {
                 .getAsJSONArray(new JSONArrayRequestListener() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        try {
-                            JSONObject jsonObject = response.getJSONObject(0);
-                            txtforecast.setText(jsonObject.getString("WeatherText"));
+                        if (isAdded()) {
+                            try {
+                                JSONObject jsonObject = response.getJSONObject(0);
+                                txtforecast.setText(jsonObject.getString("WeatherText"));
 
 
-                            JSONObject jsonObjectTemp = jsonObject.getJSONObject("Temperature");
-                            JSONObject jsonObjecttempMetric = jsonObjectTemp.getJSONObject("Metric");
-                            currenttemp.setText(String.valueOf(jsonObjecttempMetric.get("Value")) + "°c");
-                            txthumidity.setText(jsonObject.getString("RelativeHumidity") + "%");
+                                JSONObject jsonObjectTemp = jsonObject.getJSONObject("Temperature");
+                                JSONObject jsonObjecttempMetric = jsonObjectTemp.getJSONObject("Metric");
+                                currenttemp.setText(String.valueOf(jsonObjecttempMetric.get("Value")) + "°c");
+                                txthumidity.setText(jsonObject.getString("RelativeHumidity") + "%");
 
-                            JSONObject jsonObjectwind = jsonObject.getJSONObject("Wind");
-                            JSONObject jsonObjectspeed = jsonObjectwind.getJSONObject("Speed");
-                            JSONObject jsonObjectwindmetric = jsonObjectspeed.getJSONObject("Metric");
-                            txtwind.setText(String.valueOf(jsonObjectwindmetric.get("Value")) + " km/h");
+                                JSONObject jsonObjectwind = jsonObject.getJSONObject("Wind");
+                                JSONObject jsonObjectspeed = jsonObjectwind.getJSONObject("Speed");
+                                JSONObject jsonObjectwindmetric = jsonObjectspeed.getJSONObject("Metric");
+                                txtwind.setText(String.valueOf(jsonObjectwindmetric.get("Value")) + " km/h");
 
 
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
 
@@ -168,18 +154,12 @@ public class CommunityFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
+        Log.d(TAG, "onAttach: ");
         if (context instanceof Activity)
             mContext = (Activity) context;
         else throw new IllegalArgumentException("Context should be an instance of Activity");
     }
-
-    @Override
-    public void onDestroy() {
-        mContext = null;
-        super.onDestroy();
-
-    }
-
 
     private class PagerAdapter extends FragmentStatePagerAdapter {
         SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();

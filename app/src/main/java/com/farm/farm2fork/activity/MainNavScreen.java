@@ -1,4 +1,4 @@
-package com.farm.farm2fork;
+package com.farm.farm2fork.activity;
 
 import android.Manifest;
 import android.app.Activity;
@@ -29,6 +29,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.farm.data.UserDataManager;
 import com.farm.farm2fork.Fragment.AboutFragment;
 import com.farm.farm2fork.Fragment.AddFarmFragment;
 import com.farm.farm2fork.Fragment.AddFeedFragment;
@@ -41,8 +46,10 @@ import com.farm.farm2fork.Interface.ImagePathListener;
 import com.farm.farm2fork.Interface.LocationSetListener;
 import com.farm.farm2fork.Interface.NetRetryListener;
 import com.farm.farm2fork.Interface.Weatherlistener;
+import com.farm.farm2fork.Models.CropNameModel;
 import com.farm.farm2fork.Models.FarmModel;
 import com.farm.farm2fork.Models.LocationInfoModel;
+import com.farm.farm2fork.R;
 import com.google.gson.Gson;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -58,13 +65,19 @@ import com.kbeanie.multipicker.api.callbacks.ImagePickerCallback;
 import com.kbeanie.multipicker.api.entity.ChosenImage;
 import com.schibstedspain.leku.LocationPickerActivity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import zh.wang.android.yweathergetter4a.WeatherInfo;
 import zh.wang.android.yweathergetter4a.YahooWeather;
 import zh.wang.android.yweathergetter4a.YahooWeatherInfoListener;
+
+import static com.farm.farm2fork.Fragment.AddFarmFragment.BASE_URL;
 
 public class MainNavScreen extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, YahooWeatherInfoListener {
@@ -80,6 +93,7 @@ public class MainNavScreen extends AppCompatActivity
     private NetRetryListener networkReqRetryListner;
     private ImageCaptureListener imageCaptureListener;
     private Uri imageToUploadUri;
+    private UserDataManager userDataManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +101,13 @@ public class MainNavScreen extends AppCompatActivity
         setContentView(R.layout.activity_main_nav_screen);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        userDataManager = new UserDataManager(this);
+
+        if (!userDataManager.getvaluefromsharedprefBoolean("croplistfetch")) {
+            fetchcropdata();
+        }
+
 
         // weatherlistener= (Weatherlistener) this;
 
@@ -113,6 +134,36 @@ public class MainNavScreen extends AppCompatActivity
         fragmentManager.beginTransaction().replace(R.id.fl, fragment).commit();
 
 
+    }
+
+    private void fetchcropdata() {
+        AndroidNetworking.get(BASE_URL + "data_crop_list.php")
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        try {
+
+                            List<CropNameModel> croplist = new ArrayList<>();
+                            for (int i = 0; i < response.length(); i++) {
+                                croplist.add(new CropNameModel(response.getString("" + i)));
+                            }
+                            CropNameModel.saveInTx(croplist);
+                            userDataManager.putinsharedprefBoolean("croplistfetch", true);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        Log.d(TAG, "onError: " + anError.getResponse());
+                    }
+                });
     }
 
     @Override

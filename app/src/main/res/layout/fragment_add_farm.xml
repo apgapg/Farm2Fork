@@ -16,14 +16,16 @@
         android:textSize="16dp"
         android:textStyle="bold" />
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/ed_crop"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="8dp"
+
         android:background="@drawable/border_farm_card"
         android:gravity="center_vertical"
         android:hint="Crop Name"
+        android:lines="1"
         android:paddingLeft="8dp"
         android:textColor="#f44336"
         android:textSize="16dp"

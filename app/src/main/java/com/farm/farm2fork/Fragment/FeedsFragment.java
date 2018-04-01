@@ -16,13 +16,13 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.ParsedRequestListener;
+import com.farm.data.UserDataManager;
 import com.farm.farm2fork.CustomViews.ItemOffsetDecoration;
 import com.farm.farm2fork.FarmAdapter.FeedsAdapter;
 import com.farm.farm2fork.Interface.NetRetryListener;
-import com.farm.farm2fork.MainNavScreen;
 import com.farm.farm2fork.Models.FeedsModel;
 import com.farm.farm2fork.R;
-import com.farm.farm2fork.Utils.UserSessionManager;
+import com.farm.farm2fork.activity.MainNavScreen;
 
 import java.util.List;
 
@@ -36,7 +36,7 @@ public class FeedsFragment extends Fragment {
     private static final String TAG = FeedsFragment.class.getName();
     private RecyclerView recyclerView;
     private Activity mContext;
-    private UserSessionManager userSessionManager;
+    private UserDataManager userDataManager;
     private View progressbar;
     private FeedsAdapter feedsAdapter;
     private String crop, city;
@@ -62,7 +62,7 @@ public class FeedsFragment extends Fragment {
         });*/
 
         recyclerView = view.findViewById(R.id.farmrecycelrview);
-        userSessionManager = new UserSessionManager(mContext);
+        userDataManager = new UserDataManager(mContext);
         feedsAdapter = new FeedsAdapter(mContext);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -89,8 +89,8 @@ public class FeedsFragment extends Fragment {
         progressbar.setVisibility(View.VISIBLE);
         AndroidNetworking.post(BASE_URL + "fetchfeeds.php")
                 .addBodyParameter("crop", crop)
-                .addBodyParameter("authtoken", userSessionManager.getAuthToken())
-                .addBodyParameter("uid", userSessionManager.getUID())
+                .addBodyParameter("authtoken", userDataManager.getAuthToken())
+                .addBodyParameter("uid", userDataManager.getUid())
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsObjectList(FeedsModel.class, new ParsedRequestListener<List<FeedsModel>>() {
