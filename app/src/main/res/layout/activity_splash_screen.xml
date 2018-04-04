@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.farm.farm2fork.ui.login.LoginScreen">
+    tools:context="com.farm.farm2fork.ui.login.LoginActivity">
 
    <FrameLayout
        android:id="@+id/fl"

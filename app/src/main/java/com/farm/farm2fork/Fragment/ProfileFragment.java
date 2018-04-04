@@ -14,7 +14,7 @@ import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.StringRequestListener;
 import com.farm.farm2fork.R;
-import com.farm.farm2fork.activity.MainNavScreen;
+import com.farm.farm2fork.ui.mainfarmscreen.MainFarmScreen;
 
 import static com.farm.farm2fork.Fragment.AddFarmFragment.BASE_URL;
 
@@ -32,7 +32,7 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        ((MainNavScreen) mContext).setToolbarTitle("Profile");
+        ((MainFarmScreen) mContext).setToolbarTitle("Profile");
 
         btn_save = view.findViewById(R.id.btn_save);
 

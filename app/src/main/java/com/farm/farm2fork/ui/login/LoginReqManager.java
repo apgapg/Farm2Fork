@@ -2,7 +2,6 @@ package com.farm.farm2fork.ui.login;
 
 import android.content.Context;
 import android.provider.Settings;
-import android.util.Log;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
@@ -10,8 +9,11 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.androidnetworking.interfaces.StringRequestListener;
 import com.farm.farm2fork.BuildConfig;
+import com.farm.farm2fork.Utils.NetworkUtils;
 
 import org.json.JSONObject;
+
+import static com.farm.farm2fork.Utils.Constants.BASE_URL;
 
 /**
  * Created by master on 1/4/18.
@@ -19,11 +21,8 @@ import org.json.JSONObject;
 
 public class LoginReqManager {
 
-    public static final String BASE_URL = "https://www.reweyou.in/fasalapp/";
     private static final String TAG = LoginReqManager.class.getName();
     private final OnOtpNetworkReq onOtpNetworkReq;
-
-
     public LoginReqManager(OnOtpNetworkReq onOtpNetworkReq) {
         this.onOtpNetworkReq = onOtpNetworkReq;
     }
@@ -42,22 +41,16 @@ public class LoginReqManager {
                 .getAsString(new StringRequestListener() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d(TAG, "onResponse: " + response);
-
-
+                        NetworkUtils.parseResponse(TAG, response);
                         if (response.contains("success"))
                             onOtpNetworkReq.onOtpReqSuccess();
-                        else
-                            onOtpNetworkReq.onOtpReqFail();
-
 
                     }
 
                     @Override
                     public void onError(ANError anError) {
-                        Log.d(TAG, "onError: " + anError);
+                        NetworkUtils.parseError(TAG, anError);
                         onOtpNetworkReq.onOtpReqFail();
-
                     }
                 });
     }
@@ -71,16 +64,14 @@ public class LoginReqManager {
                 .getAsJSONObject(new JSONObjectRequestListener() {
                     @Override
                     public void onResponse(JSONObject response) {
-
+                        NetworkUtils.parseResponse(TAG, response);
                         onOtpNetworkReq.onOtpCorrect(response);
                     }
 
                     @Override
                     public void onError(ANError anError) {
-
-                        Log.d(TAG, "onError: " + anError);
+                        NetworkUtils.parseError(TAG, anError);
                         onOtpNetworkReq.onOtpIncorrect();
-
                     }
                 });
     }
@@ -90,11 +81,10 @@ public class LoginReqManager {
 
         void onOtpReqFail();
 
-        void showProgressBar();
-
         void onOtpIncorrect();
 
         void onOtpCorrect(JSONObject response);
     }
+
 
 }

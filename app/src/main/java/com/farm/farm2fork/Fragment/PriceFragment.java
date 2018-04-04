@@ -16,10 +16,10 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.ParsedRequestListener;
-import com.farm.data.UserDataManager;
 import com.farm.farm2fork.FarmAdapter.PriceAdapter;
 import com.farm.farm2fork.Models.PriceModel;
 import com.farm.farm2fork.R;
+import com.farm.farm2fork.data.UserDataManager;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

@@ -1,6 +1,14 @@
-package com.farm.data;
+package com.farm.farm2fork.data;
 
 import android.content.Context;
+
+import com.farm.farm2fork.Models.CropNameModel;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by master on 1/4/18.
@@ -48,5 +56,23 @@ public class UserDataManager {
 
     public Boolean getvaluefromsharedprefBoolean(String key) {
         return sharedPrefsHelper.getvaluefromsharedprefBoolean(key);
+    }
+
+    public boolean saveCropList(JSONObject response) {
+        try {
+
+            List<CropNameModel> croplist = new ArrayList<>();
+            for (int i = 0; i < response.length(); i++) {
+                croplist.add(new CropNameModel(response.getString("" + i)));
+            }
+            CropNameModel.saveInTx(croplist);
+            return true;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return false;
+
+        }
+
     }
 }

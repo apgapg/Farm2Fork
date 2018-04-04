@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.farm.farm2fork.R;
-import com.farm.farm2fork.ui.login.LoginScreen;
+import com.farm.farm2fork.ui.login.LoginActivity;
 
 import swarajsaaj.smscodereader.interfaces.OTPListener;
 import swarajsaaj.smscodereader.receivers.OtpReader;
@@ -41,7 +41,7 @@ public class OtpFragment extends Fragment implements OTPListener {
             @Override
             public void onClick(View view) {
 
-                ((LoginScreen) mContext).performValidationOfOtp(ed_otp.getText().toString().trim());
+                ((LoginActivity) mContext).performValidationOfOtp(ed_otp.getText().toString().trim());
 
             }
         });
@@ -68,7 +68,7 @@ public class OtpFragment extends Fragment implements OTPListener {
     public void otpReceived(String messageText) {
         Log.d(TAG, "otpReceived: " + messageText);
 
-        ((LoginScreen) mContext).onOtpReceived(messageText.replace("Your Reweyou authentication OTP: ", ""));
+        ((LoginActivity) mContext).onOtpReceived(messageText.replace("Your Reweyou authentication OTP: ", ""));
 
     }
 }

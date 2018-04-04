@@ -16,13 +16,13 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.ParsedRequestListener;
-import com.farm.data.UserDataManager;
 import com.farm.farm2fork.CustomViews.ItemOffsetDecoration;
 import com.farm.farm2fork.FarmAdapter.FeedsAdapter;
 import com.farm.farm2fork.Interface.NetRetryListener;
 import com.farm.farm2fork.Models.FeedsModel;
 import com.farm.farm2fork.R;
-import com.farm.farm2fork.activity.MainNavScreen;
+import com.farm.farm2fork.data.UserDataManager;
+import com.farm.farm2fork.ui.mainfarmscreen.MainFarmScreen;
 
 import java.util.List;
 
@@ -57,7 +57,7 @@ public class FeedsFragment extends Fragment {
        /* view.findViewById(R.id.addpost).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainNavScreen) mContext).showAddFeedFragment(crop,city);
+                ((MainFarmScreen) mContext).showAddFeedFragment(crop,city);
             }
         });*/
 
@@ -72,7 +72,7 @@ public class FeedsFragment extends Fragment {
         recyclerView.setAdapter(feedsAdapter);
 
         makefetchfarmReqtoserver();
-        ((MainNavScreen) mContext).setnetworkReqRetryListner(new NetRetryListener() {
+        ((MainFarmScreen) mContext).setnetworkReqRetryListner(new NetRetryListener() {
             @Override
             public void onNetReqRetry(String name) {
                 if (name.equals(FeedsFragment.class.getName())) {
@@ -114,7 +114,7 @@ public class FeedsFragment extends Fragment {
                     @Override
                     public void onError(ANError anError) {
                         progressbar.setVisibility(View.INVISIBLE);
-                        ((MainNavScreen) mContext).showSnackBarNetError(FeedsFragment.class.getName());
+                        ((MainFarmScreen) mContext).showSnackBarNetError(FeedsFragment.class.getName());
 
                         Log.d(TAG, "onError: " + anError);
                     }

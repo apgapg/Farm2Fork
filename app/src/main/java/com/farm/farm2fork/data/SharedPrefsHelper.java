@@ -1,4 +1,4 @@
-package com.farm.data;
+package com.farm.farm2fork.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;

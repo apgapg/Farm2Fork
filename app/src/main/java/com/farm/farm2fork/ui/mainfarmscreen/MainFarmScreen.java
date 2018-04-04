@@ -1,4 +1,4 @@
-package com.farm.farm2fork.activity;
+package com.farm.farm2fork.ui.mainfarmscreen;
 
 import android.Manifest;
 import android.app.Activity;
@@ -20,7 +20,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,11 +28,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.common.Priority;
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONObjectRequestListener;
-import com.farm.data.UserDataManager;
 import com.farm.farm2fork.Fragment.AboutFragment;
 import com.farm.farm2fork.Fragment.AddFarmFragment;
 import com.farm.farm2fork.Fragment.AddFeedFragment;
@@ -41,15 +35,13 @@ import com.farm.farm2fork.Fragment.CommunityFragment;
 import com.farm.farm2fork.Fragment.ContactUsFragment;
 import com.farm.farm2fork.Fragment.FarmFragment;
 import com.farm.farm2fork.Fragment.ProfileFragment;
-import com.farm.farm2fork.Interface.ImageCaptureListener;
 import com.farm.farm2fork.Interface.ImagePathListener;
 import com.farm.farm2fork.Interface.LocationSetListener;
 import com.farm.farm2fork.Interface.NetRetryListener;
-import com.farm.farm2fork.Interface.Weatherlistener;
-import com.farm.farm2fork.Models.CropNameModel;
 import com.farm.farm2fork.Models.FarmModel;
 import com.farm.farm2fork.Models.LocationInfoModel;
 import com.farm.farm2fork.R;
+import com.farm.farm2fork.data.UserDataManager;
 import com.google.gson.Gson;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -65,33 +57,19 @@ import com.kbeanie.multipicker.api.callbacks.ImagePickerCallback;
 import com.kbeanie.multipicker.api.entity.ChosenImage;
 import com.schibstedspain.leku.LocationPickerActivity;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import zh.wang.android.yweathergetter4a.WeatherInfo;
-import zh.wang.android.yweathergetter4a.YahooWeather;
-import zh.wang.android.yweathergetter4a.YahooWeatherInfoListener;
+public class MainFarmScreen extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-import static com.farm.farm2fork.Fragment.AddFarmFragment.BASE_URL;
-
-public class MainNavScreen extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, YahooWeatherInfoListener {
-
-    private static final String TAG = MainNavScreen.class.getName();
+    private static final String TAG = MainFarmScreen.class.getName();
     private static final int CAMERA_REQUEST = 24;
-    private RecyclerView recyclerView;
-    private boolean isOtherScreen = false;
-    private Weatherlistener onWeatherDataReceivedListener;
+
     private LocationSetListener locationSetByUser;
     private ImagePicker imagePicker;
     private ImagePathListener onImagePathListener;
     private NetRetryListener networkReqRetryListner;
-    private ImageCaptureListener imageCaptureListener;
     private Uri imageToUploadUri;
     private UserDataManager userDataManager;
 
@@ -101,16 +79,20 @@ public class MainNavScreen extends AppCompatActivity
         setContentView(R.layout.activity_main_nav_screen);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setToolbarTitle("Welcome");
 
-        userDataManager = new UserDataManager(this);
+        setUpNavDrawer(toolbar);
 
-        if (!userDataManager.getvaluefromsharedprefBoolean("croplistfetch")) {
-            fetchcropdata();
-        }
+        FarmFragment farmFragment = new FarmFragment();
+        showFragment(farmFragment);
+
+        MainFarmPresentor mainFarmPresentor = new MainFarmPresentor(this, farmFragment);
+        mainFarmPresentor.fetchCropNameList();
 
 
-        // weatherlistener= (Weatherlistener) this;
+    }
 
+    private void setUpNavDrawer(Toolbar toolbar) {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -119,52 +101,17 @@ public class MainNavScreen extends AppCompatActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
 
-
-        Fragment fragment = null;
-        Class fragmentClass = null;
-        fragmentClass = FarmFragment.class;
+    private void showFragment(Fragment fragment) {
         try {
-            fragment = (Fragment) fragmentClass.newInstance();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.fl, fragment).commit();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.fl, fragment).commit();
-
-
     }
 
-    private void fetchcropdata() {
-        AndroidNetworking.get(BASE_URL + "data_crop_list.php")
-                .setPriority(Priority.MEDIUM)
-                .build()
-                .getAsJSONObject(new JSONObjectRequestListener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        try {
-
-                            List<CropNameModel> croplist = new ArrayList<>();
-                            for (int i = 0; i < response.length(); i++) {
-                                croplist.add(new CropNameModel(response.getString("" + i)));
-                            }
-                            CropNameModel.saveInTx(croplist);
-                            userDataManager.putinsharedprefBoolean("croplistfetch", true);
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-
-                        }
-                    }
-
-                    @Override
-                    public void onError(ANError anError) {
-                        Log.d(TAG, "onError: " + anError.getResponse());
-                    }
-                });
-    }
 
     @Override
     public void onBackPressed() {
@@ -216,7 +163,6 @@ public class MainNavScreen extends AppCompatActivity
             fragment = (Fragment) fragmentClass.newInstance();
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.fl, fragment).addToBackStack(null).commit();
-            isOtherScreen = true;
         } catch (Exception e) {
             e.printStackTrace();
             //throw new NullPointerException("Fragment is null");
@@ -243,7 +189,6 @@ public class MainNavScreen extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fl, fragment).addToBackStack(null).commit();
 
-        isOtherScreen = true;
 
     }
 
@@ -261,23 +206,11 @@ public class MainNavScreen extends AppCompatActivity
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.fl, communityFragment).addToBackStack(null).commit();
-            isOtherScreen = true;
         } catch (Exception e) {
             throw new NullPointerException("Fragment is null");
         }
 
 
-    }
-
-    @Override
-    public void gotWeatherInfo(WeatherInfo weatherInfo, YahooWeather.ErrorType errorType) {
-        if (weatherInfo != null) {
-
-            Log.d(TAG, "gotWeatherInfo: " + weatherInfo.getLocationRegion() + "  ** " + weatherInfo);
-            onWeatherDataReceivedListener.onWeatherDataReceived(weatherInfo);
-
-
-        } else Log.d(TAG, "gotWeatherInfo: error:  " + errorType);
     }
 
 
@@ -366,7 +299,7 @@ public class MainNavScreen extends AppCompatActivity
     }
 
     public void showSnackBar() {
-        Snackbar.make(findViewById(R.id.cl), "Start by Adding your Farm", 4000).show();
+        Snackbar.make(findViewById(R.id.cl), "Start by Adding your Farm", 3500).show();
     }
 
     public void chooseImage() {
@@ -413,7 +346,7 @@ public class MainNavScreen extends AppCompatActivity
 
                     @Override
                     public void onPermissionDenied(PermissionDeniedResponse response) {
-                        Toast.makeText(MainNavScreen.this, "Please allow the permission to proceed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainFarmScreen.this, "Please allow the permission to proceed", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -428,7 +361,7 @@ public class MainNavScreen extends AppCompatActivity
 
     public void showImageChoosingDialog() {
 
-        LayoutInflater li = LayoutInflater.from(MainNavScreen.this);
+        LayoutInflater li = LayoutInflater.from(MainFarmScreen.this);
 
         View confirmDialog = li.inflate(R.layout.dialog_choose_image_options, null);
 
@@ -436,7 +369,7 @@ public class MainNavScreen extends AppCompatActivity
         TextView btn_gallery = confirmDialog.findViewById(R.id.open_gallery);
 
 
-        AlertDialog.Builder alert = new AlertDialog.Builder(MainNavScreen.this);
+        AlertDialog.Builder alert = new AlertDialog.Builder(MainFarmScreen.this);
         alert.setView(confirmDialog);
 
         final AlertDialog alertDialog = alert.create();
@@ -484,7 +417,7 @@ public class MainNavScreen extends AppCompatActivity
                             startImageCapture();
                         else {
                             Log.d(TAG, "onPermissionDenied: ");
-                            Toast.makeText(MainNavScreen.this, "Please allow the permission to proceed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainFarmScreen.this, "Please allow the permission to proceed", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -504,7 +437,7 @@ public class MainNavScreen extends AppCompatActivity
         if (!fs.exists())
             fs.mkdirs();
         File f = new File(fs, +i1 + ".jpg");
-        imageToUploadUri = FileProvider.getUriForFile(MainNavScreen.this, MainNavScreen.this.getApplicationContext().getPackageName() + ".provider", f);
+        imageToUploadUri = FileProvider.getUriForFile(MainFarmScreen.this, MainFarmScreen.this.getApplicationContext().getPackageName() + ".provider", f);
 
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageToUploadUri);
         cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -541,7 +474,6 @@ public class MainNavScreen extends AppCompatActivity
             addFeedFragment.setArguments(bundle);
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.fl, addFeedFragment).addToBackStack(null).commit();
-            isOtherScreen = true;
         } catch (Exception e) {
             throw new NullPointerException("Fragment is null");
         }
@@ -552,7 +484,5 @@ public class MainNavScreen extends AppCompatActivity
         getSupportActionBar().setTitle(toolbarTitle);
     }
 
-    public void setImageCaptureListener(ImageCaptureListener imageCaptureListener) {
-        this.imageCaptureListener = imageCaptureListener;
-    }
+
 }

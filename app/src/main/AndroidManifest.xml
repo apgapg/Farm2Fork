@@ -69,7 +69,7 @@
         </receiver>
 
         <activity
-            android:name=".ui.login.LoginScreen"
+            android:name=".ui.login.LoginActivity"
             android:screenOrientation="portrait"
 
             android:theme="@style/AppTheme.NoActionBar">
@@ -83,7 +83,7 @@
             android:name=".MainScreen"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.MainNavScreen"
+            android:name=".ui.mainfarmscreen.MainFarmScreen"
             android:label="@string/title_activity_main_nav_screen"
 
             android:screenOrientation="portrait"

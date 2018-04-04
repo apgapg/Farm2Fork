@@ -4,8 +4,8 @@ import android.content.Context;
 import android.os.Build;
 import android.text.TextUtils;
 
-import com.farm.data.PermissionHelper;
-import com.farm.data.UserDataManager;
+import com.farm.farm2fork.data.PermissionHelper;
+import com.farm.farm2fork.data.UserDataManager;
 
 import org.json.JSONObject;
 
@@ -60,7 +60,6 @@ public class LoginPresentorImp implements LoginPresentor, LoginReqManager.OnOtpN
         }
     }
 
-
     @Override
     public void onOtpReqSuccess() {
         loginView.hideProgressBar();
@@ -71,21 +70,12 @@ public class LoginPresentorImp implements LoginPresentor, LoginReqManager.OnOtpN
     public void onOtpReqFail() {
         loginView.hideProgressBar();
         loginView.onOtpReqFail();
-
-
-    }
-
-    @Override
-    public void showProgressBar() {
-        loginView.showProgressBar();
-
     }
 
     @Override
     public void onOtpIncorrect() {
         loginView.hideProgressBar();
         loginView.onOtpIncorrect();
-
     }
 
     @Override
@@ -96,7 +86,6 @@ public class LoginPresentorImp implements LoginPresentor, LoginReqManager.OnOtpN
             loginView.onOtpCorrect();
         } catch (Exception e) {
             e.printStackTrace();
-
         }
     }
 

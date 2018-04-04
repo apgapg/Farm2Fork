@@ -37,7 +37,7 @@ import zh.wang.android.yweathergetter4a.WeatherInfo;
 
 public class WeatherFragment extends Fragment {
     private static final String TAG = WeatherFragment.class.getName();
-    SimpleDateFormat sdf = new SimpleDateFormat("dd MMM", Locale.ENGLISH);
+    SimpleDateFormat sdf = new SimpleDateFormat("dd MMM (EEE)", Locale.ENGLISH);
     private RecyclerView recyclerView;
     private Activity mContext;
     private WeatherAdapter weatherAdapter;
@@ -90,10 +90,12 @@ public class WeatherFragment extends Fragment {
                                     weatherModel.setTemp_low(String.valueOf(jsonObjectmin.get("Value")));
 
                                     JSONObject jsonObjectday = jsonObject.getJSONObject("Day");
+                                    weatherModel.setDay_icon(jsonObjectday.getString("Icon"));
                                     weatherModel.setDay_text(jsonObjectday.getString("IconPhrase"));
                                     weatherModel.setDay_rain_probability(String.valueOf(jsonObjectday.get("RainProbability")));
 
                                     JSONObject jsonObjectnight = jsonObject.getJSONObject("Night");
+                                    weatherModel.setNight_icon(jsonObjectnight.getString("Icon"));
                                     weatherModel.setNight_text(jsonObjectnight.getString("IconPhrase"));
                                     weatherModel.setNight_rain_probability(String.valueOf(jsonObjectnight.get("RainProbability")));
 

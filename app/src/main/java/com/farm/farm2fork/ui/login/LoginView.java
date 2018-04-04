@@ -7,7 +7,6 @@ package com.farm.farm2fork.ui.login;
 public interface LoginView {
     void onValidationError();
 
-
     void onOtpReqFail();
 
     void onOtpReqSuccess();
@@ -15,7 +14,6 @@ public interface LoginView {
     void showProgressBar();
 
     void hideProgressBar();
-
 
     void onOtpValidationError();
 

@@ -28,14 +28,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.farm.data.UserDataManager;
 import com.farm.farm2fork.CustomViews.customspinner.MaterialSpinner;
 import com.farm.farm2fork.Interface.ImagePathListener;
 import com.farm.farm2fork.Interface.LocationSetListener;
 import com.farm.farm2fork.Models.CropNameModel;
 import com.farm.farm2fork.Models.LocationInfoModel;
 import com.farm.farm2fork.R;
-import com.farm.farm2fork.activity.MainNavScreen;
+import com.farm.farm2fork.data.UserDataManager;
+import com.farm.farm2fork.ui.mainfarmscreen.MainFarmScreen;
 import com.kbeanie.multipicker.api.ImagePicker;
 import com.schibstedspain.leku.LocationPickerActivity;
 
@@ -78,7 +78,7 @@ public class AddFarmFragment extends Fragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_list_item_1, croplist);
 
 
-        ((MainNavScreen) mContext).setToolbarTitle("Add Farm");
+        ((MainFarmScreen) mContext).setToolbarTitle("Add Farm");
 
         userDataManager = new UserDataManager(mContext);
         btn_add = view.findViewById(R.id.add);
@@ -100,12 +100,12 @@ public class AddFarmFragment extends Fragment {
         view.findViewById(R.id.rootphoto).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainNavScreen) mContext).showImageChoosingDialog();
+                ((MainFarmScreen) mContext).showImageChoosingDialog();
             }
         });
 
 
-        ((MainNavScreen) mContext).setonImagePathListener(new ImagePathListener() {
+        ((MainFarmScreen) mContext).setonImagePathListener(new ImagePathListener() {
             @Override
             public void onImagePath(String queryUri) {
                 imagepath = queryUri;
@@ -123,7 +123,7 @@ public class AddFarmFragment extends Fragment {
             }
         });
 
-       /* ((MainNavScreen) mContext).setImageCaptureListener(new ImageCaptureListener() {
+       /* ((MainFarmScreen) mContext).setImageCaptureListener(new ImageCaptureListener() {
             @Override
             public void onImageCapture(Bitmap bitmap) {
                 Log.d(TAG, "onImageCapture: "+bitmap.getHeight());
@@ -148,7 +148,7 @@ public class AddFarmFragment extends Fragment {
 
         ed_crop.setAdapter(adapter);
 
-        ((MainNavScreen) mContext).setonLocationSetByUser(new LocationSetListener() {
+        ((MainFarmScreen) mContext).setonLocationSetByUser(new LocationSetListener() {
 
             @Override
             public void onLocationSetByUser(LocationInfoModel locationInfoModel) {
@@ -232,7 +232,7 @@ public class AddFarmFragment extends Fragment {
                         progressDialog.cancel();
                         Log.d(TAG, "onResponse: " + response);
                         if (response.contains("Successfully Uploaded")) {
-                            ((MainNavScreen) mContext).showMainScreen();
+                            ((MainFarmScreen) mContext).showMainScreen();
                         } else
                             Toast.makeText(mContext, "Something went wrong! Please try again", Toast.LENGTH_SHORT).show();
                     }

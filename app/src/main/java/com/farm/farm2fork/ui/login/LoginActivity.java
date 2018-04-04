@@ -12,11 +12,11 @@ import android.widget.Toast;
 import com.farm.farm2fork.Fragment.LoginFragment;
 import com.farm.farm2fork.Fragment.OtpFragment;
 import com.farm.farm2fork.R;
-import com.farm.farm2fork.activity.MainNavScreen;
+import com.farm.farm2fork.ui.mainfarmscreen.MainFarmScreen;
 
-public class LoginScreen extends AppCompatActivity implements LoginView {
+public class LoginActivity extends AppCompatActivity implements LoginView {
 
-    private static final String TAG = LoginScreen.class.getName();
+    private static final String TAG = LoginActivity.class.getName();
     private String number;
     private LoginPresentorImp loginPresentorImp;
     private ProgressDialog progressDialog;
@@ -31,45 +31,24 @@ public class LoginScreen extends AppCompatActivity implements LoginView {
         if (loginPresentorImp.getUserSessionDataManager().getLoggedInMode()) {
             startMainActivity();
         } else
-            populateLoginFragment();
+            showFragment(new LoginFragment());
 
     }
 
-    private void populateLoginFragment() {
-        Fragment fragment = null;
-        Class fragmentClass = null;
-        fragmentClass = LoginFragment.class;
+    private void showFragment(Fragment fragment) {
+
         try {
-            fragment = (Fragment) fragmentClass.newInstance();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.fl, fragment).commit();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.fl, fragment).commit();
-
     }
 
     public void startMainActivity() {
-        startActivity(new Intent(LoginScreen.this, MainNavScreen.class));
+        startActivity(new Intent(LoginActivity.this, MainFarmScreen.class));
 
         ActivityCompat.finishAffinity(this);
-    }
-
-
-    private void proceedtoOtpscreen() {
-        Fragment fragment = null;
-        Class fragmentClass = null;
-        fragmentClass = OtpFragment.class;
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.fl, fragment).commit();
-
     }
 
 
@@ -92,12 +71,12 @@ public class LoginScreen extends AppCompatActivity implements LoginView {
 
     @Override
     public void onOtpReqSuccess() {
-        proceedtoOtpscreen();
+        showFragment(new OtpFragment());
     }
 
     @Override
     public void showProgressBar() {
-        progressDialog = new ProgressDialog(LoginScreen.this);
+        progressDialog = new ProgressDialog(LoginActivity.this);
         progressDialog.setMessage("Please Wait!");
         progressDialog.setCancelable(false);
         progressDialog.show();

@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.farm.farm2fork.R;
-import com.farm.farm2fork.activity.MainNavScreen;
+import com.farm.farm2fork.ui.mainfarmscreen.MainFarmScreen;
 
 /**
  * Created by master on 10/3/18.
@@ -23,7 +23,7 @@ public class AboutFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view=inflater.inflate(R.layout.fragment_about, container,false);
-        ((MainNavScreen) mContext).setToolbarTitle("About Us");
+        ((MainFarmScreen) mContext).setToolbarTitle("About Us");
 
 
 

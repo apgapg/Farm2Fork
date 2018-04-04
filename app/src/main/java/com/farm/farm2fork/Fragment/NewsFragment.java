@@ -16,11 +16,11 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.ParsedRequestListener;
-import com.farm.data.UserDataManager;
 import com.farm.farm2fork.CustomViews.ItemOffsetDecoration;
 import com.farm.farm2fork.FarmAdapter.NewsAdapter;
 import com.farm.farm2fork.Models.NewsModel;
 import com.farm.farm2fork.R;
+import com.farm.farm2fork.data.UserDataManager;
 
 import java.util.List;
 

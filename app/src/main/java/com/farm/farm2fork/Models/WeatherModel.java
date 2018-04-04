@@ -13,6 +13,8 @@ public class WeatherModel {
     private String night_text;
     private String day_rain_probability;
     private String night_rain_probability;
+    private String day_icon;
+    private String night_icon;
 
 
     public String getDate() {
@@ -21,6 +23,22 @@ public class WeatherModel {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getDay_icon() {
+        return day_icon;
+    }
+
+    public void setDay_icon(String day_icon) {
+        this.day_icon = day_icon;
+    }
+
+    public String getNight_icon() {
+        return night_icon;
+    }
+
+    public void setNight_icon(String night_icon) {
+        this.night_icon = night_icon;
     }
 
     public String getTemp_high() {

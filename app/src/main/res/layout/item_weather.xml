@@ -62,28 +62,7 @@
                 android:textSize="16dp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/forecastdaytext"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:paddingRight="8dp"
-                android:text="Day: 24"
-                android:textColor="#424242"
-                android:textSize="16dp"
-                android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/forecastnighttext"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingRight="8dp"
-                android:text="Night: 6"
-                android:textColor="#424242"
-                android:textSize="16dp"
-                android:textStyle="bold" />
 
 
         </LinearLayout>
