@@ -35,18 +35,28 @@ import com.farm.farm2fork.Models.CropNameModel;
 import com.farm.farm2fork.Models.LocationInfoModel;
 import com.farm.farm2fork.R;
 import com.farm.farm2fork.data.UserDataManager;
-import com.farm.farm2fork.ui.mainfarmscreen.MainFarmScreen;
+import com.farm.farm2fork.ui.mainfarmscreen.FarmScreen;
 import com.kbeanie.multipicker.api.ImagePicker;
 import com.schibstedspain.leku.LocationPickerActivity;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+
+import static com.farm.farm2fork.Utils.Constants.BASE_URL;
 
 /**
  * Created by master on 10/3/18.
  */
 
 public class AddFarmFragment extends Fragment {
-    public static final String BASE_URL = "https://www.reweyou.in/fasalapp/";
     private static final String TAG = AddFarmFragment.class.getName();
     private Activity mContext;
     private Button btn_add;
@@ -63,49 +73,51 @@ public class AddFarmFragment extends Fragment {
     private String imageencoded = "";
     private String farmSizeUnit = "acre";
     private String farmsize_acre;
+    private Disposable disposable;
+    private Object cropListObservable;
+    private Observer<? super List<String>> cropListObserver;
+    private CompositeDisposable compositeDisposable;
+    private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_add_farm, container, false);
-
-        List<CropNameModel> cropNameList = CropNameModel.listAll(CropNameModel.class);
-        String[] croplist = new String[cropNameList.size()];
-        for (int i = 0; i < cropNameList.size(); i++) {
-            croplist[i] = cropNameList.get(i).getName();
+        if (view != null) {
+            if (view.getParent() != null)
+                ((ViewGroup) view.getParent()).removeView(view);
+            return view;
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_list_item_1, croplist);
+
+        view = inflater.inflate(R.layout.fragment_add_feed, container, false);
 
 
-        ((MainFarmScreen) mContext).setToolbarTitle("Add Farm");
-
+        ed_crop = view.findViewById(R.id.ed_crop);
         userDataManager = new UserDataManager(mContext);
         btn_add = view.findViewById(R.id.add);
         txt_location = view.findViewById(R.id.txt_location);
         cameraicon = view.findViewById(R.id.cameraicon);
         mainimage = view.findViewById(R.id.photo);
+        ed_size = view.findViewById(R.id.ed_size);
 
-        MaterialSpinner spinner = view.findViewById(R.id.spinner);
-        spinner.setItems("acre", "hectare", "bigha", "guntha");
-        spinner.setSelectedIndex(0);
-        spinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+        ((FarmScreen) mContext).setToolbarTitle("Add Farm");
 
-            @Override
-            public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                farmSizeUnit = item;
-            }
-        });
+        compositeDisposable = new CompositeDisposable();
+
+        setCropList();
+
+        setupFarmSizeUnitsSpinner();
+
 
         view.findViewById(R.id.rootphoto).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainFarmScreen) mContext).showImageChoosingDialog();
+                ((FarmScreen) mContext).showImageChoosingDialog();
             }
         });
 
 
-        ((MainFarmScreen) mContext).setonImagePathListener(new ImagePathListener() {
+        ((FarmScreen) mContext).setonImagePathListener(new ImagePathListener() {
             @Override
             public void onImagePath(String queryUri) {
                 imagepath = queryUri;
@@ -123,40 +135,14 @@ public class AddFarmFragment extends Fragment {
             }
         });
 
-       /* ((MainFarmScreen) mContext).setImageCaptureListener(new ImageCaptureListener() {
-            @Override
-            public void onImageCapture(Bitmap bitmap) {
-                Log.d(TAG, "onImageCapture: "+bitmap.getHeight());
-                cameraicon.setVisibility(View.INVISIBLE);
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                Glide.with(mContext).load(stream.toByteArray()).into(mainimage);
 
-                Glide.with(mContext).load(stream.toByteArray()).asBitmap().toBytes(Bitmap.CompressFormat.JPEG, 90).format(DecodeFormat.PREFER_ARGB_8888).atMost().override(1500, 1500).into(new SimpleTarget<byte[]>() {
-                    @Override
-                    public void onResourceReady(byte[] resource, GlideAnimation<? super byte[]> glideAnimation) {
-                        imageencoded = Base64.encodeToString(resource, Base64.DEFAULT);
-                    }
-                });
-
-
-            }
-        });*/
-
-        ed_size = view.findViewById(R.id.ed_size);
-        ed_crop = view.findViewById(R.id.ed_crop);
-
-        ed_crop.setAdapter(adapter);
-
-        ((MainFarmScreen) mContext).setonLocationSetByUser(new LocationSetListener() {
+        ((FarmScreen) mContext).setonLocationSetByUser(new LocationSetListener() {
 
             @Override
             public void onLocationSetByUser(LocationInfoModel locationInfoModel) {
                 txt_location.setText(locationInfoModel.getAddress());
                 mlocationInfoModel = locationInfoModel;
                 locationtaken = true;
-
-
             }
         });
 
@@ -186,6 +172,31 @@ public class AddFarmFragment extends Fragment {
         });
         return view;
     }
+
+    private void setupFarmSizeUnitsSpinner() {
+        MaterialSpinner spinner = view.findViewById(R.id.spinner);
+        spinner.setItems("acre", "hectare", "bigha", "guntha");
+        spinner.setSelectedIndex(0);
+        spinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                farmSizeUnit = item;
+            }
+        });
+    }
+
+    private void setCropList() {
+        List<CropNameModel> cropNameList = CropNameModel.listAll(CropNameModel.class);
+
+        getCropListObservable(cropNameList).subscribe(getCropListObserver());
+
+    }
+
+    private void updateCropEditText(List<String> strings) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_list_item_1, strings);
+        ed_crop.setAdapter(adapter);
+    }
+
 
     private void makeServerReq() {
         final ProgressDialog progressDialog = new ProgressDialog(mContext);
@@ -232,7 +243,7 @@ public class AddFarmFragment extends Fragment {
                         progressDialog.cancel();
                         Log.d(TAG, "onResponse: " + response);
                         if (response.contains("Successfully Uploaded")) {
-                            ((MainFarmScreen) mContext).showMainScreen();
+                            ((FarmScreen) mContext).showMainScreen();
                         } else
                             Toast.makeText(mContext, "Something went wrong! Please try again", Toast.LENGTH_SHORT).show();
                     }
@@ -257,9 +268,51 @@ public class AddFarmFragment extends Fragment {
     @Override
     public void onDestroy() {
         mContext = null;
+        if (compositeDisposable != null && !compositeDisposable.isDisposed()) {
+            compositeDisposable.clear();
+        }
         super.onDestroy();
+
 
     }
 
 
+    public Observable<List<String>> getCropListObservable(List<CropNameModel> cropNameList) {
+        return Observable.just(cropNameList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).map(new Function<List<CropNameModel>, List<String>>() {
+            @Override
+            public List<String> apply(List<CropNameModel> cropNameModels) throws Exception {
+                List<String> croplistString = new ArrayList<>();
+                for (CropNameModel cropNameModel : cropNameModels) {
+                    String cropname = cropNameModel.getName();
+                    croplistString.add(cropname);
+                }
+                return croplistString;
+            }
+        });
+    }
+
+    public Observer<? super List<String>> getCropListObserver() {
+        return new Observer<List<String>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                compositeDisposable.add(d);
+            }
+
+            @Override
+            public void onNext(List<String> strings) {
+                updateCropEditText(strings);
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
+    }
 }

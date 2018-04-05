@@ -13,16 +13,16 @@ import java.util.List;
  * Created by master on 3/4/18.
  */
 
-public class MainFarmPresentor implements MainFarmContract.Presentor, MainFarmReqManager.OnCropListReqListener, MainFarmReqManager.Presentor {
+public class FarmPresentor implements FarmContract.Presentor, FarmReqManager.OnCropListReqListener, FarmReqManager.Presentor {
 
     private static final String FETCH_CROP_LIST_BOOLEAN = "croplistfetch";
     private final UserDataManager mUserDataManager;
-    private final MainFarmReqManager mMainFarmReqManager;
-    private final MainFarmContract.View mAddFarmView;
+    private final FarmReqManager mFarmReqManager;
+    private final FarmContract.View mAddFarmView;
 
-    public MainFarmPresentor(Context mContext, MainFarmContract.View mAddFarmView) {
+    public FarmPresentor(Context mContext, FarmContract.View mAddFarmView) {
         mUserDataManager = new UserDataManager(mContext);
-        mMainFarmReqManager = new MainFarmReqManager(this);
+        mFarmReqManager = new FarmReqManager(this);
         this.mAddFarmView = mAddFarmView;
         mAddFarmView.setPresentor(this);
 
@@ -32,14 +32,14 @@ public class MainFarmPresentor implements MainFarmContract.Presentor, MainFarmRe
         return mUserDataManager;
     }
 
-    public MainFarmReqManager getmMainFarmReqManager() {
-        return mMainFarmReqManager;
+    public FarmReqManager getmFarmReqManager() {
+        return mFarmReqManager;
     }
 
 
     public void fetchCropNameList() {
         if (!getmUserDataManager().getvaluefromsharedprefBoolean(FETCH_CROP_LIST_BOOLEAN)) {
-            getmMainFarmReqManager().sendCropNameListFetchReq(this);
+            getmFarmReqManager().sendCropNameListFetchReq(this);
         }
 
     }
@@ -54,7 +54,7 @@ public class MainFarmPresentor implements MainFarmContract.Presentor, MainFarmRe
     @Override
     public void makeFetchFarmReq() {
         mAddFarmView.showProgressBar();
-        getmMainFarmReqManager().makeFarmFetchReq(getmUserDataManager());
+        getmFarmReqManager().makeFarmFetchReq(getmUserDataManager());
     }
 
     @Override

@@ -19,12 +19,12 @@ import static com.farm.farm2fork.Fragment.AddFarmFragment.BASE_URL;
  * Created by master on 3/4/18.
  */
 
-public class MainFarmReqManager {
+public class FarmReqManager {
 
-    private static final String TAG = MainFarmReqManager.class.getName();
+    private static final String TAG = FarmReqManager.class.getName();
     private final Presentor mPresentor;
 
-    public MainFarmReqManager(MainFarmReqManager.Presentor mPresentor) {
+    public FarmReqManager(FarmReqManager.Presentor mPresentor) {
         this.mPresentor = mPresentor;
     }
 

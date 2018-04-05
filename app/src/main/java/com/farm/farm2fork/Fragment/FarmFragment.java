@@ -17,8 +17,8 @@ import com.farm.farm2fork.FarmAdapter.FarmAdapter;
 import com.farm.farm2fork.Models.FarmModel;
 import com.farm.farm2fork.R;
 import com.farm.farm2fork.Utils.ActivityUtils;
-import com.farm.farm2fork.ui.mainfarmscreen.MainFarmContract;
-import com.farm.farm2fork.ui.mainfarmscreen.MainFarmScreen;
+import com.farm.farm2fork.ui.mainfarmscreen.FarmContract;
+import com.farm.farm2fork.ui.mainfarmscreen.FarmScreen;
 
 import java.util.List;
 
@@ -26,13 +26,13 @@ import java.util.List;
  * Created by master on 10/3/18.
  */
 
-public class FarmFragment extends Fragment implements MainFarmContract.View {
+public class FarmFragment extends Fragment implements FarmContract.View {
     private static final String TAG = FarmFragment.class.getName();
     private Activity mContext;
     private FarmAdapter farmAdapter;
     private View mProgressBar;
     private View view;
-    private MainFarmContract.Presentor mPresentor;
+    private FarmContract.Presentor mPresentor;
 
 
 
@@ -92,7 +92,7 @@ public class FarmFragment extends Fragment implements MainFarmContract.View {
     }
 
     @Override
-    public void setPresentor(MainFarmContract.Presentor presentor) {
+    public void setPresentor(FarmContract.Presentor presentor) {
         this.mPresentor = presentor;
     }
 
@@ -118,13 +118,11 @@ public class FarmFragment extends Fragment implements MainFarmContract.View {
             new Handler().post(new Runnable() {
                 @Override
                 public void run() {
-
                     ActivityUtils.checkNotNull(farmAdapter, "Farm Adapter is null").add(farmModelList);
-
                 }
             });
             if (farmModelList.size() == 0)
-                ((MainFarmScreen) mContext).showSnackBar();
+                ((FarmScreen) mContext).showSnackBar();
         }
     }
 }

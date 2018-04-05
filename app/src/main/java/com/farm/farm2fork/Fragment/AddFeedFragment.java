@@ -28,7 +28,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.farm.farm2fork.Interface.ImagePathListener;
 import com.farm.farm2fork.R;
 import com.farm.farm2fork.data.UserDataManager;
-import com.farm.farm2fork.ui.mainfarmscreen.MainFarmScreen;
+import com.farm.farm2fork.ui.mainfarmscreen.FarmScreen;
 import com.kbeanie.multipicker.api.ImagePicker;
 
 /**
@@ -53,7 +53,7 @@ public class AddFeedFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_add_feed, container, false);
-        ((MainFarmScreen) mContext).setToolbarTitle("Add Post");
+        ((FarmScreen) mContext).setToolbarTitle("Add Post");
 
         userDataManager = new UserDataManager(mContext);
         btn_add = view.findViewById(R.id.add);
@@ -72,11 +72,11 @@ public class AddFeedFragment extends Fragment {
         view.findViewById(R.id.rootphoto).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainFarmScreen) mContext).checkstoragepermissionforimage();
+                ((FarmScreen) mContext).checkstoragepermissionforimage();
             }
         });
 
-        ((MainFarmScreen) mContext).setonImagePathListener(new ImagePathListener() {
+        ((FarmScreen) mContext).setonImagePathListener(new ImagePathListener() {
             @Override
             public void onImagePath(String queryUri) {
                 imagepath = queryUri;
@@ -130,7 +130,7 @@ public class AddFeedFragment extends Fragment {
                         progressDialog.cancel();
                         Log.d(TAG, "onResponse: " + response);
                         if (response.contains("Successfully Uploaded")) {
-                            ((MainFarmScreen) mContext).showMainScreen();
+                            ((FarmScreen) mContext).showMainScreen();
                         } else
                             Toast.makeText(mContext, "Something went wrong! Please try again", Toast.LENGTH_SHORT).show();
                     }

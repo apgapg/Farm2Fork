@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.farm.farm2fork.Fragment.LoginFragment;
 import com.farm.farm2fork.Fragment.OtpFragment;
 import com.farm.farm2fork.R;
-import com.farm.farm2fork.ui.mainfarmscreen.MainFarmScreen;
+import com.farm.farm2fork.ui.mainfarmscreen.FarmScreen;
 
 public class LoginActivity extends AppCompatActivity implements LoginView {
 
@@ -46,7 +46,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     }
 
     public void startMainActivity() {
-        startActivity(new Intent(LoginActivity.this, MainFarmScreen.class));
+        startActivity(new Intent(LoginActivity.this, FarmScreen.class));
 
         ActivityCompat.finishAffinity(this);
     }

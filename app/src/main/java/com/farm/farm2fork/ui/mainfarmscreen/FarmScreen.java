@@ -61,9 +61,9 @@ import java.io.File;
 import java.util.List;
 import java.util.Random;
 
-public class MainFarmScreen extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class FarmScreen extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String TAG = MainFarmScreen.class.getName();
+    private static final String TAG = FarmScreen.class.getName();
     private static final int CAMERA_REQUEST = 24;
 
     private LocationSetListener locationSetByUser;
@@ -86,8 +86,8 @@ public class MainFarmScreen extends AppCompatActivity implements NavigationView.
         FarmFragment farmFragment = new FarmFragment();
         showFragment(farmFragment);
 
-        MainFarmPresentor mainFarmPresentor = new MainFarmPresentor(this, farmFragment);
-        mainFarmPresentor.fetchCropNameList();
+        FarmPresentor farmPresentor = new FarmPresentor(this, farmFragment);
+        farmPresentor.fetchCropNameList();
 
 
     }
@@ -346,7 +346,7 @@ public class MainFarmScreen extends AppCompatActivity implements NavigationView.
 
                     @Override
                     public void onPermissionDenied(PermissionDeniedResponse response) {
-                        Toast.makeText(MainFarmScreen.this, "Please allow the permission to proceed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(FarmScreen.this, "Please allow the permission to proceed", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -361,7 +361,7 @@ public class MainFarmScreen extends AppCompatActivity implements NavigationView.
 
     public void showImageChoosingDialog() {
 
-        LayoutInflater li = LayoutInflater.from(MainFarmScreen.this);
+        LayoutInflater li = LayoutInflater.from(FarmScreen.this);
 
         View confirmDialog = li.inflate(R.layout.dialog_choose_image_options, null);
 
@@ -369,7 +369,7 @@ public class MainFarmScreen extends AppCompatActivity implements NavigationView.
         TextView btn_gallery = confirmDialog.findViewById(R.id.open_gallery);
 
 
-        AlertDialog.Builder alert = new AlertDialog.Builder(MainFarmScreen.this);
+        AlertDialog.Builder alert = new AlertDialog.Builder(FarmScreen.this);
         alert.setView(confirmDialog);
 
         final AlertDialog alertDialog = alert.create();
@@ -417,7 +417,7 @@ public class MainFarmScreen extends AppCompatActivity implements NavigationView.
                             startImageCapture();
                         else {
                             Log.d(TAG, "onPermissionDenied: ");
-                            Toast.makeText(MainFarmScreen.this, "Please allow the permission to proceed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(FarmScreen.this, "Please allow the permission to proceed", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -437,7 +437,7 @@ public class MainFarmScreen extends AppCompatActivity implements NavigationView.
         if (!fs.exists())
             fs.mkdirs();
         File f = new File(fs, +i1 + ".jpg");
-        imageToUploadUri = FileProvider.getUriForFile(MainFarmScreen.this, MainFarmScreen.this.getApplicationContext().getPackageName() + ".provider", f);
+        imageToUploadUri = FileProvider.getUriForFile(FarmScreen.this, FarmScreen.this.getApplicationContext().getPackageName() + ".provider", f);
 
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageToUploadUri);
         cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);

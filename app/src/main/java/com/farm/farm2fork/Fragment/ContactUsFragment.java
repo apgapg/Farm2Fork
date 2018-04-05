@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.farm.farm2fork.R;
-import com.farm.farm2fork.ui.mainfarmscreen.MainFarmScreen;
+import com.farm.farm2fork.ui.mainfarmscreen.FarmScreen;
 
 /**
  * Created by master on 10/3/18.
@@ -23,7 +23,7 @@ public class ContactUsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view=inflater.inflate(R.layout.fragment_contact_us, container,false);
-        ((MainFarmScreen) mContext).setToolbarTitle("Contact Us");
+        ((FarmScreen) mContext).setToolbarTitle("Contact Us");
 
 
 

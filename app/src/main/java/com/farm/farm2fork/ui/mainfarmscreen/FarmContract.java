@@ -10,7 +10,7 @@ import java.util.List;
  * Created by master on 3/4/18.
  */
 
-public interface MainFarmContract {
+public interface FarmContract {
 
     interface View extends BaseView<Presentor> {
 
