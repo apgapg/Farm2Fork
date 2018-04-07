@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.farm.farm2fork.Models.FarmModel;
 import com.farm.farm2fork.R;
-import com.farm.farm2fork.ui.farmscreen.FarmScreen;
+import com.farm.farm2fork.ui.farmscreen.FarmActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +89,7 @@ public class FarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             rootview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((FarmScreen) mContext).showCommunityFragment(((FarmModel) messagelist.get(getAdapterPosition())));
+                    ((FarmActivity) mContext).showCommunityFragment(((FarmModel) messagelist.get(getAdapterPosition())));
                 }
             });
 
@@ -109,7 +109,7 @@ public class FarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             rootview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((FarmScreen) mContext).onAddFarmButtonClick();
+                    ((FarmActivity) mContext).onAddFarmButtonClick();
                 }
             });
         }

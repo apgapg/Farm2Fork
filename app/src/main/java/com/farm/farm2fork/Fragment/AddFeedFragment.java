@@ -28,7 +28,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.farm.farm2fork.Interface.ImagePathListener;
 import com.farm.farm2fork.R;
 import com.farm.farm2fork.data.UserDataManager;
-import com.farm.farm2fork.ui.farmscreen.FarmScreen;
+import com.farm.farm2fork.ui.farmscreen.FarmActivity;
 import com.kbeanie.multipicker.api.ImagePicker;
 
 /**
@@ -53,7 +53,7 @@ public class AddFeedFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_add_feed, container, false);
-        ((FarmScreen) mContext).setToolbarTitle("Add Post");
+        ((FarmActivity) mContext).setToolbarTitle("Add Post");
 
         userDataManager = new UserDataManager(mContext);
         btn_add = view.findViewById(R.id.add);
@@ -72,11 +72,11 @@ public class AddFeedFragment extends Fragment {
         view.findViewById(R.id.rootphoto).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((FarmScreen) mContext).checkstoragepermissionforimage();
+                ((FarmActivity) mContext).checkstoragepermissionforimage();
             }
         });
 
-        ((FarmScreen) mContext).setonImagePathListener(new ImagePathListener() {
+        ((FarmActivity) mContext).setonImagePathListener(new ImagePathListener() {
             @Override
             public void onImagePath(String queryUri) {
                 imagepath = queryUri;
@@ -98,6 +98,8 @@ public class AddFeedFragment extends Fragment {
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 if (ed_description.getText().toString().trim().length() != 0)
                     makeServerReq();
                 else
@@ -130,7 +132,7 @@ public class AddFeedFragment extends Fragment {
                         progressDialog.cancel();
                         Log.d(TAG, "onResponse: " + response);
                         if (response.contains("Successfully Uploaded")) {
-                            ((FarmScreen) mContext).showMainScreen();
+                            ((FarmActivity) mContext).showBackFarmFragment();
                         } else
                             Toast.makeText(mContext, "Something went wrong! Please try again", Toast.LENGTH_SHORT).show();
                     }

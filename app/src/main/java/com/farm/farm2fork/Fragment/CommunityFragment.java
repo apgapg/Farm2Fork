@@ -22,7 +22,7 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.farm.farm2fork.Models.FarmModel;
 import com.farm.farm2fork.R;
-import com.farm.farm2fork.ui.farmscreen.FarmScreen;
+import com.farm.farm2fork.ui.farmscreen.FarmActivity;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -44,7 +44,7 @@ public class CommunityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ((FarmScreen) mContext).setToolbarTitle("Community");
+        ((FarmActivity) mContext).setToolbarTitle("Community");
 
         if (view != null) {
             if (view.getParent() != null)
@@ -63,7 +63,7 @@ public class CommunityFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((FarmScreen) mContext).showAddFeedFragment(farmModel.getCrop(), farmModel.getLoc_city());
+                ((FarmActivity) mContext).showAddFeedFragment(farmModel.getCrop(), farmModel.getLoc_city());
             }
         });
         fab.hide();
@@ -84,7 +84,7 @@ public class CommunityFragment extends Fragment {
 
         viewPager.setOffscreenPageLimit(4);
 
-        pagerAdapter = new PagerAdapter(((FarmScreen) mContext).getSupportFragmentManager());
+        pagerAdapter = new PagerAdapter(((FarmActivity) mContext).getSupportFragmentManager());
         TabLayout tabLayout = view.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
 

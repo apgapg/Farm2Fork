@@ -22,7 +22,7 @@ import com.farm.farm2fork.Interface.NetRetryListener;
 import com.farm.farm2fork.Models.FeedsModel;
 import com.farm.farm2fork.R;
 import com.farm.farm2fork.data.UserDataManager;
-import com.farm.farm2fork.ui.farmscreen.FarmScreen;
+import com.farm.farm2fork.ui.farmscreen.FarmActivity;
 
 import java.util.List;
 
@@ -55,10 +55,10 @@ public class FeedsFragment extends Fragment {
         nopost = view.findViewById(R.id.nopost);
         nopost.setVisibility(View.INVISIBLE);
         Log.d(TAG, "onCreateView: " + crop);
-       /* view.findViewById(R.id.addpost).setOnClickListener(new FarmView.OnClickListener() {
+       /* view.findViewById(R.id.addpost).setOnClickListener(new FarmFragmentView.OnClickListener() {
             @Override
-            public void onClick(FarmView v) {
-                ((FarmScreen) mContext).showAddFeedFragment(crop,city);
+            public void onClick(FarmFragmentView v) {
+                ((FarmActivity) mContext).showAddFeedFragment(crop,city);
             }
         });*/
 
@@ -73,7 +73,7 @@ public class FeedsFragment extends Fragment {
         recyclerView.setAdapter(feedsAdapter);
 
         makefetchfarmReqtoserver();
-        ((FarmScreen) mContext).setnetworkReqRetryListner(new NetRetryListener() {
+        ((FarmActivity) mContext).setnetworkReqRetryListner(new NetRetryListener() {
             @Override
             public void onNetReqRetry(String name) {
                 if (name.equals(FeedsFragment.class.getName())) {
@@ -115,7 +115,7 @@ public class FeedsFragment extends Fragment {
                     @Override
                     public void onError(ANError anError) {
                         progressbar.setVisibility(View.INVISIBLE);
-                        ((FarmScreen) mContext).showSnackBarNetError(FeedsFragment.class.getName());
+                        ((FarmActivity) mContext).showSnackBarNetError(FeedsFragment.class.getName());
 
                         Log.d(TAG, "onError: " + anError);
                     }

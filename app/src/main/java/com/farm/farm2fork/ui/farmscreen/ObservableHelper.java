@@ -51,13 +51,11 @@ public class ObservableHelper {
         return new Observer<List<String>>() {
             @Override
             public void onSubscribe(Disposable d) {
-                mCompositeDisposable.add(d);
             }
 
             @Override
             public void onNext(List<String> cropList) {
                 mCropListFetchListener.onCropListFetch(cropList);
-
             }
 
             @Override

@@ -1,8 +1,9 @@
 package com.farm.farm2fork.ui.farmscreen;
 
-import com.farm.farm2fork.BasePresentor;
 import com.farm.farm2fork.BaseView;
 import com.farm.farm2fork.Models.FarmModel;
+
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
 
 public interface FarmContract {
 
-    interface FarmView extends BaseView<Presentor> {
+    interface FarmFragmentView extends BaseView {
 
         void showProgressBar();
 
@@ -23,21 +24,43 @@ public interface FarmContract {
         void onFarmFetchReqSuccess(List<FarmModel> farmModelList);
     }
 
-    interface AddFarmView extends BaseView<Presentor> {
+    interface AddFarmFragmentView extends BaseView {
 
 
         void OnCropListFetch(List<String> cropList);
 
+        void onValidationError();
+
+        void showProgressBar();
+
+        void onAddFarmReqFail();
+
+        void onAddFarmReqSuccess();
+
+        void hideProgressBar();
     }
 
-    interface Presentor extends BasePresentor {
-        void makeFetchFarmReq();
 
-        void onUnsubscribe();
+    interface CropListReqListener {
+        void onCropListFetch(JSONObject response);
 
-        void getCropList();
-
-        void fetchCropNameList();
     }
 
+    interface FarmFetchListener {
+        void onFarmFetchReqSuccess(List<FarmModel> response);
+
+        void onFarmFetchReqFail();
+    }
+
+    interface CropListLoadListener {
+        void onCropListFetch(List<String> cropList);
+    }
+
+    interface AddFarmReqListener {
+
+        void onAddFarmReqSuccess(String response);
+
+        void onAddFarmReqFail();
+
+    }
 }

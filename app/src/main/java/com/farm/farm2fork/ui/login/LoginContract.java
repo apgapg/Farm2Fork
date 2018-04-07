@@ -11,7 +11,7 @@ import org.json.JSONObject;
 
 public interface LoginContract {
 
-    interface LoginFragmentView extends BaseView<LoginFragmentPresentor> {
+    interface LoginFragmentView extends BaseView {
 
 
         void onValidationError();
@@ -25,9 +25,11 @@ public interface LoginContract {
         void hideProgressBar();
 
         void onValidationSuccess(String number);
+
+        void onOtpReqFail();
     }
 
-    interface OtpFragmentView extends BaseView<OtpFragmentPresentor> {
+    interface OtpFragmentView extends BaseView {
 
         void onOtpValidationError();
 

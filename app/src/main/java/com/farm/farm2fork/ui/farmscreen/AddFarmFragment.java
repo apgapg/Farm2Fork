@@ -1,14 +1,12 @@
-package com.farm.farm2fork.Fragment;
+package com.farm.farm2fork.ui.farmscreen;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,22 +18,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.common.Priority;
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.StringRequestListener;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.farm.farm2fork.ApplicationClass;
 import com.farm.farm2fork.CustomViews.customspinner.MaterialSpinner;
 import com.farm.farm2fork.Interface.ImagePathListener;
 import com.farm.farm2fork.Interface.LocationSetListener;
 import com.farm.farm2fork.Models.LocationInfoModel;
 import com.farm.farm2fork.R;
 import com.farm.farm2fork.data.UserDataManager;
-import com.farm.farm2fork.ui.farmscreen.FarmContract;
-import com.farm.farm2fork.ui.farmscreen.FarmScreen;
 import com.kbeanie.multipicker.api.ImagePicker;
 import com.schibstedspain.leku.LocationPickerActivity;
 
@@ -45,13 +38,11 @@ import io.reactivex.Observer;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
-import static com.farm.farm2fork.Utils.Constants.BASE_URL;
-
 /**
  * Created by master on 10/3/18.
  */
 
-public class AddFarmFragment extends Fragment implements FarmContract.AddFarmView {
+public class AddFarmFragment extends Fragment implements FarmContract.AddFarmFragmentView {
     private static final String TAG = AddFarmFragment.class.getName();
     private Activity mContext;
     private Button btn_add;
@@ -73,7 +64,7 @@ public class AddFarmFragment extends Fragment implements FarmContract.AddFarmVie
     private Observer<? super List<String>> cropListObserver;
     private CompositeDisposable compositeDisposable;
     private View view;
-    private FarmContract.Presentor mPresentor;
+    private AddFarmFragmentPresentor mAddFarmFragmentPresentor;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -85,7 +76,7 @@ public class AddFarmFragment extends Fragment implements FarmContract.AddFarmVie
             return view;
         }
 
-        view = inflater.inflate(R.layout.fragment_add_feed, container, false);
+        view = inflater.inflate(R.layout.fragment_add_farm, container, false);
 
 
         ed_crop = view.findViewById(R.id.ed_crop);
@@ -96,11 +87,12 @@ public class AddFarmFragment extends Fragment implements FarmContract.AddFarmVie
         mainimage = view.findViewById(R.id.photo);
         ed_size = view.findViewById(R.id.ed_size);
 
-        ((FarmScreen) mContext).setToolbarTitle("Add Farm");
+        ((FarmActivity) mContext).setToolbarTitle("Add Farm");
 
-        compositeDisposable = new CompositeDisposable();
+        mAddFarmFragmentPresentor = new AddFarmFragmentPresentor(((ApplicationClass) getActivity().getApplication()).getmAppDataManager());
+        mAddFarmFragmentPresentor.setView(this);
 
-        setCropList();
+        mAddFarmFragmentPresentor.loadCropList();
 
         setupFarmSizeUnitsSpinner();
 
@@ -108,12 +100,12 @@ public class AddFarmFragment extends Fragment implements FarmContract.AddFarmVie
         view.findViewById(R.id.rootphoto).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((FarmScreen) mContext).showImageChoosingDialog();
+                ((FarmActivity) mContext).showImageChoosingDialog();
             }
         });
 
 
-        ((FarmScreen) mContext).setonImagePathListener(new ImagePathListener() {
+        ((FarmActivity) mContext).setonImagePathListener(new ImagePathListener() {
             @Override
             public void onImagePath(String queryUri) {
                 imagepath = queryUri;
@@ -132,7 +124,7 @@ public class AddFarmFragment extends Fragment implements FarmContract.AddFarmVie
         });
 
 
-        ((FarmScreen) mContext).setonLocationSetByUser(new LocationSetListener() {
+        ((FarmActivity) mContext).setonLocationSetByUser(new LocationSetListener() {
 
             @Override
             public void onLocationSetByUser(LocationInfoModel locationInfoModel) {
@@ -160,13 +152,14 @@ public class AddFarmFragment extends Fragment implements FarmContract.AddFarmVie
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (locationtaken && ed_crop.getText().toString().trim().length() != 0 && ed_size.getText().toString().trim().length() != 0)
-                    makeServerReq();
-                else
-                    Toast.makeText(mContext, "Please fill up all details", Toast.LENGTH_SHORT).show();
+                getmAddFarmFragmentPresentor().addFarm(locationtaken, ed_crop.getText().toString().trim(), ed_size.getText().toString().trim(), farmSizeUnit, imageencoded, mlocationInfoModel);
             }
         });
         return view;
+    }
+
+    public AddFarmFragmentPresentor getmAddFarmFragmentPresentor() {
+        return mAddFarmFragmentPresentor;
     }
 
     private void setupFarmSizeUnitsSpinner() {
@@ -181,75 +174,12 @@ public class AddFarmFragment extends Fragment implements FarmContract.AddFarmVie
         });
     }
 
-    private void setCropList() {
-        mPresentor.getCropList();
-
-    }
 
     private void updateCropEditText(List<String> strings) {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_list_item_1, strings);
         ed_crop.setAdapter(adapter);
     }
 
-
-    private void makeServerReq() {
-        final ProgressDialog progressDialog = new ProgressDialog(mContext);
-        progressDialog.setMessage("Adding Farm! Please Wait");
-        progressDialog.show();
-        Log.d(TAG, "makeServerReq: " + ed_size.getText().toString().trim());
-        Log.d(TAG, "makeServerReq: " + ed_crop.getText().toString());
-        Log.d(TAG, "makeServerReq: " + mlocationInfoModel.getCity());
-
-
-        if (farmSizeUnit.equals("bigha")) {
-            farmsize_acre = String.valueOf(Float.valueOf(ed_size.getText().toString().trim()) * 0.625);
-
-        } else if (farmSizeUnit.equals("acre")) {
-            farmsize_acre = ed_size.getText().toString().trim();
-
-
-        } else if (farmSizeUnit.equals("hectare")) {
-            farmsize_acre = String.valueOf(Float.valueOf(ed_size.getText().toString().trim()) * 2.471);
-
-        } else if (farmSizeUnit.equals("guntha")) {
-            farmsize_acre = String.valueOf(Float.valueOf(ed_size.getText().toString().trim()) * 0.025);
-
-
-        }
-
-        AndroidNetworking.post(BASE_URL + "addfarm_temp.php")
-                .addBodyParameter("crop", ed_crop.getText().toString().trim())
-                .addBodyParameter("farmsize", ed_size.getText().toString().trim() + " " + farmSizeUnit)
-                .addBodyParameter("farmsize_acre", farmsize_acre)
-                .addBodyParameter("image", imageencoded)
-                .addBodyParameter("loc_address", mlocationInfoModel.getAddress())
-                .addBodyParameter("loc_lat", mlocationInfoModel.getLatitude())
-                .addBodyParameter("loc_long", mlocationInfoModel.getLongitude())
-                .addBodyParameter("postalCode", mlocationInfoModel.getPostalzipcode())
-                .addBodyParameter("loc_city", mlocationInfoModel.getCity())
-                .addBodyParameter("uid", userDataManager.getUid())
-                .addBodyParameter("authtoken", userDataManager.getAuthToken())
-                .setPriority(Priority.MEDIUM)
-                .build()
-                .getAsString(new StringRequestListener() {
-                    @Override
-                    public void onResponse(String response) {
-                        progressDialog.cancel();
-                        Log.d(TAG, "onResponse: " + response);
-                        if (response.contains("Successfully Uploaded")) {
-                            ((FarmScreen) mContext).showMainScreen();
-                        } else
-                            Toast.makeText(mContext, "Something went wrong! Please try again", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onError(ANError anError) {
-                        Log.d(TAG, "onError: " + anError);
-                        progressDialog.cancel();
-                        Toast.makeText(mContext, "Something went wrong! Please try again", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -263,15 +193,42 @@ public class AddFarmFragment extends Fragment implements FarmContract.AddFarmVie
     public void onDestroy() {
         mContext = null;
 
-        mPresentor.onUnsubscribe();
         super.onDestroy();
 
 
     }
 
-
     @Override
     public void OnCropListFetch(List<String> cropList) {
         updateCropEditText(cropList);
+    }
+
+    @Override
+    public void onValidationError() {
+        Toast.makeText(mContext.getApplicationContext(), "Please fill up all details", Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void showProgressBar() {
+        ((FarmActivity) mContext).showProgressBar();
+    }
+
+    @Override
+    public void onAddFarmReqFail() {
+        Toast.makeText(mContext, "Something went wrong! Please try again", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onAddFarmReqSuccess() {
+        Toast.makeText(mContext.getApplicationContext(), "Farm Successfully Added!", Toast.LENGTH_SHORT).show();
+        ((FarmActivity) mContext).showBackFarmFragment();
+
+    }
+
+    @Override
+    public void hideProgressBar() {
+        ((FarmActivity) mContext).hideProgressBar();
+
     }
 }

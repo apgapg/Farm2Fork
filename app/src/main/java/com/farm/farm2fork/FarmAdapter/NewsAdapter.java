@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import com.farm.farm2fork.Models.NewsModel;
 import com.farm.farm2fork.R;
-import com.farm.farm2fork.ui.farmscreen.FarmScreen;
+import com.farm.farm2fork.ui.farmscreen.FarmActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +68,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             rootview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((FarmScreen) context).onAddFarmButtonClick();
+                    ((FarmActivity) context).onAddFarmButtonClick();
                 }
             });
         }

@@ -101,6 +101,12 @@ public class LoginFragment extends Fragment implements LoginContract.LoginFragme
     }
 
     @Override
+    public void onOtpReqFail() {
+        Toast.makeText(mContext.getApplicationContext(), "Something went wrong! Please try again", Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
     public void onSMSPermissionGranted() {
         getmLoginFragmentPresentor().sendOtpReqtoServer(((LoginActivity) mContext).getNumber());
     }

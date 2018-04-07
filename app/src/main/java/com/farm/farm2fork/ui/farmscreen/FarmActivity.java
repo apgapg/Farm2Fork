@@ -2,6 +2,7 @@ package com.farm.farm2fork.ui.farmscreen;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -28,12 +29,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.farm.farm2fork.ApplicationClass;
 import com.farm.farm2fork.Fragment.AboutFragment;
-import com.farm.farm2fork.Fragment.AddFarmFragment;
 import com.farm.farm2fork.Fragment.AddFeedFragment;
 import com.farm.farm2fork.Fragment.CommunityFragment;
 import com.farm.farm2fork.Fragment.ContactUsFragment;
-import com.farm.farm2fork.Fragment.FarmFragment;
 import com.farm.farm2fork.Fragment.ProfileFragment;
 import com.farm.farm2fork.Interface.ImagePathListener;
 import com.farm.farm2fork.Interface.LocationSetListener;
@@ -60,9 +60,9 @@ import java.io.File;
 import java.util.List;
 import java.util.Random;
 
-public class FarmScreen extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class FarmActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String TAG = FarmScreen.class.getName();
+    private static final String TAG = FarmActivity.class.getName();
     private static final int CAMERA_REQUEST = 24;
 
     private LocationSetListener locationSetByUser;
@@ -70,7 +70,8 @@ public class FarmScreen extends AppCompatActivity implements NavigationView.OnNa
     private ImagePathListener onImagePathListener;
     private NetRetryListener networkReqRetryListner;
     private Uri imageToUploadUri;
-    private FarmPresentor mFarmPresentor;
+    private FarmActivityPresentor mFarmActivityPresentor;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,11 +83,10 @@ public class FarmScreen extends AppCompatActivity implements NavigationView.OnNa
 
         setUpNavDrawer(toolbar);
 
-        mFarmPresentor = new FarmPresentor(this);
+        mFarmActivityPresentor = new FarmActivityPresentor(((ApplicationClass) getApplication()).getmAppDataManager());
+        mFarmActivityPresentor.fetchCropNameList();
 
         showFarmFragment();
-
-        mFarmPresentor.fetchCropNameList();
 
 
     }
@@ -95,7 +95,6 @@ public class FarmScreen extends AppCompatActivity implements NavigationView.OnNa
         FarmFragment farmFragment = new FarmFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fl, farmFragment).commit();
-        mFarmPresentor.setmFarmView(farmFragment);
     }
 
     private void setUpNavDrawer(Toolbar toolbar) {
@@ -110,8 +109,6 @@ public class FarmScreen extends AppCompatActivity implements NavigationView.OnNa
     }
 
 
-
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -123,7 +120,7 @@ public class FarmScreen extends AppCompatActivity implements NavigationView.OnNa
         }
     }
 
-    public void showMainScreen() {
+    public void showBackFarmFragment() {
         Fragment fragment = null;
         Class fragmentClass = null;
         fragmentClass = FarmFragment.class;
@@ -134,7 +131,10 @@ public class FarmScreen extends AppCompatActivity implements NavigationView.OnNa
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.popBackStackImmediate();
         fragmentManager.beginTransaction().replace(R.id.fl, fragment).commit();
+
+
     }
 
 
@@ -182,7 +182,6 @@ public class FarmScreen extends AppCompatActivity implements NavigationView.OnNa
         AddFarmFragment addFarmFragment = new AddFarmFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fl, addFarmFragment).addToBackStack(null).commit();
-        mFarmPresentor.setmAddFarmView(addFarmFragment);
     }
 
     public void onCommunityButtonClick(FarmModel farmModel) {
@@ -339,7 +338,7 @@ public class FarmScreen extends AppCompatActivity implements NavigationView.OnNa
 
                     @Override
                     public void onPermissionDenied(PermissionDeniedResponse response) {
-                        Toast.makeText(FarmScreen.this, "Please allow the permission to proceed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(FarmActivity.this, "Please allow the permission to proceed", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -354,7 +353,7 @@ public class FarmScreen extends AppCompatActivity implements NavigationView.OnNa
 
     public void showImageChoosingDialog() {
 
-        LayoutInflater li = LayoutInflater.from(FarmScreen.this);
+        LayoutInflater li = LayoutInflater.from(FarmActivity.this);
 
         View confirmDialog = li.inflate(R.layout.dialog_choose_image_options, null);
 
@@ -362,7 +361,7 @@ public class FarmScreen extends AppCompatActivity implements NavigationView.OnNa
         TextView btn_gallery = confirmDialog.findViewById(R.id.open_gallery);
 
 
-        AlertDialog.Builder alert = new AlertDialog.Builder(FarmScreen.this);
+        AlertDialog.Builder alert = new AlertDialog.Builder(FarmActivity.this);
         alert.setView(confirmDialog);
 
         final AlertDialog alertDialog = alert.create();
@@ -410,7 +409,7 @@ public class FarmScreen extends AppCompatActivity implements NavigationView.OnNa
                             startImageCapture();
                         else {
                             Log.d(TAG, "onPermissionDenied: ");
-                            Toast.makeText(FarmScreen.this, "Please allow the permission to proceed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(FarmActivity.this, "Please allow the permission to proceed", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -430,7 +429,7 @@ public class FarmScreen extends AppCompatActivity implements NavigationView.OnNa
         if (!fs.exists())
             fs.mkdirs();
         File f = new File(fs, +i1 + ".jpg");
-        imageToUploadUri = FileProvider.getUriForFile(FarmScreen.this, FarmScreen.this.getApplicationContext().getPackageName() + ".provider", f);
+        imageToUploadUri = FileProvider.getUriForFile(FarmActivity.this, FarmActivity.this.getApplicationContext().getPackageName() + ".provider", f);
 
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageToUploadUri);
         cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -475,6 +474,21 @@ public class FarmScreen extends AppCompatActivity implements NavigationView.OnNa
 
     public void setToolbarTitle(String toolbarTitle) {
         getSupportActionBar().setTitle(toolbarTitle);
+    }
+
+
+    public void showProgressBar() {
+        progressDialog = new ProgressDialog(FarmActivity.this);
+        progressDialog.setMessage("Please Wait!");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
+    public void hideProgressBar() {
+        if (progressDialog != null) {
+            progressDialog.cancel();
+            progressDialog = null;
+        }
     }
 
 
