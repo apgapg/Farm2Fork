@@ -31,24 +31,19 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.farm.farm2fork.CustomViews.customspinner.MaterialSpinner;
 import com.farm.farm2fork.Interface.ImagePathListener;
 import com.farm.farm2fork.Interface.LocationSetListener;
-import com.farm.farm2fork.Models.CropNameModel;
 import com.farm.farm2fork.Models.LocationInfoModel;
 import com.farm.farm2fork.R;
 import com.farm.farm2fork.data.UserDataManager;
-import com.farm.farm2fork.ui.mainfarmscreen.FarmScreen;
+import com.farm.farm2fork.ui.farmscreen.FarmContract;
+import com.farm.farm2fork.ui.farmscreen.FarmScreen;
 import com.kbeanie.multipicker.api.ImagePicker;
 import com.schibstedspain.leku.LocationPickerActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
 import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 
 import static com.farm.farm2fork.Utils.Constants.BASE_URL;
 
@@ -56,7 +51,7 @@ import static com.farm.farm2fork.Utils.Constants.BASE_URL;
  * Created by master on 10/3/18.
  */
 
-public class AddFarmFragment extends Fragment {
+public class AddFarmFragment extends Fragment implements FarmContract.AddFarmView {
     private static final String TAG = AddFarmFragment.class.getName();
     private Activity mContext;
     private Button btn_add;
@@ -78,6 +73,7 @@ public class AddFarmFragment extends Fragment {
     private Observer<? super List<String>> cropListObserver;
     private CompositeDisposable compositeDisposable;
     private View view;
+    private FarmContract.Presentor mPresentor;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -186,9 +182,7 @@ public class AddFarmFragment extends Fragment {
     }
 
     private void setCropList() {
-        List<CropNameModel> cropNameList = CropNameModel.listAll(CropNameModel.class);
-
-        getCropListObservable(cropNameList).subscribe(getCropListObserver());
+        mPresentor.getCropList();
 
     }
 
@@ -268,51 +262,16 @@ public class AddFarmFragment extends Fragment {
     @Override
     public void onDestroy() {
         mContext = null;
-        if (compositeDisposable != null && !compositeDisposable.isDisposed()) {
-            compositeDisposable.clear();
-        }
+
+        mPresentor.onUnsubscribe();
         super.onDestroy();
 
 
     }
 
 
-    public Observable<List<String>> getCropListObservable(List<CropNameModel> cropNameList) {
-        return Observable.just(cropNameList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).map(new Function<List<CropNameModel>, List<String>>() {
-            @Override
-            public List<String> apply(List<CropNameModel> cropNameModels) throws Exception {
-                List<String> croplistString = new ArrayList<>();
-                for (CropNameModel cropNameModel : cropNameModels) {
-                    String cropname = cropNameModel.getName();
-                    croplistString.add(cropname);
-                }
-                return croplistString;
-            }
-        });
-    }
-
-    public Observer<? super List<String>> getCropListObserver() {
-        return new Observer<List<String>>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-                compositeDisposable.add(d);
-            }
-
-            @Override
-            public void onNext(List<String> strings) {
-                updateCropEditText(strings);
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        };
+    @Override
+    public void OnCropListFetch(List<String> cropList) {
+        updateCropEditText(cropList);
     }
 }

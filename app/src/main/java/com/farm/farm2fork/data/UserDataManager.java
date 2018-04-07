@@ -3,6 +3,7 @@ package com.farm.farm2fork.data;
 import android.content.Context;
 
 import com.farm.farm2fork.Models.CropNameModel;
+import com.farm.farm2fork.data.prefs.AppPrefsHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,46 +17,47 @@ import java.util.List;
 
 public class UserDataManager {
 
-    private final SharedPrefsHelper sharedPrefsHelper;
+    private final AppPrefsHelper appPrefsHelper;
 
     public UserDataManager(Context context) {
-        sharedPrefsHelper = new SharedPrefsHelper(context);
+        appPrefsHelper = new AppPrefsHelper(context);
+
     }
 
 
     public void saveUserDetails(String uid, String authtoken, String number) {
-        sharedPrefsHelper.saveUserDetails(uid, authtoken, number);
+        appPrefsHelper.saveUserDetails(uid, authtoken, number);
 
     }
 
     public void clear() {
-        sharedPrefsHelper.clear();
+        appPrefsHelper.clear();
     }
 
 
     public boolean getLoggedInMode() {
-        return sharedPrefsHelper.getLoggedInMode();
+        return appPrefsHelper.getLoggedInMode();
     }
 
     public String getUid() {
-        return sharedPrefsHelper.getUid();
+        return appPrefsHelper.getUid();
     }
 
     public String getAuthToken() {
-        return sharedPrefsHelper.getAuthToken();
+        return appPrefsHelper.getAuthToken();
     }
 
     public String getNumber() {
-        return sharedPrefsHelper.getNumber();
+        return appPrefsHelper.getNumber();
     }
 
     public void putinsharedprefBoolean(String key, boolean value) {
 
-        sharedPrefsHelper.putinsharedprefBoolean(key, value);
+        appPrefsHelper.putinsharedprefBoolean(key, value);
     }
 
     public Boolean getvaluefromsharedprefBoolean(String key) {
-        return sharedPrefsHelper.getvaluefromsharedprefBoolean(key);
+        return appPrefsHelper.getvaluefromsharedprefBoolean(key);
     }
 
     public boolean saveCropList(JSONObject response) {

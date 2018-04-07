@@ -24,7 +24,8 @@ import com.farm.farm2fork.data.UserDataManager;
 
 import java.util.List;
 
-import static com.farm.farm2fork.Fragment.AddFarmFragment.BASE_URL;
+import static com.farm.farm2fork.Utils.Constants.BASE_URL;
+
 
 /**
  * Created by master on 10/3/18.

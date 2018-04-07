@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.farm.farm2fork.R;
-import com.farm.farm2fork.ui.mainfarmscreen.FarmScreen;
+import com.farm.farm2fork.ui.farmscreen.FarmScreen;
 
 /**
  * Created by master on 10/3/18.

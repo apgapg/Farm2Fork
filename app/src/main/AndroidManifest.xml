@@ -83,7 +83,7 @@
             android:name=".MainScreen"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.mainfarmscreen.FarmScreen"
+            android:name=".ui.farmscreen.FarmScreen"
             android:label="@string/title_activity_main_nav_screen"
 
             android:screenOrientation="portrait"

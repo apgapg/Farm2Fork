@@ -1,7 +1,9 @@
-package com.farm.farm2fork.data;
+package com.farm.farm2fork.data.prefs;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import com.farm.farm2fork.Utils.AppUtils;
 
 import static com.farm.farm2fork.ApplicationClass.PACKAGE_NAME;
 
@@ -9,7 +11,7 @@ import static com.farm.farm2fork.ApplicationClass.PACKAGE_NAME;
  * Created by master on 1/4/18.
  */
 
-public class SharedPrefsHelper {
+public class AppPrefsHelper {
 
     private static final String PREFS = PACKAGE_NAME + ".PREFS";
     private static final String IS_LOGGED_IN = "IS_LOGGED_IN";
@@ -18,8 +20,10 @@ public class SharedPrefsHelper {
     private static final String KEY_MOBILE_NUMBER = "NUMBER";
 
     private final SharedPreferences sharedPreferences;
+    private final Context mContext;
 
-    public SharedPrefsHelper(Context context) {
+    public AppPrefsHelper(Context context) {
+        this.mContext = context;
         sharedPreferences = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
     }
 
@@ -64,4 +68,7 @@ public class SharedPrefsHelper {
         return sharedPreferences.getBoolean(key, false);
     }
 
+    public String getDeviceId() {
+        return AppUtils.getDeviceId(mContext);
+    }
 }

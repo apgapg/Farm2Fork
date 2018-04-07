@@ -1,4 +1,4 @@
-package com.farm.farm2fork.ui.mainfarmscreen;
+package com.farm.farm2fork.ui.farmscreen;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
@@ -13,7 +13,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-import static com.farm.farm2fork.Fragment.AddFarmFragment.BASE_URL;
+import static com.farm.farm2fork.Utils.Constants.BASE_URL;
 
 /**
  * Created by master on 3/4/18.
@@ -22,10 +22,10 @@ import static com.farm.farm2fork.Fragment.AddFarmFragment.BASE_URL;
 public class FarmReqManager {
 
     private static final String TAG = FarmReqManager.class.getName();
-    private final Presentor mPresentor;
+    private final FarmFetchListener mFarmFetchListener;
 
-    public FarmReqManager(FarmReqManager.Presentor mPresentor) {
-        this.mPresentor = mPresentor;
+    public FarmReqManager(FarmFetchListener mFarmFetchListener) {
+        this.mFarmFetchListener = mFarmFetchListener;
     }
 
     public void sendCropNameListFetchReq(final OnCropListReqListener onCropListReqListener) {
@@ -57,14 +57,14 @@ public class FarmReqManager {
                     @Override
                     public void onResponse(final List<FarmModel> response) {
                         NetworkUtils.parseResponse(TAG, response);
-                        mPresentor.onFarmFetchReqSuccess(response);
+                        mFarmFetchListener.onFarmFetchReqSuccess(response);
                     }
 
                     @Override
                     public void onError(ANError anError) {
                         NetworkUtils.parseError(TAG, anError);
 
-                        mPresentor.onFarmFetchReqFail();
+                        mFarmFetchListener.onFarmFetchReqFail();
                     }
                 });
 
@@ -76,7 +76,7 @@ public class FarmReqManager {
 
     }
 
-    public interface Presentor {
+    public interface FarmFetchListener {
         void onFarmFetchReqSuccess(List<FarmModel> response);
 
         void onFarmFetchReqFail();

@@ -22,7 +22,7 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.farm.farm2fork.Models.FarmModel;
 import com.farm.farm2fork.R;
-import com.farm.farm2fork.ui.mainfarmscreen.FarmScreen;
+import com.farm.farm2fork.ui.farmscreen.FarmScreen;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;

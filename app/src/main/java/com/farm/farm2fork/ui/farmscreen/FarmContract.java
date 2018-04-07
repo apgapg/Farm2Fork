@@ -1,4 +1,4 @@
-package com.farm.farm2fork.ui.mainfarmscreen;
+package com.farm.farm2fork.ui.farmscreen;
 
 import com.farm.farm2fork.BasePresentor;
 import com.farm.farm2fork.BaseView;
@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface FarmContract {
 
-    interface View extends BaseView<Presentor> {
+    interface FarmView extends BaseView<Presentor> {
 
         void showProgressBar();
 
@@ -23,8 +23,21 @@ public interface FarmContract {
         void onFarmFetchReqSuccess(List<FarmModel> farmModelList);
     }
 
+    interface AddFarmView extends BaseView<Presentor> {
+
+
+        void OnCropListFetch(List<String> cropList);
+
+    }
+
     interface Presentor extends BasePresentor {
         void makeFetchFarmReq();
+
+        void onUnsubscribe();
+
+        void getCropList();
+
+        void fetchCropNameList();
     }
 
 }

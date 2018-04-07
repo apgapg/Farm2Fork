@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import com.farm.farm2fork.Models.NewsModel;
 import com.farm.farm2fork.R;
-import com.farm.farm2fork.ui.mainfarmscreen.FarmScreen;
+import com.farm.farm2fork.ui.farmscreen.FarmScreen;
 
 import java.util.ArrayList;
 import java.util.List;

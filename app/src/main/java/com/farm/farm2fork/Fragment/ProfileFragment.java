@@ -14,9 +14,10 @@ import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.StringRequestListener;
 import com.farm.farm2fork.R;
-import com.farm.farm2fork.ui.mainfarmscreen.FarmScreen;
+import com.farm.farm2fork.ui.farmscreen.FarmScreen;
 
-import static com.farm.farm2fork.Fragment.AddFarmFragment.BASE_URL;
+import static com.farm.farm2fork.Utils.Constants.BASE_URL;
+
 
 /**
  * Created by master on 10/3/18.

@@ -1,4 +1,4 @@
-package com.farm.farm2fork.ui.mainfarmscreen;
+package com.farm.farm2fork.ui.farmscreen;
 
 import android.Manifest;
 import android.app.Activity;
@@ -41,7 +41,6 @@ import com.farm.farm2fork.Interface.NetRetryListener;
 import com.farm.farm2fork.Models.FarmModel;
 import com.farm.farm2fork.Models.LocationInfoModel;
 import com.farm.farm2fork.R;
-import com.farm.farm2fork.data.UserDataManager;
 import com.google.gson.Gson;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -71,7 +70,7 @@ public class FarmScreen extends AppCompatActivity implements NavigationView.OnNa
     private ImagePathListener onImagePathListener;
     private NetRetryListener networkReqRetryListner;
     private Uri imageToUploadUri;
-    private UserDataManager userDataManager;
+    private FarmPresentor mFarmPresentor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,13 +82,20 @@ public class FarmScreen extends AppCompatActivity implements NavigationView.OnNa
 
         setUpNavDrawer(toolbar);
 
+        mFarmPresentor = new FarmPresentor(this);
+
+        showFarmFragment();
+
+        mFarmPresentor.fetchCropNameList();
+
+
+    }
+
+    private void showFarmFragment() {
         FarmFragment farmFragment = new FarmFragment();
-        showFragment(farmFragment);
-
-        FarmPresentor farmPresentor = new FarmPresentor(this, farmFragment);
-        farmPresentor.fetchCropNameList();
-
-
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fl, farmFragment).commit();
+        mFarmPresentor.setmFarmView(farmFragment);
     }
 
     private void setUpNavDrawer(Toolbar toolbar) {
@@ -103,14 +109,7 @@ public class FarmScreen extends AppCompatActivity implements NavigationView.OnNa
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private void showFragment(Fragment fragment) {
-        try {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.fl, fragment).commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+
 
 
     @Override
@@ -176,20 +175,14 @@ public class FarmScreen extends AppCompatActivity implements NavigationView.OnNa
     }
 
     public void onAddFarmButtonClick() {
-        Fragment fragment = null;
-        Class fragmentClass = null;
-        fragmentClass = AddFarmFragment.class;
-        getSupportActionBar().setTitle("Add Farm");
+        showAddFarmFragment();
+    }
 
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            throw new NullPointerException("Fragment is null");
-        }
+    private void showAddFarmFragment() {
+        AddFarmFragment addFarmFragment = new AddFarmFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.fl, fragment).addToBackStack(null).commit();
-
-
+        fragmentManager.beginTransaction().replace(R.id.fl, addFarmFragment).addToBackStack(null).commit();
+        mFarmPresentor.setmAddFarmView(addFarmFragment);
     }
 
     public void onCommunityButtonClick(FarmModel farmModel) {

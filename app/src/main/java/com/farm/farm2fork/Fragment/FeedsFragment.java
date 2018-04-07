@@ -22,11 +22,12 @@ import com.farm.farm2fork.Interface.NetRetryListener;
 import com.farm.farm2fork.Models.FeedsModel;
 import com.farm.farm2fork.R;
 import com.farm.farm2fork.data.UserDataManager;
-import com.farm.farm2fork.ui.mainfarmscreen.FarmScreen;
+import com.farm.farm2fork.ui.farmscreen.FarmScreen;
 
 import java.util.List;
 
-import static com.farm.farm2fork.Fragment.AddFarmFragment.BASE_URL;
+import static com.farm.farm2fork.Utils.Constants.BASE_URL;
+
 
 /**
  * Created by master on 10/3/18.
@@ -54,9 +55,9 @@ public class FeedsFragment extends Fragment {
         nopost = view.findViewById(R.id.nopost);
         nopost.setVisibility(View.INVISIBLE);
         Log.d(TAG, "onCreateView: " + crop);
-       /* view.findViewById(R.id.addpost).setOnClickListener(new View.OnClickListener() {
+       /* view.findViewById(R.id.addpost).setOnClickListener(new FarmView.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(FarmView v) {
                 ((FarmScreen) mContext).showAddFeedFragment(crop,city);
             }
         });*/

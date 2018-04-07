@@ -6,19 +6,18 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.farm.farm2fork.Fragment.LoginFragment;
-import com.farm.farm2fork.Fragment.OtpFragment;
+import com.farm.farm2fork.ApplicationClass;
 import com.farm.farm2fork.R;
-import com.farm.farm2fork.ui.mainfarmscreen.FarmScreen;
+import com.farm.farm2fork.ui.farmscreen.FarmScreen;
 
-public class LoginActivity extends AppCompatActivity implements LoginView {
+public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = LoginActivity.class.getName();
     private String number;
-    private LoginPresentorImp loginPresentorImp;
     private ProgressDialog progressDialog;
 
     @Override
@@ -27,19 +26,21 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         setContentView(R.layout.activity_splash_screen);
 
 
-        loginPresentorImp = new LoginPresentorImp(this, this);
-        if (loginPresentorImp.getUserSessionDataManager().getLoggedInMode()) {
+        if (((ApplicationClass) getApplication()).getmAppDataManager().getLoggedInMode()) {
             startMainActivity();
         } else
-            showFragment(new LoginFragment());
+            showFragment(new LoginFragment(), false);
 
     }
 
-    private void showFragment(Fragment fragment) {
+    private void showFragment(Fragment fragment, boolean b) {
 
         try {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.fl, fragment).commit();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            if (b)
+                fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+            fragmentTransaction.replace(R.id.fl, fragment).commit();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -47,34 +48,14 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
     public void startMainActivity() {
         startActivity(new Intent(LoginActivity.this, FarmScreen.class));
-
         ActivityCompat.finishAffinity(this);
     }
 
 
-    public void performLogin(String number) {
-        this.number = number;
-        loginPresentorImp.performLogin(number);
-    }
-
-    @Override
-    public void onValidationError() {
-        Toast.makeText(getApplicationContext(), "Please enter valid number!", Toast.LENGTH_SHORT).show();
-    }
-
-
-    @Override
-    public void onOtpReqFail() {
-        Toast.makeText(getApplicationContext(), "Something went wrong! Please try again", Toast.LENGTH_SHORT).show();
-
-    }
-
-    @Override
     public void onOtpReqSuccess() {
-        showFragment(new OtpFragment());
+        showFragment(new OtpFragment(), true);
     }
 
-    @Override
     public void showProgressBar() {
         progressDialog = new ProgressDialog(LoginActivity.this);
         progressDialog.setMessage("Please Wait!");
@@ -82,41 +63,23 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         progressDialog.show();
     }
 
-    @Override
     public void hideProgressBar() {
         if (progressDialog != null) {
             progressDialog.cancel();
             progressDialog = null;
         }
-
-
     }
 
-    @Override
-    public void onOtpValidationError() {
-        Toast.makeText(getApplicationContext(), "OTP cant be empty!", Toast.LENGTH_SHORT).show();
-
-    }
-
-    @Override
     public void onOtpCorrect() {
         Toast.makeText(getApplicationContext(), "OTP verification successful", Toast.LENGTH_SHORT).show();
         startMainActivity();
-
-
     }
 
-    @Override
-    public void onOtpIncorrect() {
-        Toast.makeText(getApplicationContext(), "Something went wrong! Please try again", Toast.LENGTH_SHORT).show();
-
+    public void setnumber(String number) {
+        this.number = number;
     }
 
-    public void performValidationOfOtp(String otp) {
-        loginPresentorImp.performValidationOfOtp(otp, number);
-    }
-
-    public void onOtpReceived(String otp) {
-        loginPresentorImp.performValidationOfOtp(otp, number);
+    public String getNumber() {
+        return number;
     }
 }
