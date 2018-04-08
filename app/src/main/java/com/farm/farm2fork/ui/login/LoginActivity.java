@@ -7,14 +7,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.farm.farm2fork.ApplicationClass;
+import com.farm.farm2fork.BaseActivity;
 import com.farm.farm2fork.R;
 import com.farm.farm2fork.ui.farmscreen.FarmActivity;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
 
     private static final String TAG = LoginActivity.class.getName();
     private String number;
@@ -26,10 +25,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
 
 
-        if (((ApplicationClass) getApplication()).getmAppDataManager().getLoggedInMode()) {
-            startMainActivity();
-        } else
-            showFragment(new LoginFragment(), false);
+        showFragment(new LoginFragment(), false);
 
     }
 
@@ -81,5 +77,9 @@ public class LoginActivity extends AppCompatActivity {
 
     public String getNumber() {
         return number;
+    }
+
+    public void showLoginFragment() {
+        showFragment(new LoginFragment(), true);
     }
 }

@@ -6,4 +6,25 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="google_place_api">AIzaSyD7urTrfE4Yrovm_awNwt9k8WZ8xIvQtjQ</string>
+    <string name="scheme_eligibility">Eligibility</string>
+    <string name="scheme_benefits">Benefits</string>
+    <string name="scheme_how_to_avail">How to Avail</string>
+    <string name="scheme_other_details">Other Details</string>
+    <string name="farm2fork">Farm2Fork</string>
+    <string name="login_tag_line">Connecting farmers for effective farming</string>
+    <string name="number_verification">Please enter your number to become a part of the Farm2Fork community. We shall send a verification code to verify it.</string>
+    <string name="button_next"><![CDATA[Next >]]></string>
+    <string name="otp_detect">Auto Detecting OTP. Please Wait</string>
+
+    <string name="nav_profile">Profile</string>
+    <string name="nav_crop_community">Crop Community</string>
+    <string name="nav_agriculture_news">Agriculture news</string>
+    <string name="nav_govt_schemes">Govt. Schemes</string>
+    <string name="nav_about">About</string>
+    <string name="nav_contact_us">Contact Us</string>
+    <string name="title_activity_choose_locale">ChooseLocaleActivity</string>
+
+    <string name="welcome">Welcome</string>
+    <string name="details">Details</string>
+
 </resources>

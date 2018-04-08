@@ -6,11 +6,14 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.androidnetworking.interfaces.ParsedRequestListener;
 import com.androidnetworking.interfaces.StringRequestListener;
+import com.farm.farm2fork.ApplicationClass;
 import com.farm.farm2fork.BuildConfig;
 import com.farm.farm2fork.Models.FarmModel;
 import com.farm.farm2fork.Models.LocationInfoModel;
+import com.farm.farm2fork.Models.SchemeModel;
 import com.farm.farm2fork.Utils.NetworkUtils;
 import com.farm.farm2fork.ui.farmscreen.FarmContract;
+import com.farm.farm2fork.ui.scheme.SchemeContract;
 
 import org.json.JSONObject;
 
@@ -149,10 +152,29 @@ public class ApiHelper {
                 });
     }
 
+    public void sendSchemeReq(String uid, String authToken, final SchemeContract.SchemeFetchListener schemeFetchListener) {
+        AndroidNetworking.post(BASE_URL + "fetchschemes.php")
+                .addBodyParameter("language", ApplicationClass.localeCode)
+                .addBodyParameter("uid", uid)
+                .addBodyParameter("authtoken", authToken)
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsObjectList(SchemeModel.class, new ParsedRequestListener<List<SchemeModel>>() {
 
 
+                    @Override
+                    public void onResponse(List<SchemeModel> response) {
+                        NetworkUtils.parseResponse(TAG, response);
+                        schemeFetchListener.onSchemeFetchReqSuccess(response);
+                    }
 
-     /*   */
+                    @Override
+                    public void onError(ANError anError) {
+                        NetworkUtils.parseError(TAG, anError);
+                        schemeFetchListener.onSchemeFetchReqFail();
+                    }
+                });
 
 
+    }
 }

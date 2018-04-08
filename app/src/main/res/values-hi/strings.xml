@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Farm2Fork</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_main_nav_screen">MainNavScreen</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="google_place_api">AIzaSyD7urTrfE4Yrovm_awNwt9k8WZ8xIvQtjQ</string>
+
+    <string name="scheme_eligibility">पात्रता</string>
+    <string name="scheme_benefits">लाभ</string>
+    <string name="scheme_how_to_avail">कैसे लाभ उठाएं</string>
+    <string name="scheme_other_details">अन्य जानकारी</string>
+
+    <string name="farm2fork">Farm2Fork</string>
+    <string name="login_tag_line">प्रभावी खेती के लिए किसानों को जोड़े</string>
+    <string name="number_verification">कृपया Farm2Fork समुदाय का हिस्सा बनने के लिए अपना नंबर दर्ज करें हम इसे सत्यापित करने के लिए एक सत्यापन कोड भेज देंगे।</string>
+    <string name="button_next"><![CDATA[आगे >]]></string>
+    <string name="otp_detect">सत्यापन कोड दर्ज करें</string>
+
+    <string name="nav_profile">प्रोफाइल</string>
+    <string name="nav_crop_community">फसल समुदाय</string>
+    <string name="nav_agriculture_news">कृषि समाचार</string>
+    <string name="nav_govt_schemes">सरकारी योजनाएं</string>
+    <string name="nav_about">हमारे बारे में</string>
+    <string name="nav_contact_us">हमसे संपर्क करें</string>
+
+    <string name="welcome">स्वागत है</string>
+    <string name="details">विवरण</string>
+
+</resources>

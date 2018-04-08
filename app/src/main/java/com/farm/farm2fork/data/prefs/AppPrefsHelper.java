@@ -13,12 +13,12 @@ import static com.farm.farm2fork.ApplicationClass.PACKAGE_NAME;
 
 public class AppPrefsHelper {
 
+    public static final String KEY_LOCALE = "locale";
     private static final String PREFS = PACKAGE_NAME + ".PREFS";
     private static final String IS_LOGGED_IN = "IS_LOGGED_IN";
     private static final String KEY_UID = "UID";
     private static final String KEY_AUTH_TOKEN = "AUTHTOKEN";
     private static final String KEY_MOBILE_NUMBER = "NUMBER";
-
     private final SharedPreferences sharedPreferences;
     private final Context mContext;
 
@@ -61,14 +61,28 @@ public class AppPrefsHelper {
 
     public void putinsharedprefBoolean(String key, boolean value) {
 
-        sharedPreferences.edit().putBoolean(key, value).commit();
+        sharedPreferences.edit().putBoolean(key, value).apply();
     }
 
     public Boolean getvaluefromsharedprefBoolean(String key) {
         return sharedPreferences.getBoolean(key, false);
     }
 
+    public void putinsharedprefString(String key, String value) {
+
+        sharedPreferences.edit().putString(key, value).commit();
+    }
+
+    public String getvaluefromsharedprefString(String key) {
+        return sharedPreferences.getString(key, null);
+    }
+
     public String getDeviceId() {
         return AppUtils.getDeviceId(mContext);
+    }
+
+    public void updateLocale(String localeCode) {
+        putinsharedprefString(KEY_LOCALE, localeCode);
+
     }
 }

@@ -12,6 +12,7 @@ import com.orm.SugarApp;
 
 public class ApplicationClass extends SugarApp {
     public static final String PACKAGE_NAME = "com.farm.farm2fork";
+    public static String localeCode = "en";
     private AppDataManager mAppDataManager;
 
     @Override
@@ -22,6 +23,9 @@ public class ApplicationClass extends SugarApp {
         AndroidNetworking.initialize(getApplicationContext());
         AppPrefsHelper appPrefsHelper = new AppPrefsHelper(getApplicationContext());
         mAppDataManager = new AppDataManager(appPrefsHelper);
+
+        if (mAppDataManager.getmAppPrefsHelper().getvaluefromsharedprefString(AppPrefsHelper.KEY_LOCALE) != null)
+            localeCode = mAppDataManager.getmAppPrefsHelper().getvaluefromsharedprefString(AppPrefsHelper.KEY_LOCALE);
     }
 
     public AppDataManager getmAppDataManager() {

@@ -3,11 +3,13 @@ package com.farm.farm2fork.data;
 import com.farm.farm2fork.Models.CropNameModel;
 import com.farm.farm2fork.Models.FarmModel;
 import com.farm.farm2fork.Models.LocationInfoModel;
+import com.farm.farm2fork.Models.SchemeModel;
 import com.farm.farm2fork.data.prefs.AppPrefsHelper;
 import com.farm.farm2fork.ui.farmscreen.FarmContract;
 import com.farm.farm2fork.ui.farmscreen.ObservableHelper;
 import com.farm.farm2fork.ui.login.ApiHelper;
 import com.farm.farm2fork.ui.login.LoginContract;
+import com.farm.farm2fork.ui.scheme.SchemeContract;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -189,5 +191,23 @@ public class AppDataManager implements DataManager, LoginContract.OtpReqListener
             }
         });
 
+    }
+
+    public void sendSchemesReq(final SchemeContract.SchemeFetchListener schemeFetchListener) {
+        getmApiHelper().sendSchemeReq(getUid(), getAuthToken(), new SchemeContract.SchemeFetchListener() {
+            @Override
+            public void onSchemeFetchReqSuccess(List<SchemeModel> list) {
+                schemeFetchListener.onSchemeFetchReqSuccess(list);
+            }
+
+            @Override
+            public void onSchemeFetchReqFail() {
+                schemeFetchListener.onSchemeFetchReqFail();
+            }
+        });
+    }
+
+    public void updateLocale(String localeCode) {
+        getmAppPrefsHelper().updateLocale(localeCode);
     }
 }

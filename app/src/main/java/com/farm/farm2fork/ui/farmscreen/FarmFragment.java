@@ -34,16 +34,13 @@ public class FarmFragment extends Fragment implements FarmContract.FarmFragmentV
     private View mProgressBar;
     private View view;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate: ");
-    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        ((FarmActivity) mContext).setToolbarTitle(mContext.getResources().getString(R.string.welcome));
 
         if (view != null) {
             if (view.getParent() != null)

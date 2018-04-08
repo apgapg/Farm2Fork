@@ -10,7 +10,7 @@ import org.json.JSONObject;
  * Created by master on 7/4/18.
  */
 
-public class OtpFragmentPresentor implements LoginContract.OtpFragmentPresentor, LoginContract.OtpCheckListener {
+public class OtpFragmentPresentor implements LoginContract.OtpCheckListener {
 
     private final AppDataManager mAppDataManager;
     private LoginContract.OtpFragmentView view;

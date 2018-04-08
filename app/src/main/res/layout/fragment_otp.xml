@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Farm2Fork"
+            android:text="@string/farm2fork"
             android:textColor="#000"
             android:textSize="36dp"
 
@@ -27,7 +27,7 @@
             android:layout_marginBottom="64dp"
             android:layout_marginTop="24dp"
             android:gravity="center"
-            android:text="Connecting farmers for effective farming"
+            android:text="@string/login_tag_line"
             android:textColor="#212121"
 
             android:textSize="16dp" />
@@ -41,7 +41,7 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingTop="8dp"
-            android:text="Auto Detecting OTP. Please Wait"
+            android:text="@string/otp_detect"
             android:textColor="#212121"
             android:textSize="16dp" />
 
@@ -72,7 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="8dp"
-            android:text="Next >"
+            android:text="@string/button_next"
             android:textAllCaps="false" />
 
 

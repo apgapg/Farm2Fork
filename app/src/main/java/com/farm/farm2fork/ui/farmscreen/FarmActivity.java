@@ -20,7 +20,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.farm.farm2fork.ApplicationClass;
+import com.farm.farm2fork.BaseActivity;
 import com.farm.farm2fork.Fragment.AboutFragment;
 import com.farm.farm2fork.Fragment.AddFeedFragment;
 import com.farm.farm2fork.Fragment.CommunityFragment;
@@ -40,7 +40,10 @@ import com.farm.farm2fork.Interface.LocationSetListener;
 import com.farm.farm2fork.Interface.NetRetryListener;
 import com.farm.farm2fork.Models.FarmModel;
 import com.farm.farm2fork.Models.LocationInfoModel;
+import com.farm.farm2fork.Models.SchemeModel;
 import com.farm.farm2fork.R;
+import com.farm.farm2fork.ui.scheme.DetailSchemeFragment;
+import com.farm.farm2fork.ui.scheme.SchemeFragment;
 import com.google.gson.Gson;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -60,7 +63,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Random;
 
-public class FarmActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class FarmActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = FarmActivity.class.getName();
     private static final int CAMERA_REQUEST = 24;
@@ -79,7 +82,6 @@ public class FarmActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main_nav_screen);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setToolbarTitle("Welcome");
 
         setUpNavDrawer(toolbar);
 
@@ -121,19 +123,11 @@ public class FarmActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void showBackFarmFragment() {
-        Fragment fragment = null;
-        Class fragmentClass = null;
-        fragmentClass = FarmFragment.class;
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
+        FarmFragment fragment = new FarmFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.popBackStackImmediate();
         fragmentManager.beginTransaction().replace(R.id.fl, fragment).commit();
-
 
     }
 
@@ -155,6 +149,10 @@ public class FarmActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.nav_about) {
             fragmentClass = AboutFragment.class;
+
+
+        } else if (id == R.id.nav_scheme) {
+            fragmentClass = SchemeFragment.class;
 
 
         }
@@ -492,4 +490,14 @@ public class FarmActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
+    public void showDetailSchemeFragment(SchemeModel schemeModel) {
+        DetailSchemeFragment fragment = new DetailSchemeFragment();
+        Bundle bundle = new Bundle();
+        String scheme = new Gson().toJson(schemeModel);
+        bundle.putString("scheme", scheme);
+        fragment.setArguments(bundle);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fl, fragment).addToBackStack(null).commit();
+
+    }
 }

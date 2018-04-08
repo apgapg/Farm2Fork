@@ -26,7 +26,6 @@ public class OtpFragment extends Fragment implements LoginContract.OtpFragmentVi
     private static final String TAG = OtpFragment.class.getName();
     private Activity mContext;
     private EditText ed_otp;
-    private LoginContract.OtpFragmentPresentor mPresentor;
     private OtpFragmentPresentor mOtpFragmentPresentor;
 
     @Override

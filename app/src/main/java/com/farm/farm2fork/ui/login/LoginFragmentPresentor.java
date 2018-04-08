@@ -65,4 +65,6 @@ public class LoginFragmentPresentor implements LoginContract.LoginFragmentPresen
     public void onOtpReqFail() {
         view.onOtpReqFail();
     }
+
+
 }

@@ -51,9 +51,6 @@ public interface LoginContract {
         void sendOtpReqtoServer(String number);
     }
 
-    interface OtpFragmentPresentor extends BasePresentor {
-
-    }
 
     interface OtpReqListener {
         void onOtpReqSuccess();
@@ -66,4 +63,6 @@ public interface LoginContract {
 
         void onOtpCorrect(JSONObject response);
     }
+
+
 }
