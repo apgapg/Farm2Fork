@@ -15,6 +15,7 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.farm.farm2fork.ApplicationClass;
 import com.farm.farm2fork.CustomViews.ItemOffsetDecoration;
 import com.farm.farm2fork.FarmAdapter.WeatherAdapter;
 import com.farm.farm2fork.Models.WeatherModel;
@@ -27,7 +28,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import zh.wang.android.yweathergetter4a.WeatherInfo;
 
@@ -37,7 +37,7 @@ import zh.wang.android.yweathergetter4a.WeatherInfo;
 
 public class WeatherFragment extends Fragment {
     private static final String TAG = WeatherFragment.class.getName();
-    SimpleDateFormat sdf = new SimpleDateFormat("dd MMM (EEE)", Locale.ENGLISH);
+    SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM (EEEE)");
     private RecyclerView recyclerView;
     private Activity mContext;
     private WeatherAdapter weatherAdapter;
@@ -64,7 +64,7 @@ public class WeatherFragment extends Fragment {
     }
 
     private void getWeatherData(String loc_key) {
-        AndroidNetworking.get("http://dataservice.accuweather.com/forecasts/v1/daily/5day/" + loc_key + "?apikey=wPPGSAmAyTuYLJV3MJ8ZVnAxGQOFAwdE&details=true&metric=true&language=en-IN")
+        AndroidNetworking.get("http://dataservice.accuweather.com/forecasts/v1/daily/5day/" + loc_key + "?apikey=wPPGSAmAyTuYLJV3MJ8ZVnAxGQOFAwdE&details=true&metric=true&language=" + ApplicationClass.localeCode)
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {

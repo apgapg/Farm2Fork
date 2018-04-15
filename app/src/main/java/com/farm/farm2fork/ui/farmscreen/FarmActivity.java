@@ -32,7 +32,6 @@ import com.farm.farm2fork.ApplicationClass;
 import com.farm.farm2fork.BaseActivity;
 import com.farm.farm2fork.Fragment.AboutFragment;
 import com.farm.farm2fork.Fragment.AddFeedFragment;
-import com.farm.farm2fork.Fragment.CommunityFragment;
 import com.farm.farm2fork.Fragment.ContactUsFragment;
 import com.farm.farm2fork.Fragment.ProfileFragment;
 import com.farm.farm2fork.Interface.ImagePathListener;
@@ -42,6 +41,7 @@ import com.farm.farm2fork.Models.FarmModel;
 import com.farm.farm2fork.Models.LocationInfoModel;
 import com.farm.farm2fork.Models.SchemeModel;
 import com.farm.farm2fork.R;
+import com.farm.farm2fork.ui.community.CommunityFragment;
 import com.farm.farm2fork.ui.scheme.DetailSchemeFragment;
 import com.farm.farm2fork.ui.scheme.SchemeFragment;
 import com.google.gson.Gson;
@@ -159,10 +159,15 @@ public class FarmActivity extends BaseActivity implements NavigationView.OnNavig
         try {
             fragment = (Fragment) fragmentClass.newInstance();
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.fl, fragment).addToBackStack(null).commit();
+            Fragment f = fragmentManager.findFragmentById(R.id.fl);
+            if (f instanceof ProfileFragment || f instanceof ContactUsFragment || f instanceof AboutFragment || f instanceof SchemeFragment) {
+                fragmentManager.beginTransaction().replace(R.id.fl, fragment).commit();
+                Log.d(TAG, "onNavigationItemSelected: ");
+            } else
+                fragmentManager.beginTransaction().replace(R.id.fl, fragment).addToBackStack(null).commit();
+
         } catch (Exception e) {
             e.printStackTrace();
-            //throw new NullPointerException("Fragment is null");
         }
 
 
@@ -184,7 +189,6 @@ public class FarmActivity extends BaseActivity implements NavigationView.OnNavig
 
     public void onCommunityButtonClick(FarmModel farmModel) {
 
-        getSupportActionBar().setTitle("Community");
 
         try {
             CommunityFragment communityFragment = new CommunityFragment();

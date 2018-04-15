@@ -5,7 +5,6 @@ package com.farm.farm2fork.Models;
  */
 
 public class FeedsModel {
-
     private String uid;
     private String postid;
     private String name;
@@ -15,6 +14,7 @@ public class FeedsModel {
     private String description;
     private String like;
     private String comment;
+    private String like_status;
 
     public String getCity() {
         return city;
@@ -46,5 +46,17 @@ public class FeedsModel {
 
     public String getPostid() {
         return postid;
+    }
+
+    public String getLike_status() {
+        return like_status;
+    }
+
+    public void setLike_status(String like_status) {
+        this.like_status = like_status;
+    }
+
+    public void setLike(String like) {
+        this.like = like;
     }
 }

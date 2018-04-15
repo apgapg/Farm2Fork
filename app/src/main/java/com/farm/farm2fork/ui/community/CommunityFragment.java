@@ -1,4 +1,4 @@
-package com.farm.farm2fork.Fragment;
+package com.farm.farm2fork.ui.community;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,36 +15,38 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.common.Priority;
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONArrayRequestListener;
+import com.farm.farm2fork.ApplicationClass;
+import com.farm.farm2fork.Fragment.AboutFragment;
+import com.farm.farm2fork.Fragment.FeedsFragment;
+import com.farm.farm2fork.Fragment.NewsFragment;
+import com.farm.farm2fork.Fragment.PriceFragment;
+import com.farm.farm2fork.Fragment.WeatherFragment;
+import com.farm.farm2fork.Models.CurrentWeatherModel;
 import com.farm.farm2fork.Models.FarmModel;
 import com.farm.farm2fork.R;
 import com.farm.farm2fork.ui.farmscreen.FarmActivity;
 import com.google.gson.Gson;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-public class CommunityFragment extends Fragment {
+public class CommunityFragment extends Fragment implements CommunityContract.CommunityFragmentView {
     private static final String TAG = CommunityFragment.class.getName();
     private Activity mContext;
     private ViewPager viewPager;
     private PagerAdapter pagerAdapter;
-    private TextView currenttemp;
-    private TextView txtforecast;
-    private TextView txtwind;
-    private TextView txthumidity, txtcrop, txtaddress;
+    private TextView txtCurrentTemp;
+    private TextView txtForecast;
+    private TextView txtWind;
+    private TextView txtHumidity, txtcrop, txtaddress;
     private FarmModel farmModel;
     private View view;
     private FloatingActionButton fab;
+    private CommunityFragmentPresentor mCommunityFragmentPresentor;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ((FarmActivity) mContext).setToolbarTitle("Community");
+        ((FarmActivity) mContext).setToolbarTitle(getResources().getString(R.string.community));
 
         if (view != null) {
             if (view.getParent() != null)
@@ -53,12 +55,19 @@ public class CommunityFragment extends Fragment {
         }
         view = inflater.inflate(R.layout.fragment_community, container, false);
 
+        mCommunityFragmentPresentor = new CommunityFragmentPresentor(((ApplicationClass) mContext.getApplication()).getmAppDataManager());
+        mCommunityFragmentPresentor.setView(this);
 
-        String farmModelJson = getArguments().getString("FarmModel");
-        Gson gson = new Gson();
+        getArgumentsData();
 
-        farmModel = gson.fromJson(farmModelJson, FarmModel.class);
+        initViews();
 
+        mCommunityFragmentPresentor.getCurrentWeather(farmModel.getLoc_key());
+
+        return view;
+    }
+
+    private void initViews() {
         fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,19 +77,17 @@ public class CommunityFragment extends Fragment {
         });
         fab.hide();
 
-
-        currenttemp = view.findViewById(R.id.currenttemp);
-        txtforecast = view.findViewById(R.id.forecast);
-        txthumidity = view.findViewById(R.id.humidity);
-        txtwind = view.findViewById(R.id.wind);
+        txtCurrentTemp = view.findViewById(R.id.currenttemp);
+        txtForecast = view.findViewById(R.id.forecast);
+        txtHumidity = view.findViewById(R.id.humidity);
+        txtWind = view.findViewById(R.id.wind);
         txtcrop = view.findViewById(R.id.crop);
         txtaddress = view.findViewById(R.id.address);
+        viewPager = view.findViewById(R.id.viewPager);
 
         txtaddress.setText(farmModel.getLoc_address());
-        txtcrop.setText(farmModel.getCrop());
-
         txtaddress.setSelected(true);
-        viewPager = view.findViewById(R.id.viewPager);
+        txtcrop.setText(farmModel.getCrop());
 
         viewPager.setOffscreenPageLimit(4);
 
@@ -108,46 +115,12 @@ public class CommunityFragment extends Fragment {
             }
         });
 
-        getWeatherData(farmModel.getLoc_key());
-
-        return view;
     }
 
-    private void getWeatherData(String loc_key) {
-        AndroidNetworking.get("http://dataservice.accuweather.com/currentconditions/v1/" + loc_key + "?apikey=wPPGSAmAyTuYLJV3MJ8ZVnAxGQOFAwdE&language=en-IN&details=true")
-                .setPriority(Priority.MEDIUM)
-                .build()
-                .getAsJSONArray(new JSONArrayRequestListener() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        if (isAdded()) {
-                            try {
-                                JSONObject jsonObject = response.getJSONObject(0);
-                                txtforecast.setText(jsonObject.getString("WeatherText"));
-
-
-                                JSONObject jsonObjectTemp = jsonObject.getJSONObject("Temperature");
-                                JSONObject jsonObjecttempMetric = jsonObjectTemp.getJSONObject("Metric");
-                                currenttemp.setText(String.valueOf(jsonObjecttempMetric.get("Value")) + "°c");
-                                txthumidity.setText(jsonObject.getString("RelativeHumidity") + "%");
-
-                                JSONObject jsonObjectwind = jsonObject.getJSONObject("Wind");
-                                JSONObject jsonObjectspeed = jsonObjectwind.getJSONObject("Speed");
-                                JSONObject jsonObjectwindmetric = jsonObjectspeed.getJSONObject("Metric");
-                                txtwind.setText(String.valueOf(jsonObjectwindmetric.get("Value")) + " km/h");
-
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onError(ANError anError) {
-                        Log.d(TAG, "onError: " + anError.getResponse());
-                    }
-                });
+    private void getArgumentsData() {
+        String farmModelJson = getArguments().getString("FarmModel");
+        Gson gson = new Gson();
+        farmModel = gson.fromJson(farmModelJson, FarmModel.class);
     }
 
 
@@ -159,6 +132,21 @@ public class CommunityFragment extends Fragment {
         if (context instanceof Activity)
             mContext = (Activity) context;
         else throw new IllegalArgumentException("Context should be an instance of Activity");
+    }
+
+    @Override
+    public void onWeatherFetchSuccess(CurrentWeatherModel currentWeatherModel) {
+        if (isAdded()) {
+            txtForecast.setText(currentWeatherModel.getForecast());
+            txtHumidity.setText(currentWeatherModel.getHumidity());
+            txtWind.setText(currentWeatherModel.getWind().concat(" ").concat(getResources().getString(R.string.wind_unit)));
+            txtCurrentTemp.setText(currentWeatherModel.getCurrentTemp());
+        }
+    }
+
+    @Override
+    public void onWeatherFetchFail() {
+        Toast.makeText(mContext.getApplicationContext(), "Weather Fetch Fail", Toast.LENGTH_SHORT).show();
     }
 
     private class PagerAdapter extends FragmentStatePagerAdapter {

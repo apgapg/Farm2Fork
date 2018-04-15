@@ -3,6 +3,7 @@ package com.farm.farm2fork.ui.login;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.androidnetworking.interfaces.ParsedRequestListener;
 import com.androidnetworking.interfaces.StringRequestListener;
@@ -12,9 +13,12 @@ import com.farm.farm2fork.Models.FarmModel;
 import com.farm.farm2fork.Models.LocationInfoModel;
 import com.farm.farm2fork.Models.SchemeModel;
 import com.farm.farm2fork.Utils.NetworkUtils;
+import com.farm.farm2fork.ui.community.CommunityContract;
 import com.farm.farm2fork.ui.farmscreen.FarmContract;
+import com.farm.farm2fork.ui.feeds.FeedsAdapterContract;
 import com.farm.farm2fork.ui.scheme.SchemeContract;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -176,5 +180,47 @@ public class ApiHelper {
                 });
 
 
+    }
+
+    public void getCurrentWeather(String loc_key, final CommunityContract.WeatherFetchListener weatherFetchListener) {
+        AndroidNetworking.get("http://dataservice.accuweather.com/currentconditions/v1/" + loc_key + "?apikey=wPPGSAmAyTuYLJV3MJ8ZVnAxGQOFAwdE&language=" + ApplicationClass.localeCode + "&details=true")
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        NetworkUtils.parseResponse(TAG, response);
+                        weatherFetchListener.onWeatherFetchSuccess(response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        NetworkUtils.parseError(TAG, anError);
+                        weatherFetchListener.onWeatherFetchFail();
+
+                    }
+                });
+    }
+
+    public void makeLikeReq(String uid, String authToken, String postid, final FeedsAdapterContract.LikeStatusListener LikeStatusListener) {
+        AndroidNetworking.post(BASE_URL + "addlike.php")
+                .addBodyParameter("postid", postid)
+                .addBodyParameter("uid", uid)
+                .addBodyParameter("authtoken", authToken)
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsString(new StringRequestListener() {
+                    @Override
+                    public void onResponse(String response) {
+                        NetworkUtils.parseResponse(TAG, response);
+                        LikeStatusListener.onSuccess(response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        NetworkUtils.parseError(TAG, anError);
+                        LikeStatusListener.onFail();
+                    }
+                });
     }
 }

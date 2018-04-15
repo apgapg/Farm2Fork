@@ -28,4 +28,33 @@
     <string name="welcome">स्वागत है</string>
     <string name="details">विवरण</string>
 
+    <string name="community">फसल समुदाय</string>
+    <string name="current_temp">वर्तमान तापमान:</string>
+    <string name="humidity">नमी:</string>
+    <string name="wind">हवा:</string>
+    <string name="forecast">पूर्वानुमान:</string>
+    <string name="location">स्थान:</string>
+    <string name="crop">फसल:</string>
+
+    <string name="select_crop">फसल का चयन करें:</string>
+    <string name="select_crop_name_hint">(फसल का नाम)</string>
+    <string name="farm_location">खेत का स्थान:</string>
+    <string name="please_select_location_of_your_farm">(कृपया अपने खेत का स्थान चुनें)</string>
+    <string name="size">आकार:</string>
+    <string name="farm_photo_optional">खेत फोटो: (वैकल्पिक)</string>
+    <string name="add_farm"><![CDATA[खेत जोड़ें >]]></string>
+    <string name="add_farm_option">खेत जोड़ें></string>
+    <string name="choose_image">छवि चुनें:</string>
+    <string name="open_camera">कैमरा खोलो</string>
+    <string name="gallery">गेलरी</string>
+    <string name="wind_unit">कि.मी/घंटा</string>
+    <string name="state">राज्य</string>
+    <string name="prices_rs_quintal">मूल्य (रू./क्विंटल)</string>
+    <string name="mandi_name">मंडी का नाम</string>
+    <string name="max">उच्च</string>
+    <string name="min">निम्न</string>
+    <string name="modal">बहुलकी</string>
+    <string name="city">शहर:</string>
+    <string name="add_your_farm">अपना खेत जोड़ें</string>
+
 </resources>

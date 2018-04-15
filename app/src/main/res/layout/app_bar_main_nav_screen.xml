@@ -19,10 +19,11 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorAccent"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0.7dp"
-            android:background="#424242"/>
+            android:background="#424242" />
 
     </android.support.design.widget.AppBarLayout>
 
@@ -30,7 +31,7 @@
         android:id="@+id/fl"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"/>
+        android:layout_marginTop="?attr/actionBarSize" />
 
 
 </android.support.design.widget.CoordinatorLayout>

@@ -1,10 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="tabs">
-        <item>Weather</item>
-        <item>Feeds</item>
-        <item>Price</item>
-        <item>Cycle</item>
-        <item>News</item>
+        <item>@string/weather</item>
+        <item>@string/feeds</item>
+        <item>@string/price</item>
+        <item>@string/cycle</item>
+        <item>@string/news</item>
     </string-array>
+
+    <string-array name="farm_size_units">
+        <item>@string/acre</item>
+        <item>@string/hectare</item>
+        <item>@string/bigha</item>
+        <item>@string/guntha</item>
+    </string-array>
+
+
+    <string name="weather">Weather</string>
+    <string name="feeds">Feeds</string>
+    <string name="price">Price</string>
+    <string name="cycle">Cycle</string>
+    <string name="news">News</string>
+
+    <string name="acre">acre</string>
+    <string name="hectare">hectare</string>
+    <string name="bigha">bigha</string>
+    <string name="guntha">guntha</string>
 </resources>

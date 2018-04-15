@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="weather">मौसम</string>
+    <string name="feeds">फ़ीड</string>
+    <string name="price">मूल्य</string>
+    <string name="cycle">चक्र</string>
+    <string name="news">समाचार</string>
+
+    <string name="acre">एकड़</string>
+    <string name="hectare">हैक्टर</string>
+    <string name="bigha">बीघा</string>
+    <string name="guntha">गुंठा</string>
+</resources>

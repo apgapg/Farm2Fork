@@ -1,16 +1,20 @@
 package com.farm.farm2fork.data;
 
 import com.farm.farm2fork.Models.CropNameModel;
+import com.farm.farm2fork.Models.CurrentWeatherModel;
 import com.farm.farm2fork.Models.FarmModel;
 import com.farm.farm2fork.Models.LocationInfoModel;
 import com.farm.farm2fork.Models.SchemeModel;
 import com.farm.farm2fork.data.prefs.AppPrefsHelper;
+import com.farm.farm2fork.ui.community.CommunityContract;
 import com.farm.farm2fork.ui.farmscreen.FarmContract;
 import com.farm.farm2fork.ui.farmscreen.ObservableHelper;
+import com.farm.farm2fork.ui.feeds.FeedsAdapterContract;
 import com.farm.farm2fork.ui.login.ApiHelper;
 import com.farm.farm2fork.ui.login.LoginContract;
 import com.farm.farm2fork.ui.scheme.SchemeContract;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -209,5 +213,54 @@ public class AppDataManager implements DataManager, LoginContract.OtpReqListener
 
     public void updateLocale(String localeCode) {
         getmAppPrefsHelper().updateLocale(localeCode);
+    }
+
+    public void getCurrentWeather(String loc_key, final CommunityContract.WeatherListener weatherListener) {
+        getmApiHelper().getCurrentWeather(loc_key, new CommunityContract.WeatherFetchListener() {
+            @Override
+            public void onWeatherFetchSuccess(JSONArray response) {
+                try {
+
+                    JSONObject jsonObject = response.getJSONObject(0);
+                    String forecast = jsonObject.getString("WeatherText");
+                    JSONObject jsonObjectTemp = jsonObject.getJSONObject("Temperature");
+                    JSONObject jsonObjecttempMetric = jsonObjectTemp.getJSONObject("Metric");
+                    String currentTemp = String.valueOf(jsonObjecttempMetric.get("Value")) + "°c";
+                    String humidity = jsonObject.getString("RelativeHumidity") + "%";
+                    JSONObject jsonObjectwind = jsonObject.getJSONObject("Wind");
+                    JSONObject jsonObjectspeed = jsonObjectwind.getJSONObject("Speed");
+                    JSONObject jsonObjectwindmetric = jsonObjectspeed.getJSONObject("Metric");
+                    String wind = String.valueOf(jsonObjectwindmetric.get("Value"));
+
+                    CurrentWeatherModel currentWeatherModel = new CurrentWeatherModel(forecast, currentTemp, humidity, wind);
+                    weatherListener.onWeatherFetchSuccess(currentWeatherModel);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    weatherListener.onWeatherFetchFail();
+
+                }
+            }
+
+            @Override
+            public void onWeatherFetchFail() {
+                weatherListener.onWeatherFetchFail();
+            }
+        });
+    }
+
+
+    public void makeLikeReq(String postid, final FeedsAdapterContract.LikeStatusListener LikeStatusListener) {
+        getmApiHelper().makeLikeReq(getUid(), getAuthToken(), postid, new FeedsAdapterContract.LikeStatusListener() {
+            @Override
+            public void onSuccess(String response) {
+                LikeStatusListener.onSuccess(response);
+            }
+
+            @Override
+            public void onFail() {
+                LikeStatusListener.onFail();
+            }
+        });
     }
 }

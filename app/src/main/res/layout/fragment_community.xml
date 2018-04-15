@@ -39,7 +39,7 @@
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
 
-                    android:text="Crop:"
+                    android:text="@string/crop"
                     android:textColor="#212121"
                     android:textSize="16dp"
                     android:textStyle="bold" />
@@ -77,7 +77,7 @@
                     android:gravity="center"
 
 
-                    android:text="Location:"
+                    android:text="@string/location"
                     android:textColor="#212121"
                     android:textSize="16dp"
                     android:textStyle="bold" />
@@ -122,7 +122,7 @@
                         android:gravity="center_horizontal"
                         android:paddingLeft="8dp"
                         android:paddingRight="8dp"
-                        android:text="Current Temp: "
+                        android:text="@string/current_temp"
                         android:textColor="#212121"
                         android:textSize="16dp"
                         android:textStyle="bold" />
@@ -171,7 +171,7 @@
                             android:paddingLeft="8dp"
                             android:paddingRight="8dp"
 
-                            android:text="Humidity: "
+                            android:text="@string/humidity"
                             android:textColor="#212121"
                             android:textSize="16dp"
                             android:textStyle="bold" />
@@ -205,7 +205,7 @@
                             android:paddingLeft="8dp"
                             android:paddingRight="8dp"
 
-                            android:text="Wind: "
+                            android:text="@string/wind"
                             android:textColor="#212121"
                             android:textSize="16dp"
                             android:textStyle="bold" />
@@ -238,7 +238,7 @@
                             android:paddingLeft="8dp"
                             android:paddingRight="8dp"
 
-                            android:text="Forecast: "
+                            android:text="@string/forecast"
                             android:textColor="#212121"
                             android:textSize="16dp"
                             android:textStyle="bold" />
@@ -291,11 +291,10 @@
 
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <android.support.v4.mFarmFragmentView.ViewPager
+    <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         android:layout_marginTop="45dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 

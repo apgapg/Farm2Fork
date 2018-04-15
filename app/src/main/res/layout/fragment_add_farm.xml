@@ -11,7 +11,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=" Select Crop: "
+        android:paddingLeft="4dp"
+        android:text="@string/select_crop"
         android:textColor="#424242"
         android:textSize="16dp"
         android:textStyle="bold" />
@@ -24,7 +25,7 @@
 
         android:background="@drawable/border_farm_card"
         android:gravity="center_vertical"
-        android:hint="Crop Name"
+        android:hint="@string/select_crop_name_hint"
         android:lines="1"
         android:paddingLeft="8dp"
         android:textColor="#f44336"
@@ -35,8 +36,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Farm Location: "
-
+        android:paddingLeft="4dp"
+        android:text="@string/farm_location"
         android:textColor="#424242"
 
         android:textSize="16dp"
@@ -50,44 +51,23 @@
         android:layout_marginTop="8dp"
         android:background="@drawable/border_farm_card"
         android:gravity="center_vertical"
-        android:hint="(Please choose Location of your Farm)"
+        android:hint="@string/please_select_location_of_your_farm"
         android:minHeight="40dp"
         android:paddingBottom="4dp"
         android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         android:paddingTop="4dp"
 
         android:textColor="#f44336"
         android:textSize="16dp"
         android:textStyle="bold" />
 
-    <!-- <TextView
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_marginTop="8dp"
-         android:text=" Farm Photo: "
-
-         android:textColor="#424242"
-         android:textSize="16dp"
-         android:textStyle="bold" />
-
-     <EditText
-         android:layout_width="match_parent"
-         android:layout_height="32dp"
-         android:layout_marginTop="8dp"
-         android:background="@drawable/border_farm_card"
-         android:gravity="center_vertical"
-         android:paddingLeft="8dp"
-         android:text="+91-7054392300"
-         android:textColor="#f44336"
-         android:textSize="16dp"
-         android:textStyle="bold" />
- -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text=" Size: (in Acre)"
-
+        android:paddingLeft="4dp"
+        android:text="@string/size"
         android:textColor="#424242"
         android:textSize="16dp"
         android:textStyle="bold" />
@@ -141,8 +121,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text=" Farm Photo: (optional)"
-
+        android:paddingLeft="4dp"
+        android:text="@string/farm_photo_optional"
         android:textColor="#424242"
         android:textSize="16dp"
         android:textStyle="bold" />
@@ -178,6 +158,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:text="ADD FARM" />
+        android:text="@string/add_farm" />
 
 </LinearLayout>

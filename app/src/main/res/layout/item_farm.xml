@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingRight="8dp"
-            android:text="Crop: "
+            android:text="@string/crop"
             android:textColor="#424242"
             android:textSize="16dp"
             android:textStyle="bold" />
@@ -47,8 +47,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="4dp"
-            android:text="City: "
+            android:paddingRight="8dp"
+            android:text="@string/city"
 
             android:textColor="#424242"
             android:textSize="16dp"
@@ -75,8 +75,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="4dp"
-            android:text="Size: "
+            android:paddingRight="8dp"
+            android:text="@string/size"
 
             android:textColor="#424242"
             android:textSize="16dp"

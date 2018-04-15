@@ -28,15 +28,10 @@ import com.farm.farm2fork.Interface.ImagePathListener;
 import com.farm.farm2fork.Interface.LocationSetListener;
 import com.farm.farm2fork.Models.LocationInfoModel;
 import com.farm.farm2fork.R;
-import com.farm.farm2fork.data.UserDataManager;
 import com.kbeanie.multipicker.api.ImagePicker;
 import com.schibstedspain.leku.LocationPickerActivity;
 
 import java.util.List;
-
-import io.reactivex.Observer;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 
 /**
  * Created by master on 10/3/18.
@@ -47,7 +42,6 @@ public class AddFarmFragment extends Fragment implements FarmContract.AddFarmFra
     private Activity mContext;
     private Button btn_add;
     private TextView txt_location;
-    private UserDataManager userDataManager;
     private LocationInfoModel mlocationInfoModel;
     private EditText ed_size;
     private AutoCompleteTextView ed_crop;
@@ -58,17 +52,14 @@ public class AddFarmFragment extends Fragment implements FarmContract.AddFarmFra
     private String imagepath = "";
     private String imageencoded = "";
     private String farmSizeUnit = "acre";
-    private String farmsize_acre;
-    private Disposable disposable;
-    private Object cropListObservable;
-    private Observer<? super List<String>> cropListObserver;
-    private CompositeDisposable compositeDisposable;
+
     private View view;
     private AddFarmFragmentPresentor mAddFarmFragmentPresentor;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ((FarmActivity) mContext).setToolbarTitle(getResources().getString(R.string.add_your_farm));
 
         if (view != null) {
             if (view.getParent() != null)
@@ -80,14 +71,12 @@ public class AddFarmFragment extends Fragment implements FarmContract.AddFarmFra
 
 
         ed_crop = view.findViewById(R.id.ed_crop);
-        userDataManager = new UserDataManager(mContext);
         btn_add = view.findViewById(R.id.add);
         txt_location = view.findViewById(R.id.txt_location);
         cameraicon = view.findViewById(R.id.cameraicon);
         mainimage = view.findViewById(R.id.photo);
         ed_size = view.findViewById(R.id.ed_size);
 
-        ((FarmActivity) mContext).setToolbarTitle("Add Farm");
 
         mAddFarmFragmentPresentor = new AddFarmFragmentPresentor(((ApplicationClass) getActivity().getApplication()).getmAppDataManager());
         mAddFarmFragmentPresentor.setView(this);
@@ -164,7 +153,9 @@ public class AddFarmFragment extends Fragment implements FarmContract.AddFarmFra
 
     private void setupFarmSizeUnitsSpinner() {
         MaterialSpinner spinner = view.findViewById(R.id.spinner);
-        spinner.setItems("acre", "hectare", "bigha", "guntha");
+        spinner.setItems(getResources().getStringArray(R.array.farm_size_units));
+
+
         spinner.setSelectedIndex(0);
         spinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override

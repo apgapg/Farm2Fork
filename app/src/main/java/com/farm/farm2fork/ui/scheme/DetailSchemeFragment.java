@@ -27,7 +27,7 @@ public class DetailSchemeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ((FarmActivity) mContext).setToolbarTitle("Details");
+        ((FarmActivity) mContext).setToolbarTitle(getResources().getString(R.string.details));
 
         if (view != null) {
             if (view.getParent() != null)

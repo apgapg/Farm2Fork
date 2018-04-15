@@ -16,6 +16,7 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.ParsedRequestListener;
+import com.farm.farm2fork.ApplicationClass;
 import com.farm.farm2fork.FarmAdapter.PriceAdapter;
 import com.farm.farm2fork.Models.PriceModel;
 import com.farm.farm2fork.R;
@@ -25,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static com.farm.farm2fork.Utils.Constants.BASE_URL;
 
@@ -38,7 +40,7 @@ public class PriceFragment extends Fragment {
     private Activity mContext;
     private UserDataManager userDataManager;
     private String crop;
-    private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY", Locale.ENGLISH);
     private RecyclerView recyclerView;
     private PriceAdapter priceAdapter;
     private View nopost;
@@ -49,7 +51,7 @@ public class PriceFragment extends Fragment {
         crop = getArguments().getString("crop");
 
         View view = inflater.inflate(R.layout.fragment_prices_tab, container, false);
-        ((TextView) view.findViewById(R.id.crop)).setText("Crop: " + crop);
+        ((TextView) view.findViewById(R.id.crop)).setText(getResources().getString(R.string.crop).concat(" ").concat(crop));
         userDataManager = new UserDataManager(mContext);
         nopost = view.findViewById(R.id.nopost);
         recyclerView = view.findViewById(R.id.farmrecycelrview);
@@ -69,7 +71,7 @@ public class PriceFragment extends Fragment {
         AndroidNetworking.post(BASE_URL + "htmlparser.php")
                 .addBodyParameter("crop", crop)
                 .addBodyParameter("date", sdf.format(new Date()))
-
+                .addBodyParameter("language", ApplicationClass.localeCode)
                 .addBodyParameter("uid", userDataManager.getUid())
                 .addBodyParameter("authtoken", userDataManager.getAuthToken())
                 .setPriority(Priority.MEDIUM)
@@ -80,22 +82,20 @@ public class PriceFragment extends Fragment {
                     public void onResponse(List<PriceModel> list) {
 
                         if (isAdded()) {
-                            List<Object> mainlist = new ArrayList<>();
-                            mainlist.add(list.get(0).getState());
-                            String currentState = list.get(0).getState();
-                            for (int i = 0; i < list.size(); i++) {
-                                if (list.get(i).getState().equals(currentState)) {
-                                    mainlist.add(list.get(i));
-                                } else {
-                                    mainlist.add(list.get(i).getState());
-                                    currentState = list.get(i).getState();
-                                    mainlist.add(list.get(i));
-
+                            if (list.size() > 0) {
+                                List<Object> mainlist = new ArrayList<>();
+                                mainlist.add(list.get(0).getState());
+                                String currentState = list.get(0).getState();
+                                for (int i = 0; i < list.size(); i++) {
+                                    if (list.get(i).getState().equals(currentState)) {
+                                        mainlist.add(list.get(i));
+                                    } else {
+                                        mainlist.add(list.get(i).getState());
+                                        currentState = list.get(i).getState();
+                                        mainlist.add(list.get(i));
+                                    }
                                 }
-                            }
-                            if (mainlist.size() > 0) {
                                 priceAdapter.add(mainlist);
-
                             } else nopost.setVisibility(View.VISIBLE);
                         }
                     }
