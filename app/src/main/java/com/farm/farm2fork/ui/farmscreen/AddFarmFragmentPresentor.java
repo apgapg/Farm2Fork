@@ -24,7 +24,7 @@ public class AddFarmFragmentPresentor implements FarmContract.CropListLoadListen
     }
 
     public void loadCropList() {
-        getmAppDataManager().loadCropList(this);
+        //  getmAppDataManager().loadCropList(this);
     }
 
     @Override

@@ -13,11 +13,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.farm.farm2fork.ApplicationClass;
 import com.farm.farm2fork.Models.FeedsModel;
 import com.farm.farm2fork.R;
+import com.farm.farm2fork.Utils.GlideUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +72,7 @@ public class FeedsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         ((FeedsTextViewHolder) holder).comment.setText("COMMENT (" + messagelist.get(position).getComment() + ")");
         if (holder instanceof FeedsImageViewHolder)
-            Glide.with(context).load(messagelist.get(position).getImage()).diskCacheStrategy(DiskCacheStrategy.RESULT).into(((FeedsImageViewHolder) holder).image);
+            GlideUtils.loadImagefromUrl(context, messagelist.get(position).getImage(), ((FeedsImageViewHolder) holder).image);
     }
 
 

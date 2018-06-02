@@ -53,5 +53,8 @@
     <string name="modal">Modal</string>
     <string name="city">City:</string>
     <string name="add_your_farm">Add your farm</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="autocomplete_hint">Enter farm location or address</string>
+    <string name="place_details">&lt;b&gt;%1$s&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Place Id: %2$s&lt;/i&gt;&lt;br/&gt;Address: %3$s&lt;br/&gt;Phone: %4$s&lt;br/&gt;Website: %5$s</string>
 
 </resources>

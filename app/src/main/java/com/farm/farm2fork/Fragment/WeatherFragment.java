@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import zh.wang.android.yweathergetter4a.WeatherInfo;
 
 /**
  * Created by master on 10/3/18.
@@ -130,9 +129,4 @@ public class WeatherFragment extends Fragment {
 
     }
 
-    public void onWeatherDataReceived(List<WeatherInfo.ForecastInfo> forecastInfoList) {
-
-        // weatherAdapter.add(forecastInfoList);
-
-    }
 }

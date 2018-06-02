@@ -107,7 +107,6 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <include layout="@layout/leku_layout_coordinates" />
 
                     <include layout="@layout/leku_layout_address" />
 

@@ -1,7 +1,6 @@
 package com.farm.farm2fork;
 
 import com.androidnetworking.AndroidNetworking;
-import com.farm.farm2fork.Utils.AppLogger;
 import com.farm.farm2fork.data.AppDataManager;
 import com.farm.farm2fork.data.prefs.AppPrefsHelper;
 import com.orm.SugarApp;
@@ -19,7 +18,6 @@ public class ApplicationClass extends SugarApp {
     public void onCreate() {
 
         super.onCreate();
-        AppLogger.init();
         AndroidNetworking.initialize(getApplicationContext());
         AppPrefsHelper appPrefsHelper = new AppPrefsHelper(getApplicationContext());
         mAppDataManager = new AppDataManager(appPrefsHelper);

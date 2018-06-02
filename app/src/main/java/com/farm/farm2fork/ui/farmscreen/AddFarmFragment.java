@@ -3,10 +3,8 @@ package com.farm.farm2fork.ui.farmscreen;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,17 +17,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DecodeFormat;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.farm.farm2fork.ApplicationClass;
 import com.farm.farm2fork.CustomViews.customspinner.MaterialSpinner;
 import com.farm.farm2fork.Interface.ImagePathListener;
 import com.farm.farm2fork.Interface.LocationSetListener;
 import com.farm.farm2fork.Models.LocationInfoModel;
 import com.farm.farm2fork.R;
+import com.farm.farm2fork.ui.map.MapsActivity;
 import com.kbeanie.multipicker.api.ImagePicker;
-import com.schibstedspain.leku.LocationPickerActivity;
 
 import java.util.List;
 
@@ -101,12 +96,12 @@ public class AddFarmFragment extends Fragment implements FarmContract.AddFarmFra
                 Glide.with(mContext).load(queryUri).into(mainimage);
                 cameraicon.setVisibility(View.INVISIBLE);
                 if (!imagepath.isEmpty()) {
-                    Glide.with(mContext).load(imagepath).asBitmap().toBytes(Bitmap.CompressFormat.JPEG, 90).format(DecodeFormat.PREFER_ARGB_8888).atMost().override(1500, 1500).into(new SimpleTarget<byte[]>() {
+                /*    Glide.with(mContext).load(imagepath).asBitmap().toBytes(Bitmap.CompressFormat.JPEG, 90).format(DecodeFormat.PREFER_ARGB_8888).atMost().override(1500, 1500).into(new SimpleTarget<byte[]>() {
                         @Override
                         public void onResourceReady(byte[] resource, GlideAnimation<? super byte[]> glideAnimation) {
                             imageencoded = Base64.encodeToString(resource, Base64.DEFAULT);
                         }
-                    });
+                    });*/
 
                 }
             }
@@ -126,7 +121,7 @@ public class AddFarmFragment extends Fragment implements FarmContract.AddFarmFra
         txt_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new LocationPickerActivity.Builder()
+                /*Intent intent = new LocationPickerActivity.Builder()
                         .withGooglePlacesEnabled()
                         .withGeolocApiKey("AIzaSyBtuQ0bOdBshWBziK31gyUY2wKFnQnrEyc")
                         .withSearchZone("en_in")
@@ -134,7 +129,9 @@ public class AddFarmFragment extends Fragment implements FarmContract.AddFarmFra
                         .withSatelliteViewHidden()
                         .build(mContext);
 
-                mContext.startActivityForResult(intent, 1);
+                mContext.startActivityForResult(intent, 1);*/
+
+                mContext.startActivity(new Intent(mContext, MapsActivity.class));
             }
         });
 

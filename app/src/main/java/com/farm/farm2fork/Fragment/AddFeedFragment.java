@@ -3,10 +3,8 @@ package com.farm.farm2fork.Fragment;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,9 +20,6 @@ import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.StringRequestListener;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DecodeFormat;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.farm.farm2fork.Interface.ImagePathListener;
 import com.farm.farm2fork.R;
 import com.farm.farm2fork.data.UserDataManager;
@@ -83,12 +78,12 @@ public class AddFeedFragment extends Fragment {
                 Glide.with(mContext).load(queryUri).into(mainimage);
                 cameraicon.setVisibility(View.INVISIBLE);
                 if (!imagepath.isEmpty()) {
-                    Glide.with(mContext).load(imagepath).asBitmap().toBytes(Bitmap.CompressFormat.JPEG, 90).format(DecodeFormat.PREFER_ARGB_8888).atMost().override(1200, 1200).into(new SimpleTarget<byte[]>() {
+                    /*Glide.with(mContext).load(imagepath).asBitmap().toBytes(Bitmap.CompressFormat.JPEG, 90).format(DecodeFormat.PREFER_ARGB_8888).atMost().override(1200, 1200).into(new SimpleTarget<byte[]>() {
                         @Override
                         public void onResourceReady(byte[] resource, GlideAnimation<? super byte[]> glideAnimation) {
                             imageencoded = Base64.encodeToString(resource, Base64.DEFAULT);
                         }
-                    });
+                    });*/
 
                 }
             }
