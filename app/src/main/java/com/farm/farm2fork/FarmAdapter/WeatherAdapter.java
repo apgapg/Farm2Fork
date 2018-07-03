@@ -10,8 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.farm.farm2fork.Models.WeatherModel;
 import com.farm.farm2fork.R;
+import com.farm.farm2fork.models.WeatherModel;
 
 import java.util.ArrayList;
 import java.util.List;

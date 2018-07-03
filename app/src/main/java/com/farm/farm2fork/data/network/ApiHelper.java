@@ -9,10 +9,10 @@ import com.androidnetworking.interfaces.ParsedRequestListener;
 import com.androidnetworking.interfaces.StringRequestListener;
 import com.farm.farm2fork.ApplicationClass;
 import com.farm.farm2fork.BuildConfig;
-import com.farm.farm2fork.Models.FarmModel;
-import com.farm.farm2fork.Models.LocationInfoModel;
-import com.farm.farm2fork.Models.SchemeModel;
 import com.farm.farm2fork.Utils.NetworkUtils;
+import com.farm.farm2fork.models.FarmModel;
+import com.farm.farm2fork.models.LocationInfoModel;
+import com.farm.farm2fork.models.SchemeModel;
 import com.farm.farm2fork.ui.community.CommunityContract;
 import com.farm.farm2fork.ui.farmscreen.FarmContract;
 import com.farm.farm2fork.ui.feeds.FeedsAdapterContract;
@@ -133,8 +133,8 @@ public class ApiHelper {
                 .addBodyParameter("farmsize_acre", farmSizeAcre)
                 .addBodyParameter("image", imageencoded)
                 .addBodyParameter("loc_address", mlocationInfoModel.getAddress())
-                .addBodyParameter("loc_lat", mlocationInfoModel.getLatitude())
-                .addBodyParameter("loc_long", mlocationInfoModel.getLongitude())
+                .addBodyParameter("loc_lat", String.valueOf(mlocationInfoModel.getLatitude()))
+                .addBodyParameter("loc_long", String.valueOf(mlocationInfoModel.getLongitude()))
                 .addBodyParameter("postalCode", mlocationInfoModel.getPostalzipcode())
                 .addBodyParameter("loc_city", mlocationInfoModel.getCity())
                 .addBodyParameter("uid", uid)

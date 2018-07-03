@@ -14,9 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.farm.farm2fork.ApplicationClass;
-import com.farm.farm2fork.Models.FeedsModel;
 import com.farm.farm2fork.R;
 import com.farm.farm2fork.Utils.GlideUtils;
+import com.farm.farm2fork.models.FeedsModel;
 
 import java.util.ArrayList;
 import java.util.List;

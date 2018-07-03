@@ -1,106 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingLeft="16dp"
-    android:paddingRight="16dp"
     android:paddingTop="16dp"
-    android:layout_height="match_parent"
-   >
+    android:paddingRight="16dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16dp"
-        android:textStyle="bold"
+        android:text=" Name: "
         android:textColor="#424242"
-        android:text=" Name: "/>
+        android:textSize="16dp"
+        android:textStyle="bold" />
 
     <EditText
+        android:id="@+id/field_name"
         android:layout_width="match_parent"
         android:layout_height="32dp"
         android:layout_marginTop="8dp"
-        android:paddingLeft="8dp"
-        android:textColor="#f44336"
-android:text="Ayush P Gupta"
-        android:textStyle="bold"
+        android:background="@drawable/border_farm_card"
         android:gravity="center_vertical"
+        android:paddingLeft="8dp"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="16dp"
-        android:background="@drawable/border_farm_card"/>
+        android:textStyle="bold"
+        tools:text="Ayush P Gupta" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16dp"
-        android:textStyle="bold"
-
         android:layout_marginTop="8dp"
+        android:text=" Mobile: "
 
         android:textColor="#424242"
-        android:text=" Language: "/>
+        android:textSize="16dp"
+        android:textStyle="bold" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="32dp"
         android:layout_marginTop="8dp"
-        android:textStyle="bold"
-        android:text="English"
-        android:paddingLeft="8dp"
-        android:textColor="#f44336"
-
+        android:background="@drawable/border_farm_card"
         android:gravity="center_vertical"
-        android:textSize="16dp"
-        android:background="@drawable/border_farm_card"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="16dp"
-        android:layout_marginTop="8dp"
-
-        android:textStyle="bold"
-        android:textColor="#424242"
-        android:text=" Mobile: "/>
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:layout_marginTop="8dp"
         android:paddingLeft="8dp"
-        android:textColor="#f44336"
-android:textStyle="bold"
         android:text="+91-7054392300"
-        android:gravity="center_vertical"
+        android:enabled="false"
+        android:textColor="@color/secondary_text"
         android:textSize="16dp"
-        android:background="@drawable/border_farm_card"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="16dp"
-        android:layout_marginTop="8dp"
-
-        android:textStyle="bold"
-        android:textColor="#424242"
-        android:text=" Location: "/>
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:layout_marginTop="8dp"
-        android:paddingLeft="8dp"
-        android:textStyle="bold"
-        android:gravity="center_vertical"
-        android:text="Lucknow"
-        android:textColor="#f44336"
-        android:textSize="16dp"
-        android:background="@drawable/border_farm_card"/>
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/btn_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SAVE"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="20dp"
+        android:text="SAVE" />
 
 </LinearLayout>

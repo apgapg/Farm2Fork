@@ -1,6 +1,6 @@
 package com.farm.farm2fork.ui.community;
 
-import com.farm.farm2fork.Models.CurrentWeatherModel;
+import com.farm.farm2fork.models.CurrentWeatherModel;
 
 import org.json.JSONArray;
 

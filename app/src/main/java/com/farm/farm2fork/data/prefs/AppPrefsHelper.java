@@ -19,6 +19,8 @@ public class AppPrefsHelper {
     private static final String KEY_UID = "UID";
     private static final String KEY_AUTH_TOKEN = "AUTHTOKEN";
     private static final String KEY_MOBILE_NUMBER = "NUMBER";
+    private static final String KEY_PROFILE_COMPELTE = "profile_complete";
+    private static final String KEY_NAME = "name";
     private final SharedPreferences sharedPreferences;
     private final Context mContext;
 
@@ -40,11 +42,17 @@ public class AppPrefsHelper {
         sharedPreferences.edit().putBoolean("IS_LOGGED_IN", loggedIn).apply();
     }
 
-    public void saveUserDetails(String uid, String authtoken, String number) {
+    public void saveUserDetails(String uid, String authtoken, String number, int profile_complete, String name) {
         sharedPreferences.edit().putString(KEY_UID, uid).commit();
         sharedPreferences.edit().putString(KEY_AUTH_TOKEN, authtoken).commit();
         sharedPreferences.edit().putString(KEY_MOBILE_NUMBER, number).commit();
+        sharedPreferences.edit().putInt(KEY_PROFILE_COMPELTE, profile_complete).commit();
+        sharedPreferences.edit().putString(KEY_NAME, name).commit();
         setLoggedInMode(true);
+    }
+
+    public int getKeyProfileCompelte() {
+        return sharedPreferences.getInt(KEY_PROFILE_COMPELTE, 0);
     }
 
     public String getUid() {
@@ -84,5 +92,9 @@ public class AppPrefsHelper {
     public void updateLocale(String localeCode) {
         putinsharedprefString(KEY_LOCALE, localeCode);
 
+    }
+
+    public String getName() {
+        return sharedPreferences.getString(KEY_NAME, null);
     }
 }

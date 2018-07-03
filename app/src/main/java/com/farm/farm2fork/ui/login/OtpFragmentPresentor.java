@@ -46,7 +46,7 @@ public class OtpFragmentPresentor implements LoginContract.OtpCheckListener {
     @Override
     public void onOtpCorrect(JSONObject response) {
         try {
-            getmAppDataManager().saveUserDetails(response.getString("uid"), response.getString("authtoken"), response.getString("number"));
+            getmAppDataManager().saveUserDetails(response.getString("uid"), response.getString("authtoken"), response.getString("number"), response.getInt("profile_complete"), response.getString("name"));
             view.hideProgressBar();
             view.onOtpVerificationSuccess();
         } catch (Exception e) {

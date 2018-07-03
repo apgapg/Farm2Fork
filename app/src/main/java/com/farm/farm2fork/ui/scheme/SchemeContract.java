@@ -1,6 +1,6 @@
 package com.farm.farm2fork.ui.scheme;
 
-import com.farm.farm2fork.Models.SchemeModel;
+import com.farm.farm2fork.models.SchemeModel;
 
 import java.util.List;
 

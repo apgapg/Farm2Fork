@@ -1,13 +1,14 @@
 package com.farm.farm2fork.data;
 
-import com.farm.farm2fork.Models.CropNameModel;
-import com.farm.farm2fork.Models.CurrentWeatherModel;
-import com.farm.farm2fork.Models.FarmModel;
-import com.farm.farm2fork.Models.LocationInfoModel;
-import com.farm.farm2fork.Models.SchemeModel;
 import com.farm.farm2fork.data.prefs.AppPrefsHelper;
+import com.farm.farm2fork.models.CropNameModel;
+import com.farm.farm2fork.models.CurrentWeatherModel;
+import com.farm.farm2fork.models.FarmModel;
+import com.farm.farm2fork.models.LocationInfoModel;
+import com.farm.farm2fork.models.SchemeModel;
 import com.farm.farm2fork.ui.community.CommunityContract;
 import com.farm.farm2fork.ui.farmscreen.FarmContract;
+import com.farm.farm2fork.ui.farmscreen.ObservableHelper;
 import com.farm.farm2fork.ui.feeds.FeedsAdapterContract;
 import com.farm.farm2fork.ui.login.ApiHelper;
 import com.farm.farm2fork.ui.login.LoginContract;
@@ -30,6 +31,7 @@ public class AppDataManager implements DataManager, LoginContract.OtpReqListener
 
     private final AppPrefsHelper mAppPrefsHelper;
     private final ApiHelper mApiHelper;
+    private final ObservableHelper mObservableHelper;
     private LoginContract.OtpReqListener mOtpReqListener;
     private LoginContract.OtpCheckListener mOtpCheckListener;
     private FarmContract.FarmFetchListener mFarmFetchListener;
@@ -37,6 +39,7 @@ public class AppDataManager implements DataManager, LoginContract.OtpReqListener
     public AppDataManager(AppPrefsHelper appPrefsHelper) {
         mAppPrefsHelper = appPrefsHelper;
         mApiHelper = new ApiHelper();
+        mObservableHelper = new ObservableHelper();
 
     }
 
@@ -48,9 +51,12 @@ public class AppDataManager implements DataManager, LoginContract.OtpReqListener
         return mApiHelper;
     }
 
+    public ObservableHelper getmObservableHelper() {
+        return mObservableHelper;
+    }
 
-    public void saveUserDetails(String uid, String authtoken, String number) {
-        mAppPrefsHelper.saveUserDetails(uid, authtoken, number);
+    public void saveUserDetails(String uid, String authtoken, String number, int profile_complete, String name) {
+        mAppPrefsHelper.saveUserDetails(uid, authtoken, number, profile_complete, name);
 
     }
 
@@ -162,7 +168,7 @@ public class AppDataManager implements DataManager, LoginContract.OtpReqListener
 
     }
 
-   /* public void loadCropList(final FarmContract.CropListLoadListener cropListLoadListener) {
+    public void loadCropList(final FarmContract.CropListLoadListener cropListLoadListener) {
         getmObservableHelper().getCropList(new ObservableHelper.CropListFetchListener() {
 
             @Override
@@ -170,7 +176,7 @@ public class AppDataManager implements DataManager, LoginContract.OtpReqListener
                 cropListLoadListener.onCropListFetch(cropList);
             }
         });
-    }*/
+    }
 
     public void sendAddFarmReq(String crop, String size, String farmSizeAcre, String farmSizeUnit, String imageencoded, LocationInfoModel mlocationInfoModel, final FarmContract.AddFarmReqListener addFarmReqListener) {
         getmApiHelper().sendAddFarmReq(crop, size, farmSizeAcre, farmSizeUnit, getUid(), getAuthToken(), imageencoded, mlocationInfoModel, new FarmContract.AddFarmReqListener() {
@@ -256,5 +262,13 @@ public class AppDataManager implements DataManager, LoginContract.OtpReqListener
                 LikeStatusListener.onFail();
             }
         });
+    }
+
+    public int isProfileComplete() {
+        return getmAppPrefsHelper().getKeyProfileCompelte();
+    }
+
+    public String getName() {
+        return getmAppPrefsHelper().getName();
     }
 }

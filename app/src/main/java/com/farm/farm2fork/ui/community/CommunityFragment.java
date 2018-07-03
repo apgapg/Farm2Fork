@@ -23,9 +23,9 @@ import com.farm.farm2fork.Fragment.FeedsFragment;
 import com.farm.farm2fork.Fragment.NewsFragment;
 import com.farm.farm2fork.Fragment.PriceFragment;
 import com.farm.farm2fork.Fragment.WeatherFragment;
-import com.farm.farm2fork.Models.CurrentWeatherModel;
-import com.farm.farm2fork.Models.FarmModel;
 import com.farm.farm2fork.R;
+import com.farm.farm2fork.models.CurrentWeatherModel;
+import com.farm.farm2fork.models.FarmModel;
 import com.farm.farm2fork.ui.farmscreen.FarmActivity;
 import com.google.gson.Gson;
 

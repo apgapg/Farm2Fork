@@ -1,7 +1,7 @@
 package com.farm.farm2fork.ui.farmscreen;
 
-import com.farm.farm2fork.Models.FarmModel;
 import com.farm.farm2fork.data.AppDataManager;
+import com.farm.farm2fork.models.FarmModel;
 
 import java.util.List;
 

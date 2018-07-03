@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.farm.farm2fork.Models.PriceModel;
 import com.farm.farm2fork.R;
+import com.farm.farm2fork.models.PriceModel;
 
 import java.util.ArrayList;
 import java.util.List;

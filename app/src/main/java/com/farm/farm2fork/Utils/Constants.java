@@ -6,4 +6,5 @@ package com.farm.farm2fork.Utils;
 
 public class Constants {
     public static final String BASE_URL = "https://www.reweyou.in/fasalapp/";
+    public static final String LOCATION = "location";
 }

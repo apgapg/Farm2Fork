@@ -1,5 +1,6 @@
 package com.farm.farm2fork.ui.map;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.location.Address;
 import android.location.Geocoder;
@@ -15,7 +16,10 @@ import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
 import com.farm.farm2fork.R;
+import com.farm.farm2fork.Utils.AddressHelper;
+import com.farm.farm2fork.Utils.Constants;
 import com.farm.farm2fork.Utils.KeyboardUtils;
+import com.farm.farm2fork.models.LocationInfoModel;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.AutocompletePrediction;
 import com.google.android.gms.location.places.GeoDataClient;
@@ -35,6 +39,13 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Callable;
+
+import rx.Observable;
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, AdapterView.OnItemClickListener {
 
@@ -43,14 +54,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final LatLng INDIA_UPPER_RIGHT = new LatLng(37.691225, 90.413055);
     private static final LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(
             INDIA_LOWER_LEFT, INDIA_UPPER_RIGHT);
-    private static final float ZOOM_LEVEL = 14;
+    private static final float ZOOM_LEVEL = 16;
+    private static final String LOCATION = "location";
     private GoogleMap mMap;
     private AutoCompleteTextView mAutocompleteView;
     private PlaceAutocompleteAdapter mAdapter;
     private GeoDataClient mGeoDataClient;
     private TextView text_address;
-
-
+    private Subscription addressSubscription;
+    private View fabDone;
+    private Intent addressIntentData;
     /**
      * Callback for results from a Places Geo Data Client query that shows the first place result in
      * the details view on screen.
@@ -64,32 +77,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 // Get the Place object from the buffer.
                 final Place place = places.get(0);
-
-                // Format details of the place for display and show it in a TextView.
-              /*  text_address.setText(formatPlaceDetails(getResources(), place.getName(),
-                        place.getId(), place.getAddress(), place.getPhoneNumber(),
-                        place.getWebsiteUri()));*/
-                text_address.setText(place.getAddress());
-
-                // Display the third party attributions if set.
-                //   final CharSequence thirdPartyAttribution = places.getAttributions();
-               /* if (thirdPartyAttribution == null) {
-                    mPlaceDetailsAttribution.setVisibility(View.GONE);
-                } else {
-                    mPlaceDetailsAttribution.setVisibility(View.VISIBLE);
-                    mPlaceDetailsAttribution.setText(
-                            Html.fromHtml(thirdPartyAttribution.toString()));
-                }*/
-
-
-                Log.i(TAG, "Place details received: " + place.getName());
+                getCompleteAddress(place.getLatLng());
 
                 mMap.clear();
                 mMap.addMarker(new MarkerOptions()
                         .position(place.getLatLng())
                         .draggable(true));
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                        place.getLatLng(), 14));
+                        place.getLatLng(), ZOOM_LEVEL));
 
 
                 places.release();
@@ -110,7 +105,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,6 +116,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
 
 
+        fabDone = findViewById(R.id.fab_done);
         text_address = findViewById(R.id.text_address);
         mAutocompleteView = findViewById(R.id.autocomplete_places);
         mAutocompleteView.setOnItemClickListener(this);
@@ -133,6 +128,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mAdapter = new PlaceAutocompleteAdapter(this, mGeoDataClient, BOUNDS_GREATER_SYDNEY, typeFilter);
         mAutocompleteView.setAdapter(mAdapter);
 
+        fabDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (addressIntentData != null) {
+                    setResult(RESULT_OK, addressIntentData);
+                    finish();
+                }
+            }
+        });
       /*  // Set up the 'clear text' button that clears the text in the autocomplete view
         Button clearButton = (Button) findViewById(R.id.button_clear);
         clearButton.setOnClickListener(new View.OnClickListener() {
@@ -162,22 +166,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
 
+                getCompleteAddress(latLng);
                 mMap.clear();
                 mMap.addMarker(new MarkerOptions().position(latLng));
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, ZOOM_LEVEL));
-                getCompleteAddressString(latLng.latitude, latLng.longitude);
             }
         });
 
         // Add a marker in Sydney and move the camera
         LatLng delhi = new LatLng(28.7041, 77.1025);
         mMap.addMarker(new MarkerOptions().position(delhi).draggable(true));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(delhi, 10));
-        getCompleteAddressString(delhi.latitude, delhi.longitude);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(delhi, 12));
+        getCompleteAddress(delhi);
+
 
     }
 
@@ -201,28 +207,73 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.i(TAG, "Called getPlaceById to get Place details for " + placeId);
     }
 
-    private void getCompleteAddressString(double LATITUDE, double LONGITUDE) {
-        String strAdd = "";
+
+    private void getCompleteAddress(LatLng latLng) {
+        Observable<Address> addressObservable = Observable.fromCallable(new Callable<Address>() {
+            @Override
+            public Address call() {
+                return getCompleteAddressInString(latLng);
+            }
+        });
+
+        addressSubscription = addressObservable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Address>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(Address address) {
+                        if (address != null)
+                            onAddressFetch(address);
+                    }
+                });
+    }
+
+    private void onAddressFetch(Address address) {
+        String strAddress = AddressHelper.getAddressInString(address);
+        text_address.setText(strAddress);
+
+        LocationInfoModel locationInfoModel = createLocationModel(address);
+        addressIntentData = new Intent();
+        addressIntentData.putExtra(Constants.LOCATION, locationInfoModel);
+    }
+
+
+    private LocationInfoModel createLocationModel(Address address) {
+        return new LocationInfoModel(address);
+    }
+
+    private Address getCompleteAddressInString(LatLng latLng) {
         Geocoder geocoder = new Geocoder(this, Locale.ENGLISH);
         try {
-            List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
-            if (addresses != null) {
-                Address returnedAddress = addresses.get(0);
-                StringBuilder strReturnedAddress = new StringBuilder();
+            List<Address> addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+            Address returnedAddress = addresses.get(0);
 
-                for (int i = 0; i <= returnedAddress.getMaxAddressLineIndex(); i++) {
-                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
-                }
-                strAdd = strReturnedAddress.toString();
-                Log.d("My ", strReturnedAddress.toString());
-            } else {
-                Log.d("My ", "No Address returned!");
-            }
+
+            return returnedAddress;
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d("My Current lo", "Canont get Address!");
+            return null;
         }
 
-        text_address.setText(strAdd.trim());
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        if (addressSubscription != null && !addressSubscription.isUnsubscribed()) {
+            addressSubscription.unsubscribe();
+        }
+
+        super.onDestroy();
     }
 }

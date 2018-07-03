@@ -29,4 +29,6 @@ public class ApplicationClass extends SugarApp {
     public AppDataManager getmAppDataManager() {
         return mAppDataManager;
     }
+
+
 }

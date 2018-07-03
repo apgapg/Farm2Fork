@@ -18,8 +18,8 @@ import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.farm.farm2fork.ApplicationClass;
 import com.farm.farm2fork.CustomViews.ItemOffsetDecoration;
 import com.farm.farm2fork.FarmAdapter.WeatherAdapter;
-import com.farm.farm2fork.Models.WeatherModel;
 import com.farm.farm2fork.R;
+import com.farm.farm2fork.models.WeatherModel;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

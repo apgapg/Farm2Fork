@@ -13,9 +13,9 @@ import android.view.ViewGroup;
 
 import com.farm.farm2fork.ApplicationClass;
 import com.farm.farm2fork.CustomViews.ItemOffsetDecoration;
-import com.farm.farm2fork.Models.SchemeModel;
 import com.farm.farm2fork.R;
 import com.farm.farm2fork.Utils.ActivityUtils;
+import com.farm.farm2fork.models.SchemeModel;
 import com.farm.farm2fork.ui.farmscreen.FarmActivity;
 
 import java.util.List;

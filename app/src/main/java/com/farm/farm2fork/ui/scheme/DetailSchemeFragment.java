@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.farm.farm2fork.Models.SchemeModel;
 import com.farm.farm2fork.R;
+import com.farm.farm2fork.models.SchemeModel;
 import com.farm.farm2fork.ui.farmscreen.FarmActivity;
 import com.google.gson.Gson;
 

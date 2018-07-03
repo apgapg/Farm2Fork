@@ -3,7 +3,6 @@ package com.farm.farm2fork.ui.farmscreen;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -15,11 +14,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.farm.farm2fork.ApplicationClass;
-import com.farm.farm2fork.CustomViews.ItemOffsetDecoration;
 import com.farm.farm2fork.FarmAdapter.FarmAdapter;
-import com.farm.farm2fork.Models.FarmModel;
 import com.farm.farm2fork.R;
-import com.farm.farm2fork.Utils.ActivityUtils;
+import com.farm.farm2fork.models.FarmModel;
 
 import java.util.List;
 
@@ -33,7 +30,6 @@ public class FarmFragment extends Fragment implements FarmContract.FarmFragmentV
     private FarmAdapter farmAdapter;
     private View mProgressBar;
     private View view;
-
 
 
     @Override
@@ -50,11 +46,25 @@ public class FarmFragment extends Fragment implements FarmContract.FarmFragmentV
 
         view = inflater.inflate(R.layout.fragment_farm, container, false);
 
-        mProgressBar = view.findViewById(R.id.progressbar);
+        view.findViewById(R.id.text_profile).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                ((FarmActivity) mContext).showProfileFragment();
+            }
+        });
+        mProgressBar = view.findViewById(R.id.progressbar);
+        view.findViewById(R.id.bottom_bar).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((FarmActivity) mContext).showAddFarmFragment();
+            }
+        });
 
         setUpRecyclerView();
-
+        if (((ApplicationClass) mContext.getApplication()).getmAppDataManager().isProfileComplete() == 1) {
+            view.findViewById(R.id.text_profile).setVisibility(View.GONE);
+        }
         FarmFragmentPresentor farmFragmentPresentor = new FarmFragmentPresentor(((ApplicationClass) mContext.getApplication()).getmAppDataManager());
         farmFragmentPresentor.setView(this);
 
@@ -66,11 +76,11 @@ public class FarmFragment extends Fragment implements FarmContract.FarmFragmentV
 
     private void setUpRecyclerView() {
         RecyclerView recyclerView = view.findViewById(R.id.farmrecycelrview);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 2);
+        //GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 2);
         farmAdapter = new FarmAdapter(getContext());
-        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(mContext, R.dimen.item_offset);
-        recyclerView.addItemDecoration(itemDecoration);
-        recyclerView.setLayoutManager(gridLayoutManager);
+       /* ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(mContext, R.dimen.item_offset);
+        recyclerView.addItemDecoration(itemDecoration);*/
+        recyclerView.setLayoutManager(new GridLayoutManager(mContext, 2, GridLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(farmAdapter);
     }
 
@@ -116,16 +126,9 @@ public class FarmFragment extends Fragment implements FarmContract.FarmFragmentV
 
     @Override
     public void onFarmFetchReqSuccess(final List<FarmModel> farmModelList) {
-        if (isAdded()) {
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
-                    ActivityUtils.checkNotNull(farmAdapter, "Farm Adapter is null").add(farmModelList);
-                }
-            });
-            if (farmModelList.size() == 0)
-                ((FarmActivity) mContext).showSnackBar();
-        }
+
+        farmAdapter.add(farmModelList);
+
     }
 
 

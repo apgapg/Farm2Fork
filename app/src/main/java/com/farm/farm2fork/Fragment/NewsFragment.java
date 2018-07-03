@@ -18,9 +18,9 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.ParsedRequestListener;
 import com.farm.farm2fork.CustomViews.ItemOffsetDecoration;
 import com.farm.farm2fork.FarmAdapter.NewsAdapter;
-import com.farm.farm2fork.Models.NewsModel;
 import com.farm.farm2fork.R;
 import com.farm.farm2fork.data.UserDataManager;
+import com.farm.farm2fork.models.NewsModel;
 
 import java.util.List;
 

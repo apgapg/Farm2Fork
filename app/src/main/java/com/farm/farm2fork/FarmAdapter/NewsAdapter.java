@@ -7,8 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.farm.farm2fork.Models.NewsModel;
 import com.farm.farm2fork.R;
+import com.farm.farm2fork.models.NewsModel;
 import com.farm.farm2fork.ui.farmscreen.FarmActivity;
 
 import java.util.ArrayList;

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +21,9 @@ import com.bumptech.glide.Glide;
 import com.farm.farm2fork.ApplicationClass;
 import com.farm.farm2fork.CustomViews.customspinner.MaterialSpinner;
 import com.farm.farm2fork.Interface.ImagePathListener;
-import com.farm.farm2fork.Interface.LocationSetListener;
-import com.farm.farm2fork.Models.LocationInfoModel;
 import com.farm.farm2fork.R;
+import com.farm.farm2fork.Utils.Constants;
+import com.farm.farm2fork.models.LocationInfoModel;
 import com.farm.farm2fork.ui.map.MapsActivity;
 import com.kbeanie.multipicker.api.ImagePicker;
 
@@ -34,6 +35,7 @@ import java.util.List;
 
 public class AddFarmFragment extends Fragment implements FarmContract.AddFarmFragmentView {
     private static final String TAG = AddFarmFragment.class.getName();
+    private static final int REQUEST_CODE_MAP_ACTIVITY = 45;
     private Activity mContext;
     private Button btn_add;
     private TextView txt_location;
@@ -108,30 +110,12 @@ public class AddFarmFragment extends Fragment implements FarmContract.AddFarmFra
         });
 
 
-        ((FarmActivity) mContext).setonLocationSetByUser(new LocationSetListener() {
 
-            @Override
-            public void onLocationSetByUser(LocationInfoModel locationInfoModel) {
-                txt_location.setText(locationInfoModel.getAddress());
-                mlocationInfoModel = locationInfoModel;
-                locationtaken = true;
-            }
-        });
 
         txt_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Intent intent = new LocationPickerActivity.Builder()
-                        .withGooglePlacesEnabled()
-                        .withGeolocApiKey("AIzaSyBtuQ0bOdBshWBziK31gyUY2wKFnQnrEyc")
-                        .withSearchZone("en_in")
-                        .shouldReturnOkOnBackPressed()
-                        .withSatelliteViewHidden()
-                        .build(mContext);
-
-                mContext.startActivityForResult(intent, 1);*/
-
-                mContext.startActivity(new Intent(mContext, MapsActivity.class));
+                startActivityForResult(new Intent(getContext(), MapsActivity.class), REQUEST_CODE_MAP_ACTIVITY);
             }
         });
 
@@ -217,6 +201,26 @@ public class AddFarmFragment extends Fragment implements FarmContract.AddFarmFra
     @Override
     public void hideProgressBar() {
         ((FarmActivity) mContext).hideProgressBar();
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_MAP_ACTIVITY && resultCode == Activity.RESULT_OK) {
+
+            LocationInfoModel locationInfoModel = (LocationInfoModel) data.getSerializableExtra(Constants.LOCATION);
+            onFarmAddressSet(locationInfoModel);
+
+        } else {
+            Log.e(TAG, "onActivityResult: some error");
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void onFarmAddressSet(LocationInfoModel locationInfoModel) {
+        txt_location.setText(locationInfoModel.getAddress());
+        this.mlocationInfoModel = locationInfoModel;
+        locationtaken = true;
 
     }
 }

@@ -2,8 +2,8 @@ package com.farm.farm2fork.ui.farmscreen;
 
 import android.os.Handler;
 
-import com.farm.farm2fork.Models.LocationInfoModel;
 import com.farm.farm2fork.data.AppDataManager;
+import com.farm.farm2fork.models.LocationInfoModel;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class AddFarmFragmentPresentor implements FarmContract.CropListLoadListen
     }
 
     public void loadCropList() {
-        //  getmAppDataManager().loadCropList(this);
+        getmAppDataManager().loadCropList(this);
     }
 
     @Override

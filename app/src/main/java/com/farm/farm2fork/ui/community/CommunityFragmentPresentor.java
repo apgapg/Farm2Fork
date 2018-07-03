@@ -1,7 +1,7 @@
 package com.farm.farm2fork.ui.community;
 
-import com.farm.farm2fork.Models.CurrentWeatherModel;
 import com.farm.farm2fork.data.AppDataManager;
+import com.farm.farm2fork.models.CurrentWeatherModel;
 
 /**
  * Created by master on 9/4/18.

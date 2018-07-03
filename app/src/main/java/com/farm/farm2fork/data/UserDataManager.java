@@ -2,8 +2,8 @@ package com.farm.farm2fork.data;
 
 import android.content.Context;
 
-import com.farm.farm2fork.Models.CropNameModel;
 import com.farm.farm2fork.data.prefs.AppPrefsHelper;
+import com.farm.farm2fork.models.CropNameModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,10 +25,7 @@ public class UserDataManager {
     }
 
 
-    public void saveUserDetails(String uid, String authtoken, String number) {
-        appPrefsHelper.saveUserDetails(uid, authtoken, number);
 
-    }
 
     public void clear() {
         appPrefsHelper.clear();

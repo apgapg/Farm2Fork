@@ -33,15 +33,14 @@ import com.farm.farm2fork.BaseActivity;
 import com.farm.farm2fork.Fragment.AboutFragment;
 import com.farm.farm2fork.Fragment.AddFeedFragment;
 import com.farm.farm2fork.Fragment.ContactUsFragment;
-import com.farm.farm2fork.Fragment.ProfileFragment;
 import com.farm.farm2fork.Interface.ImagePathListener;
 import com.farm.farm2fork.Interface.LocationSetListener;
 import com.farm.farm2fork.Interface.NetRetryListener;
-import com.farm.farm2fork.Models.FarmModel;
-import com.farm.farm2fork.Models.LocationInfoModel;
-import com.farm.farm2fork.Models.SchemeModel;
 import com.farm.farm2fork.R;
+import com.farm.farm2fork.models.FarmModel;
+import com.farm.farm2fork.models.SchemeModel;
 import com.farm.farm2fork.ui.community.CommunityFragment;
+import com.farm.farm2fork.ui.profile.ProfileFragment;
 import com.farm.farm2fork.ui.scheme.DetailSchemeFragment;
 import com.farm.farm2fork.ui.scheme.SchemeFragment;
 import com.google.gson.Gson;
@@ -57,7 +56,6 @@ import com.kbeanie.multipicker.api.ImagePicker;
 import com.kbeanie.multipicker.api.Picker;
 import com.kbeanie.multipicker.api.callbacks.ImagePickerCallback;
 import com.kbeanie.multipicker.api.entity.ChosenImage;
-import com.schibstedspain.leku.LocationPickerActivity;
 
 import java.io.File;
 import java.util.List;
@@ -181,7 +179,7 @@ public class FarmActivity extends BaseActivity implements NavigationView.OnNavig
         showAddFarmFragment();
     }
 
-    private void showAddFarmFragment() {
+    public void showAddFarmFragment() {
         AddFarmFragment addFarmFragment = new AddFarmFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fl, addFarmFragment).addToBackStack(null).commit();
@@ -210,6 +208,8 @@ public class FarmActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
         // checkPermissionOnActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             onImagePathListener.onImagePath(String.valueOf(imageToUploadUri));
@@ -217,84 +217,37 @@ public class FarmActivity extends BaseActivity implements NavigationView.OnNavig
             Log.d(TAG, "onActivityResult: Image cant be captured");
             imageToUploadUri = null;
         }
-        if (requestCode == 1) {
-            if (resultCode == RESULT_OK) {
-
-                LocationInfoModel locationInfoModel = parseLocationData(data);
 
 
-                locationSetByUser.onLocationSetByUser(locationInfoModel);
+        if (resultCode == RESULT_OK && requestCode == Picker.PICK_IMAGE_DEVICE) {
+            if (imagePicker == null) {
+                imagePicker = new ImagePicker(this);
+                imagePicker.setImagePickerCallback(new ImagePickerCallback() {
+                                                       @Override
+                                                       public void onImagesChosen(List<ChosenImage> images) {
+                                                           if (images != null)
+                                                               if (images.size() > 0) {
+                                                                   onImagePathListener.onImagePath(images.get(0).getQueryUri());
+                                                               } else Log.d(TAG, "onImagesChosen: empty");
+                                                           else
+                                                               Log.e(TAG, "onError: onimagechoosen: ");
 
-            }
-            if (resultCode == RESULT_CANCELED) {
-                //Write your code if there's no result
-                Log.d(TAG, "onActivityResult: no result");
-
-            }
-        }
-
-        if (resultCode == RESULT_OK) {
-            if (requestCode == Picker.PICK_IMAGE_DEVICE) {
-                if (imagePicker == null) {
-                    imagePicker = new ImagePicker(this);
-                    imagePicker.setImagePickerCallback(new ImagePickerCallback() {
-                                                           @Override
-                                                           public void onImagesChosen(List<ChosenImage> images) {
-                                                               if (images != null)
-                                                                   if (images.size() > 0) {
-                                                                       onImagePathListener.onImagePath(images.get(0).getQueryUri());
-                                                                   } else Log.d(TAG, "onImagesChosen: empty");
-                                                               else
-                                                                   Log.e(TAG, "onError: onimagechoosen: ");
-
-                                                           }
-
-                                                           @Override
-                                                           public void onError(String message) {
-                                                               // Do error handling
-                                                               Log.e(TAG, "onError: " + message);
-                                                           }
                                                        }
 
-                    );
-                }
-                imagePicker.submit(data);
+                                                       @Override
+                                                       public void onError(String message) {
+                                                           // Do error handling
+                                                           Log.e(TAG, "onError: " + message);
+                                                       }
+                                                   }
+
+                );
             }
+            imagePicker.submit(data);
+
         }
     }
 
-    private LocationInfoModel parseLocationData(Intent data) {
-        double latitude = data.getDoubleExtra(LocationPickerActivity.LATITUDE, 0);
-        double longitude = data.getDoubleExtra(LocationPickerActivity.LONGITUDE, 0);
-
-        String address = data.getStringExtra(LocationPickerActivity.LOCATION_ADDRESS);
-
-        String postalcode = data.getStringExtra(LocationPickerActivity.ZIPCODE);
-
-        String city = data.getStringExtra(LocationPickerActivity.LOCATION_CITY);
-        Log.d("LATITUDE: ", String.valueOf(latitude));
-        Log.d("LONGITUDE: ", String.valueOf(longitude));
-        Log.d("ADDRESS: ", String.valueOf(address));
-        Log.d("POSTALCODE: ", String.valueOf(postalcode));
-        Log.d("CITY: ", String.valueOf(city));
-
-        LocationInfoModel locationInfoModel = new LocationInfoModel();
-        locationInfoModel.setLongitude(String.valueOf(longitude));
-        locationInfoModel.setLatitude(String.valueOf(latitude));
-        locationInfoModel.setAddress(address);
-        locationInfoModel.setPostalzipcode(postalcode);
-        locationInfoModel.setCity(city);
-
-        return locationInfoModel;
-    }
-
-    public void setonLocationSetByUser(LocationSetListener onLocationSetByUser) {
-        this.locationSetByUser = onLocationSetByUser;
-    }
-
-    public void showSnackBar() {
-        Snackbar.make(findViewById(R.id.cl), "Start by Adding your Farm", 3500).show();
-    }
 
     public void chooseImage() {
         imagePicker = new ImagePicker(this);
@@ -500,6 +453,13 @@ public class FarmActivity extends BaseActivity implements NavigationView.OnNavig
         String scheme = new Gson().toJson(schemeModel);
         bundle.putString("scheme", scheme);
         fragment.setArguments(bundle);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fl, fragment).addToBackStack(null).commit();
+
+    }
+
+    public void showProfileFragment() {
+        ProfileFragment fragment = new ProfileFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fl, fragment).addToBackStack(null).commit();
 

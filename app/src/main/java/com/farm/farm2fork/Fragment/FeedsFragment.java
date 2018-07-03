@@ -18,9 +18,9 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.ParsedRequestListener;
 import com.farm.farm2fork.CustomViews.ItemOffsetDecoration;
 import com.farm.farm2fork.Interface.NetRetryListener;
-import com.farm.farm2fork.Models.FeedsModel;
 import com.farm.farm2fork.R;
 import com.farm.farm2fork.data.UserDataManager;
+import com.farm.farm2fork.models.FeedsModel;
 import com.farm.farm2fork.ui.farmscreen.FarmActivity;
 import com.farm.farm2fork.ui.feeds.FeedsAdapter;
 

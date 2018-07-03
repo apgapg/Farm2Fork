@@ -18,9 +18,9 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.ParsedRequestListener;
 import com.farm.farm2fork.ApplicationClass;
 import com.farm.farm2fork.FarmAdapter.PriceAdapter;
-import com.farm.farm2fork.Models.PriceModel;
 import com.farm.farm2fork.R;
 import com.farm.farm2fork.data.UserDataManager;
+import com.farm.farm2fork.models.PriceModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
