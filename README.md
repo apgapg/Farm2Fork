@@ -1,4 +1,4 @@
-## Farm2Fork
+# Farm2Fork
 
 Farm2Fork is a agri based platform aiming to provide various agri related services and information under one hood.  
 This app first allow user to login using mobile number and otp verification and then it makes user to enter details about his farms like crop name, farm location, farm size etc. For farm location a google map is provided to give a pin  for selecting his farm.  
