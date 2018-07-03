@@ -9,11 +9,12 @@ After adding farm, various details related to it like weather, market prices, ne
 ![](https://github.com/apgapg/Farm2Fork/blob/master/screenshots/Screenshot_2018-07-03-13-50-09-384_com.farm.farm2fork.png)
 ![](https://github.com/apgapg/Farm2Fork/blob/master/screenshots/Screenshot_2018-07-03-13-50-23-903_com.farm.farm2fork.png)
 
-## Features:
+## Platform Specific Features:
 1. MVP pattern
 2. Google map api (custom UI with location search and address)
 3. AccuWeather Api (json parsing)
-4. View Pager, recycler view
+4. Implementing News Feeds, Like-Unlike System, Managing ViewPager, RecyclerView
+5. Mobile Number based authentication
 
 ## Contribution:
 
